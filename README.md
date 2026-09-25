@@ -82,3 +82,11 @@ d:/GenWebSite/
 5. **"genera la propuesta para Dr. Smith"** $\to$ Crea el borrador en Gmail con el enlace de la demo.
 6. **"genera el contrato para Dr. Smith"** $\to$ Crea el acuerdo legal en HTML (para PDF) y DOCX protegido listo para firmar.
 7. **Doble clic en `iniciar-dashboard.bat`** $\to$ Abre el panel de control Kanban en `http://localhost:8765` para monitorear el pipeline y la facturación en USD.
+
+---
+
+## 📖 Manual de Operaciones y Setup Automatizado con IA
+
+Para ver el manual completo de uso, instructivo de prospección manual y el **Prompt Maestro** para que cualquier agente de IA instale y configure este repositorio automáticamente:
+👉 Consulta el archivo **[MANUAL_DE_USO.md](MANUAL_DE_USO.md)**.
+

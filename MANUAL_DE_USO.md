@@ -93,7 +93,7 @@ Para desplegar este proyecto por primera vez en cualquier computadora o para cua
 ```text
 Actúa como un Especialista DevOps y de Automatización Senior.
 Quiero que instales, configures y dejes 100% verificado y listo para operar este proyecto en mi entorno local:
-[URL_DE_TU_REPOSITORIO_GITHUB]
+https://github.com/ThePipis/gemini-prospector
 
 Por favor ejecuta el siguiente protocolo paso a paso de forma autónoma:
 
