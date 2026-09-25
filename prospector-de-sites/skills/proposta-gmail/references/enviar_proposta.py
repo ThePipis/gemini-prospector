@@ -192,21 +192,20 @@ def crear_borrador_imap(cfg, destinatario, asunto, cuerpo_html):
         imap = imaplib.IMAP4_SSL('imap.gmail.com', 993)
         imap.login(user, pw)
 
-        # Detectar carpeta de borradores de Gmail (inglés o español)
-        folder = '[Gmail]/Drafts'
+        # Detectar carpeta de borradores de Gmail de forma dinámica y robusta (RFC 6154)
+        folder = '[Gmail]/Borradores'
         typ, list_resp = imap.list()
         for f in list_resp:
             decoded = f.decode('utf-8', errors='ignore')
-            if 'Drafts' in decoded:
-                m = re.search(r'Drafts', decoded)
-                folder = '[Gmail]/Drafts'
-                break
-            elif 'Borradores' in decoded:
-                folder = '[Gmail]/Borradores'
-                break
+            if '\\Drafts' in decoded:
+                parts = decoded.split(' "/" ')
+                if len(parts) > 1:
+                    folder = parts[1].strip().strip('"')
+                    break
 
-        imap.select(folder)
-        imap.append(folder, '\\Draft', imaplib.Time2Internaldate(time.time()), msg.as_bytes())
+        quoted_folder = f'"{folder}"'
+        imap.select(quoted_folder)
+        imap.append(quoted_folder, '\\Draft', imaplib.Time2Internaldate(time.time()), msg.as_bytes())
         imap.logout()
         return {'ok': True, 'msg': f'Borrador creado exitosamente en tu Gmail ({folder})'}
     except Exception as e:
