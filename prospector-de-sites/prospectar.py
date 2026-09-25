@@ -97,7 +97,16 @@ def extrair_contatos_web(url):
         req = urllib.request.Request(url, headers=headers)
         with urllib.request.urlopen(req, timeout=8) as resp:
             html = resp.read().decode('utf-8', errors='ignore')
-    except Exception:
+    except Exception as e:
+        err_str = str(e).lower()
+        if 'ssl' in err_str or 'handshake' in err_str or 'certificate' in err_str:
+            contatos['motivo'] = 'Error crítico SSL / Inaccesible en navegadores (ERR_SSL_PROTOCOL_ERROR) — Urgencia máxima'
+        elif 'timeout' in err_str or 'timed out' in err_str:
+            contatos['motivo'] = 'Sitio web caído o sin respuesta del servidor (Timeout) — Alta urgencia'
+        elif '404' in err_str or 'not found' in err_str:
+            contatos['motivo'] = 'Enlace roto / Error 404 en web oficial — Alta urgencia'
+        else:
+            contatos['motivo'] = 'Sitio web inaccesible o caído — Oportunidad prioritaria de reemplazo'
         return contatos
 
     # 1. Buscar correos electrónicos en la home
