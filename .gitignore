@@ -17,7 +17,7 @@ prospector.db-journal
 /iniciar-dashboard.bat
 /prospectar.py
 /prospector-config.template.json
-/wrangler.jsonc
+wrangler.jsonc
 sites/
 comparar.html
 

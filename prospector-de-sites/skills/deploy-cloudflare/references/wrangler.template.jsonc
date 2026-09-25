@@ -4,9 +4,11 @@
   "compatibility_date": "2024-09-23",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
+  "routes": [
+    { "pattern": "demos.aisalesradar.com", "custom_domain": true }
+  ],
   "assets": {
     "directory": "./sites",
-    "binding": "ASSETS",
     "html_handling": "auto-trailing-slash"
   }
 }
