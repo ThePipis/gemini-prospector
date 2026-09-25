@@ -4,31 +4,55 @@ Plugin profesional para **Google Antigravity** (compatible con Agy 2.0 / CLI / I
 
 ---
 
-## Estructura del Repositorio
+## Estructura del Plugin (`prospector-de-sites/`)
 
 ```text
-gemini-prospector/
-├── .gitignore                   ← Excluye credenciales privadas, bases de datos y temporales
-├── README.md                    ← Documentación principal del repositorio
-├── MANUAL_DE_USO.md             ← Manual de operaciones y Prompt Maestro de instalación
-└── prospector-de-sites/         ← Paquete principal del Plugin para Antigravity / Claude
-    ├── plugin.json              ← Manifiesto del plugin
-    ├── mcp_config.json          ← Configuración de servidores MCP (CRM + Playwright)
-    ├── prospector-mcp.py        ← Servidor FastMCP de base de datos SQLite
-    ├── prospectar.py            ← Motor multi-proveedor de prospección segura (Yelp, Apify, Web)
-    ├── prospector-config.template.json ← Plantilla base de configuración
-    ├── dashboard/               ← Fuentes del Dashboard y servidor local
-    │   ├── dashboard-server.py  ← Mini-servidor local en Python
-    │   ├── dashboard-template.html ← Plantilla bilingüe del CRM Kanban [ES | EN]
-    │   └── iniciar-dashboard.bat ← Lanzador para Windows (puerto 8765)
-    └── skills/                  ← Las 7 skills en lenguaje natural
-        ├── prospector-setup/    (asistente de configuración inicial)
-        ├── prospeccao-maps/     (búsqueda y calificación de leads sin Google API)
-        ├── redesign-premium/    (motor de rediseño bilingüe EN/ES)
-        ├── deploy-cloudflare/   (despliegue en Cloudflare Workers con Static Assets)
-        ├── proposta-gmail/      (propuestas anti-spam en inglés y español)
-        ├── dashboard-leads/     (gestión de CRM y métricas MRR)
-        └── contrato-servico/    (acuerdos legales para el Estado de California)
+prospector-de-sites/
+├── dashboard/
+│   ├── dashboard-server.py                 # Mini-servidor local en Python (puerto 8765)
+│   ├── dashboard-template.html             # Plantilla bilingüe del CRM Kanban [ES | EN]
+│   ├── iniciar-dashboard.bat               # Lanzador para Windows
+│   └── iniciar-dashboard.command           # Lanzador para macOS / Linux
+├── mcp_config.json                         # Configuración de servidores MCP (CRM + Playwright)
+├── plugin.json                             # Manifiesto del plugin para Google Antigravity
+├── prospectar.py                           # Motor multi-proveedor de prospección segura (Yelp, Apify, Web)
+├── prospector-config.template.json         # Plantilla base de configuración
+├── prospector-mcp.py                       # Servidor FastMCP de base de datos SQLite
+└── skills/
+    ├── contrato-servico/
+    │   ├── references/
+    │   │   ├── contract-template-en.html   # Plantilla de contrato en inglés (California)
+    │   │   ├── contrato-template-es.html   # Plantilla de contrato en español
+    │   │   ├── contrato-template.html      # Plantilla base
+    │   │   └── gerar-docx.py               # Generador de contratos Word (.docx)
+    │   └── SKILL.md
+    ├── dashboard-leads/
+    │   ├── references/
+    │   │   ├── dashboard-server.py
+    │   │   ├── dashboard-template.html
+    │   │   ├── iniciar-dashboard.bat
+    │   │   └── iniciar-dashboard.command
+    │   └── SKILL.md
+    ├── deploy-cloudflare/
+    │   ├── references/
+    │   │   ├── publicar-cloudflare.bat     # Lanzador de publicación para Windows
+    │   │   ├── publicar-cloudflare.ps1     # Script de despliegue a Cloudflare Workers
+    │   │   └── wrangler.template.jsonc     # Plantilla de configuración Wrangler
+    │   └── SKILL.md
+    ├── proposta-gmail/
+    │   ├── references/
+    │   │   ├── capa-proposta-template.html # Plantilla visual de presentación de propuesta
+    │   │   └── enviar_proposta.py          # Script de automatización de borradores Gmail
+    │   └── SKILL.md
+    ├── prospeccao-maps/
+    │   └── SKILL.md
+    ├── prospector-setup/
+    │   └── SKILL.md
+    └── redesign-premium/
+        ├── references/
+        │   ├── comparador-template.html    # Comparador interactivo antes / después
+        │   └── editor-visual.md            # Guía de edición y personalización visual
+        └── SKILL.md
 ```
 
 ---
