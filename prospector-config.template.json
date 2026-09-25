@@ -1,0 +1,49 @@
+{
+  "firma": {
+    "nombre": "Your Name / Agency Name",
+    "empresa": "Your Agency Studio",
+    "presentacion_en": "High-Converting Web Designer & Conversion Specialist",
+    "presentacion_es": "Especialista en Diseño Web y Conversión para Negocios",
+    "telefono": "+1 (000) 000-0000",
+    "whatsapp": "10000000000",
+    "email": "your-agency@gmail.com"
+  },
+  "prospeccion": {
+    "motor": "auto",
+    "yelp_api_key": "",
+    "apify_api_token": "",
+    "estado": "CA",
+    "ciudad": "Los Angeles",
+    "nichos": [
+      "dentists",
+      "med spas",
+      "personal injury attorneys",
+      "hvac contractors",
+      "cpas",
+      "chiropractors"
+    ],
+    "min_rating": 4.5,
+    "min_reviews": 30,
+    "idioma_default": "auto",
+    "leadsPorBusca": 10
+  },
+  "envio": {
+    "modo": "borrador_gmail",
+    "gmail_user": "your-agency@gmail.com",
+    "gmail_app_password": ""
+  },
+  "cloudflare": {
+    "accountId": "",
+    "apiToken": "",
+    "projectName": "prospector-sites",
+    "customDomain": "yourdomain.com",
+    "subdomain": "demos"
+  },
+  "contrato": {
+    "prestador_nombre": "Your Name / Business Name",
+    "prestador_empresa": "Your Company LLC",
+    "prestador_ein": "",
+    "prestador_direccion": "California, USA",
+    "estado_jurisdiccion": "California"
+  }
+}

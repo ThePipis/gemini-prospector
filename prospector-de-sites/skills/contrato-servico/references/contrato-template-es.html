@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<!-- CONTRATO DE PRESTACIÓN DE SERVICIOS INDEPENDIENTES (DISEÑO WEB Y HOSPEDAJE) — Reemplazar {{PLACEHOLDERS}}. Imprimir: Ctrl+P > Guardar como PDF (Carta) -->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Contrato de Servicios — {{CLIENT_BUSINESS_OR_NAME}}</title>
+<style>
+@page { size: letter; margin: 1in; }
+body {
+  font-family: 'Times New Roman', Times, Georgia, serif;
+  color: #111;
+  line-height: 1.6;
+  font-size: 11pt;
+  margin: 0;
+  background: #f3f4f6;
+  padding: 40px 16px;
+}
+.sheet {
+  background: #fff;
+  max-width: 8.5in;
+  margin: 0 auto;
+  padding: 1in;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  border-radius: 4px;
+}
+.print-bar {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  z-index: 100;
+}
+.print-bar button {
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  background: #2563eb;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+}
+.print-bar button:hover { background: #1d4ed8; }
+h1 {
+  font-size: 14pt;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 24px;
+  font-weight: bold;
+}
+h2 {
+  font-size: 11pt;
+  margin: 18px 0 6px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+p { margin: 8px 0; text-align: justify; }
+.parties p { margin: 6px 0; }
+.signatures {
+  margin-top: 50px;
+  display: flex;
+  gap: 40px;
+  justify-content: space-between;
+  page-break-inside: avoid;
+}
+.signatures div { flex: 1; text-align: center; }
+.line {
+  border-top: 1px solid #111;
+  margin-top: 45px;
+  margin-bottom: 6px;
+  padding-top: 4px;
+}
+.notice {
+  margin-top: 36px;
+  font-size: 8.5pt;
+  color: #6b7280;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+@media print {
+  body { background: #fff; padding: 0; }
+  .sheet { box-shadow: none; border-radius: 0; max-width: none; padding: 0; }
+  .print-bar { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="print-bar"><button onclick="window.print()">🖨 Imprimir / Guardar como PDF</button></div>
+<div class="sheet">
+<h1>Contrato de Prestación de Servicios Independientes<br><span style="font-size:12pt;font-weight:normal">Diseño Web, Optimización y Despliegue en la Nube</span></h1>
+
+<p>El presente Contrato de Prestación de Servicios Independientes (el "Contrato") se celebra con fecha efectiva del <b>{{EFFECTIVE_DATE}}</b>, por y entre:</p>
+
+<div class="parties">
+<p><b>EL CLIENTE:</b> {{CLIENT_NAME}}, operando comercialmente como {{CLIENT_BUSINESS}}, con domicilio en {{CLIENT_ADDRESS}}, {{CLIENT_CITY_STATE_ZIP}} ("Cliente").</p>
+<p><b>EL CONTRATISTA:</b> {{CONTRACTOR_NAME}}, operando como {{CONTRACTOR_COMPANY}}, con domicilio en {{CONTRACTOR_ADDRESS}}, {{CONTRACTOR_CITY_STATE_ZIP}} ("Contratista").</p>
+</div>
+
+<p>POR CUANTO, el Cliente desea contratar los servicios profesionales del Contratista para realizar el rediseño, optimización y publicación web de su negocio, y el Contratista conviene en prestarlos bajo las siguientes estipulaciones:</p>
+
+<h2>Cláusula 1 — Alcance del Trabajo</h2>
+<p>El Contratista diseñará y desarrollará una nueva versión optimizada para alta conversión de la página web del Cliente a partir de su sitio actual ({{URL_CURRENT_SITE}}). El alcance incluye: (a) rediseño responsivo para móviles, tabletas y computadoras; (b) preservación y mejora de la identidad visual, colores y fotografías originales; (c) copywriting profesional orientado a captación de clientes y llamadas a la acción directas; (d) publicación en infraestructura cloud de alta velocidad Cloudflare en <b>{{URL_PUBLICADA}}</b>.</p>
+
+<h2>Cláusula 2 — Honorarios y Forma de Pago</h2>
+<p>Por los servicios descritos en la Cláusula 1, el Cliente pagará al Contratista el monto total de <b>${{VALOR}} USD</b> ({{VALOR_EXTENSO}}). El pago se efectuará de la siguiente manera: {{PAYMENT_TERMS}}.</p>
+
+{{SECTION_MAINTENANCE}}
+
+<h2>Cláusula 3 — Plazos y Revisiones</h2>
+<p>El Contratista entregará el sitio web finalizado en un plazo máximo de <b>{{TIMELINE_DAYS}}</b> posteriores a la firma de este acuerdo y entrega de materiales o aprobaciones requeridas. El Cliente tiene derecho a <b>{{ROUNDS_OF_REVISIONS}}</b> ronda(s) de ajustes y revisiones menores tras la entrega.</p>
+
+<h2>Cláusula 4 — Propiedad Intelectual</h2>
+<p>El Cliente mantiene todos los derechos de propiedad, marcas comerciales y derechos de autor sobre sus materiales y contenidos preexistentes. Una vez cancelado el monto acordado en su totalidad, el Contratista cede al Cliente todos los derechos sobre el diseño web final desarrollado en virtud de este acuerdo.</p>
+
+<h2>Cláusula 5 — Hospedaje e Infraestructura Cloudflare</h2>
+<p>El sitio web quedará desplegado sobre la red perimetral global de Cloudflare, la cual provee certificado SSL/TLS (HTTPS) nativo, protección DDoS y CDN de ultra-baja latencia. Se incluye asistencia para vincular el dominio propio del Cliente.</p>
+
+<h2>Cláusula 6 — Relación de Contratista Independiente</h2>
+<p>Las partes reconocen expresamente que el Contratista actúa bajo la condición de contratista independiente y no como empleado, socio o agente del Cliente. El Contratista es el único responsable de sus obligaciones fiscales e impuestos correspondientes.</p>
+
+<h2>Cláusula 7 — Rescisión</h2>
+<p>Cualquiera de las partes podrá rescindir el presente Contrato mediante notificación por escrito en caso de incumplimiento grave de la otra parte. En caso de rescisión anticipada por parte del Cliente, se liquidará la compensación proporcional a los trabajos efectivamente realizados. Los servicios de mantenimiento mensual pueden cancelarse con aviso previo de 30 días.</p>
+
+<h2>Cláusula 8 — Ley Aplicable y Jurisdicción</h2>
+<p>Este Contrato se regirá e interpretará conforme a las leyes del <b>Estado de California</b>. Cualquier controversia legal se resolverá ante los tribunales competentes de dicho Estado.</p>
+
+<p style="margin-top:24px">EN TESTIMONIO DE LO CUAL, las partes suscriben el presente Contrato en la fecha arriba indicada.</p>
+
+<div class="signatures">
+  <div>
+    <div class="line"></div>
+    <b>POR EL CLIENTE:</b> {{CLIENT_NAME}}<br>
+    Cargo: Propietario / Representante Autorizado<br>
+    Fecha: ____________________
+  </div>
+  <div>
+    <div class="line"></div>
+    <b>POR EL CONTRATISTA:</b> {{CONTRACTOR_NAME}}<br>
+    Cargo: Principal, {{CONTRACTOR_COMPANY}}<br>
+    Fecha: ____________________
+  </div>
+</div>
+
+<div class="notice">
+Aviso: Este documento constituye un modelo estándar de contrato comercial para el Estado de California. Se sugiere revisión letrada para condiciones particulares.
+</div>
+</div>
+</body>
+</html>

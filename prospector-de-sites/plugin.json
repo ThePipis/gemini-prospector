@@ -1,4 +1,4 @@
 {
   "name": "prospector-de-sites",
-  "description": "Prospecção de clientes com site fraco (Google Maps Platform + navegador), redesign premium, publicação na HostGator, proposta anti-spam por Gmail e CRM local. Autor: Helio Arreche."
+  "description": "Prospección B2B de clientes con web débil (Google Maps Platform + Playwright), rediseño premium bilingüe (EN/ES), despliegue atómico en Cloudflare (Workers/Assets/CDN), propuesta anti-spam por Gmail y CRM local con contratos para USA (California)."
 }

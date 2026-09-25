@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Prospector — servidor local do dashboard (SQLite). Sem dependências: só Python padrão.
+"""Prospector — servidor local do dashboard (SQLite + Cloudflare). Sem dependências: só Python padrão.
 Uso: python dashboard-server.py  (ou duplo clique em iniciar-dashboard.bat)
 Abre em http://localhost:8765 — edições, exclusões e drag&drop salvam no prospector.db"""
 import json, sqlite3, os, sys, webbrowser
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 PASTA = os.path.dirname(os.path.abspath(__file__))
+# Si se ejecuta desde subcarpeta dashboard, subir a raíz si prospector.db / config están arriba
+if not os.path.exists(os.path.join(PASTA, 'prospector-config.json')) and os.path.exists(os.path.join(PASTA, '..', 'prospector-config.json')):
+    PASTA = os.path.abspath(os.path.join(PASTA, '..'))
+elif not os.path.exists(os.path.join(PASTA, 'prospector-config.json')) and os.path.exists(os.path.join(PASTA, '..', '..', 'prospector-config.json')):
+    PASTA = os.path.abspath(os.path.join(PASTA, '..', '..'))
+
 os.chdir(PASTA)
 DB = os.path.join(PASTA, 'prospector.db')
 CONFIG = os.path.join(PASTA, 'prospector-config.json')
@@ -14,6 +20,7 @@ CONFIG = os.path.join(PASTA, 'prospector-config.json')
 def ler_config():
     try: return json.load(open(CONFIG, encoding='utf-8'))
     except Exception: return {}
+
 PORTA = 8765
 CAMPOS = ['slug','nome','nicho','cidade','nota','avaliacoes','email','telefone','whatsapp',
           'siteAntigo','motivo','status','urlNova','dataProposta','valor','obs',
@@ -56,16 +63,23 @@ class App(SimpleHTTPRequestHandler):
         self.send_header('Cache-Control', 'no-store')
         self.send_header('Content-Length', str(len(corpo)))
         self.end_headers(); self.wfile.write(corpo)
+
     def _corpo(self):
         n = int(self.headers.get('Content-Length', 0))
         return json.loads(self.rfile.read(n).decode('utf-8')) if n else {}
+
     def do_GET(self):
         if self.path.split('?')[0] == '/api/config':
             cfg = ler_config()
-            hg = dict(cfg.get('hostgator', {}))
-            hg['senhaDefinida'] = bool(hg.get('senha'))
-            hg.pop('senha', None)  # a senha NUNCA sai do arquivo
-            return self._json(200, {'contratante': cfg.get('contratante', {}), 'hostgator': hg})
+            cf = dict(cfg.get('cloudflare', {}))
+            cf['tokenDefinido'] = bool(cf.get('apiToken') or os.getenv('CLOUDFLARE_API_TOKEN'))
+            cf.pop('apiToken', None)  # El token NUNCA sale hacia el frontend
+            return self._json(200, {
+                'contrato': cfg.get('contrato', {}),
+                'firma': cfg.get('firma', {}),
+                'cloudflare': cf,
+                'prospeccion': cfg.get('prospeccion', {})
+            })
         if self.path.split('?')[0] == '/api/leads':
             c = conexao(); c.row_factory = sqlite3.Row
             rows = [dict(r) for r in c.execute('SELECT * FROM leads').fetchall()]; c.close()
@@ -73,6 +87,7 @@ class App(SimpleHTTPRequestHandler):
         if self.path in ('/', ''):
             self.path = '/dashboard.html'
         return SimpleHTTPRequestHandler.do_GET(self)
+
     def do_POST(self):
         if self.path.split('?')[0] == '/api/leads':
             l = self._corpo(); c = conexao()
@@ -80,25 +95,18 @@ class App(SimpleHTTPRequestHandler):
                       [l.get(k) for k in CAMPOS])
             c.commit(); c.close(); return self._json(200, {'ok': True})
         return self._json(404, {'erro': 'rota'})
+
     def do_PUT(self):
         if self.path.split('?')[0] == '/api/config':
             cfg = ler_config(); corpo = self._corpo()
-            if 'contratante' in corpo or 'hostgator' in corpo:
-                if 'contratante' in corpo:
-                    ct = cfg.get('contratante', {})
-                    ct.update({k: v for k, v in corpo['contratante'].items() if isinstance(v, str)})
-                    cfg['contratante'] = ct
-                if 'hostgator' in corpo:
-                    hg = cfg.get('hostgator', {})
-                    for k, v in corpo['hostgator'].items():
-                        if not isinstance(v, str): continue
-                        if k == 'senha' and v == '': continue  # em branco = mantém a atual
-                        hg[k] = v
-                    cfg['hostgator'] = hg
-            else:  # compatibilidade: corpo plano = contratante
-                ct = cfg.get('contratante', {})
-                ct.update({k: v for k, v in corpo.items() if isinstance(v, str)})
-                cfg['contratante'] = ct
+            for key in ['contrato', 'firma', 'cloudflare', 'prospeccion', 'contratante', 'hostgator']:
+                if key in corpo and isinstance(corpo[key], dict):
+                    sub = cfg.get(key, {})
+                    for k, v in corpo[key].items():
+                        if key == 'cloudflare' and k == 'apiToken' and v == '':
+                            continue
+                        sub[k] = v
+                    cfg[key] = sub
             json.dump(cfg, open(CONFIG, 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
             return self._json(200, {'ok': True})
         partes = self.path.split('?')[0].split('/')
@@ -112,19 +120,21 @@ class App(SimpleHTTPRequestHandler):
                 c.commit(); c.close()
             return self._json(200, {'ok': True})
         return self._json(404, {'erro': 'rota'})
+
     def do_DELETE(self):
         partes = self.path.split('?')[0].split('/')
         if len(partes) == 4 and partes[1] == 'api' and partes[2] == 'leads':
             c = conexao(); c.execute('DELETE FROM leads WHERE slug=?', (partes[3],)); c.commit(); c.close()
             return self._json(200, {'ok': True})
         return self._json(404, {'erro': 'rota'})
+
     def log_message(self, *a): pass
 
 if __name__ == '__main__':
     novo = not os.path.exists(DB)
     conexao().close()
     if novo: importar_snapshot()
-    print('Prospector rodando em http://localhost:%d  (Ctrl+C para parar)' % PORTA)
+    print('Prospector Dashboard activo en http://localhost:%d  (Ctrl+C para detener)' % PORTA)
     try: webbrowser.open('http://localhost:%d' % PORTA)
     except Exception: pass
     try: ThreadingHTTPServer(('127.0.0.1', PORTA), App).serve_forever()

@@ -18,9 +18,9 @@ body{margin-top:44px !important}
 [contenteditable="true"]:focus{outline:2px solid #3b82f6 !important;outline-offset:2px}
 </style>
 <div id="pe-bar">
-  <strong>Modo edição</strong>
-  <span>Clique em textos para editar · clique em imagens para trocar</span>
-  <button id="pe-export" type="button">Exportar página</button>
+  <strong>Edit Mode / Modo Edición</strong>
+  <span>Click text to edit · Click image to replace (Clic en textos para editar / imágenes para cambiar)</span>
+  <button id="pe-export" type="button">Export Page / Exportar</button>
 </div>
 <input type="file" id="pe-file" accept="image/*" style="display:none">
 <script id="pe-script">

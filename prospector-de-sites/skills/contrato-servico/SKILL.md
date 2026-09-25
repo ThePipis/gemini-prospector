@@ -1,34 +1,44 @@
 ---
 name: contrato-servico
-description: Esta skill deve ser usada ao gerar contratos de prestação de serviço para clientes fechados — criação/redesign de site, publicação e manutenção. Acione quando o usuário disser "contrato", "gerar contrato", "formalizar", "cliente fechou", "enviar contrato" ou pedir o contrato (skill contrato-servico).
+description: Esta skill debe ser usada al generar contratos de prestación de servicios para clientes cerrados en USA (California) — creación/rediseño de landing page, despliegue en Cloudflare y mantenimiento mensual recurrente. Acione cuando el usuario diga "contrato", "generar contrato", "formalizar", "cliente cerró", "enviar contrato", "agreement", "contract" o pida el contrato (skill contrato-servico).
 ---
 
-# Contrato de prestação de serviço
+# Contrato de Servicios Comerciales (Independent Contractor Agreement - California)
 
-Gerar a minuta do contrato do serviço fechado (redesign + publicação de página, com manutenção opcional), pronta pra virar PDF e ir por e-mail.
+Genera el borrador del acuerdo de servicios profesionales (rediseño web + despliegue en Cloudflare + mantenimiento opcional), listo para imprimirse como PDF o exportarse como documento Word (.docx) protegido.
 
-## Fonte dos dados (nesta ordem)
+## 1. Fuentes de Datos (En este orden)
 
-1. **Banco (`prospector.db`)**: nome do cliente, cidade, valor fechado, URL publicada.
-2. **Config (`prospector-config.json`)**: dados do PRESTADOR — nome, CPF/CNPJ, endereço, cidade/UF (campo `contratante`; se não existir, colete do usuário UMA vez e salve).
-3. **Usuário** (ele pergunta ao cliente): CPF/CNPJ e endereço do CONTRATANTE, forma de pagamento, prazo, manutenção mensal (sim/não + valor).
+1. **Base de Datos (`prospector.db`)**: nombre del cliente (`nome`), nicho, ciudad, valor acordado (`valor`), URL publicada (`urlNova`).
+2. **Configuración (`prospector-config.json`)**: datos del PRESTADOR/CONTRATISTA — nombre, empresa/LLC, dirección, EIN/Tax ID, estado de jurisdicción ("California").
+3. **Usuario / Cliente**: EIN/SSN del cliente, dirección fiscal en California/USA, términos de pago (ej. 50% anticipo y 50% al entregar), plazo de entrega (ej. 5 días hábiles) y cuota de mantenimiento mensual (MRR, ej. $100-$300 USD/mes).
 
-## Geração
+## 2. Soporte Bilingüe (Inglés / Español)
 
-- Template: `references/contrato-template.html` — arquivo único com CSS A4 de impressão. Substituir todos os `{{PLACEHOLDERS}}`; conferir que nenhum sobrou (busca por `{{`).
-- Salvar em `sites/[slug]/contrato-[slug].html`. PDF: abrir no navegador → Ctrl+P → Salvar como PDF (informe isso ao usuário).
-- Cláusulas parametrizáveis: manutenção mensal (incluir só se contratada) e parcelamento (texto muda conforme forma de pagamento).
+La skill detecta automáticamente el idioma preferido según el cliente o la indicación del usuario:
+- **Inglés (Standard USA)**: usa `references/contract-template-en.html` y genera `sites/[slug]/contract-[slug].html` (y `.docx`).
+- **Español (Mercado Hispano)**: usa `references/contrato-template-es.html` y genera `sites/[slug]/contrato-[slug].html` (y `.docx`).
 
-## DOCX travado (o arquivo que vai pro cliente)
+## 3. Generación en HTML y PDF
 
-Script pronto: `references/gerar-docx.py` (requer `python-docx`). Recebe `dados.json` (mesmas chaves do template HTML + `MANUTENCAO: true/false` e `VALOR_MANUTENCAO`) e gera o .docx com proteção `readOnly` + regiões editáveis (`permStart/permEnd`, grupo everyone) nos pontos do cliente: CPF/CNPJ e endereço quando vierem como "(preencher)", data e assinatura — destacados em amarelo. Limitação honesta (avise o usuário 1 vez): a proteção do Word é dissuasória, guia o preenchimento mas não impede quem quiser desativá-la; para validade forte, assinatura eletrônica (gov.br, Autentique).
+1. Reemplazar los marcadores `{{PLACEHOLDERS}}` en el template seleccionado.
+2. Guardar en `sites/[slug]/contract-[slug].html`.
+3. Exportar a PDF: Abrir en el navegador $\to$ `Ctrl + P` $\to$ Guardar como PDF (formato Letter estándar de EE.UU.).
 
-## E-mail de envio (rascunho no Gmail)
+## 4. Generación en DOCX Protegido (Word)
 
-Assunto: `Contrato de prestação de serviço — nova página [Nome do negócio]`. Corpo (adaptar à voz do usuário): agradecer a confiança, resumir em 2 linhas o combinado (escopo + valor + prazo), pedir que leia a minuta anexa e responda com um "de acordo" (ou assine digitalmente, se o usuário usar alguma ferramenta), e fechar com a assinatura do config. Instruir o usuário a ANEXAR o PDF exportado antes de enviar.
+Script listo para ejecutar: `references/gerar-docx.py` (requiere `python-docx`):
+```bash
+python references/gerar-docx.py dados.json sites/[slug]/contract-[slug].docx
+```
+*Genera el documento Word en modo solo lectura (`readOnly`), dejando campos editables destacados en amarillo para que el cliente complete su EIN/SSN, fecha y firma.*
+*Nota legal: Para validez electrónica robusta en EE.UU., sugerir herramientas como DocuSign, PandaDoc o HelloSign.*
 
-## Limites
+## 5. Correo de Acompañamiento (Borrador en Gmail)
 
-- SEMPRE manter o aviso do rodapé: minuta base, recomenda-se revisão por advogado.
-- Não prometer validade jurídica nem substituir assinatura formal; se o usuário pedir assinatura eletrônica, sugerir que suba o PDF na ferramenta dele (gov.br, Autentique etc.).
-- Nunca inventar cláusula financeira: tudo vem do banco/usuário.
+- **Inglés**:
+  - Asunto: `Services Agreement — Web Redesign for [Business Name]`
+  - Cuerpo: Agradecer la confianza, resumir en 2 líneas el acuerdo (alcance + valor $ + plazo), solicitar revisión del documento adjunto y respuesta con conformidad o firma.
+- **Español**:
+  - Asunto: `Contrato de Servicios — Rediseño Web para [Nombre Negocio]`
+  - Cuerpo: Mensaje profesional y cordial resumiendo el alcance, honorarios en USD y adjuntando la minuta.

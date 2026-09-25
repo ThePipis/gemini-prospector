@@ -1,6 +1,6 @@
 ---
 name: dashboard-leads
-description: Esta skill deve ser usada para criar e ATUALIZAR o dashboard de leads — o painel de controle local (SQLite + página web) onde o usuário administra prospecções, sites, publicações e propostas. Acione sempre que qualquer comando do plugin mudar dados de leads (a skill prospeccao-maps, a skill redesign-premium, a skill deploy-hostgator, a skill proposta-gmail), ou quando o usuário disser "dashboard", "painel", "meus leads", "controle de clientes", "banco de dados de leads".
+description: Esta skill deve ser usada para criar e ATUALIZAR o dashboard de leads — o painel de controle local (SQLite + página web) onde o usuário administra prospecções, sites, publicações e propostas. Acione sempre que qualquer comando do plugin mudar dados de leads (a skill prospeccao-maps, a skill redesign-premium, a skill deploy-cloudflare, a skill proposta-gmail), ou quando o usuário disser "dashboard", "painel", "meus leads", "controle de clientes", "banco de dados de leads".
 ---
 
 # Dashboard de leads (SQLite + página local)
@@ -44,7 +44,7 @@ c.commit()
 EOF
 ```
    - `a skill prospeccao-maps` → insere leads (`novo`) e descartados (`descartado`, motivo em `obs`). NUNCA sobrescreva um lead cujo status já avançou.
-   - `a skill redesign-premium` → `status='redesenhado'` · `a skill deploy-hostgator` → `status='publicado'`, `urlNova` · `a skill proposta-gmail` → `status='proposta'`, `dataProposta`.
+   - `a skill redesign-premium` → `status='redesenhado'` · `a skill deploy-cloudflare` → `status='publicado'`, `urlNova` · `a skill proposta-gmail` → `status='proposta'`, `dataProposta`.
    - Usuário conta que respondeu/fechou → `status='respondeu'|'fechado'`, `valor` (+ `manutencao` se houver mensalidade).
    - `a skill contrato-servico` → `contratoStatus='enviado'` + `contratoEm`. Cliente assinou → `contratoStatus='assinado'`. Pagamento recebido → `pago=1`.
 2. **Regenerar o snapshot**: leia todos os leads do banco e regrave `dashboard.html` do template com o JSON embutido atualizado (`{"atualizado": "...", "leads": [...]}`) — é o fallback para quem abre sem servidor.

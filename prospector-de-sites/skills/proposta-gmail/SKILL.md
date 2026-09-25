@@ -1,55 +1,124 @@
 ---
 name: proposta-gmail
-description: Esta skill deve ser usada ao escrever e enviar a proposta comercial por e-mail para um lead prospectado — e-mail de apresentação da nova versão do site, com rapport e sem preço. Acione quando o usuário disser "enviar proposta", "e-mail para o cliente", "mandar o site para o cliente" ou pedir para enviar a proposta (skill proposta-gmail).
+description: Esta skill debe ser usada al redactar y enviar propuestas comerciales por correo electrónico a un lead prospectado — e-mail de presentación del rediseño, con rapport auténtico, 100% bilingüe (Inglés para mercado estadounidense o Español para negocios hispanos en California/USA), sin precio y anti-spam. Acione cuando el usuario diga "enviar propuesta", "correo para el cliente", "mandar propuesta", "send proposal", "draft email" o pida enviar la propuesta (skill proposta-gmail).
 ---
 
-# Proposta por e-mail
+# Propuesta por Correo (Mercado USA / California — Bilingüe EN/ES)
 
-O e-mail NÃO vende — ele desperta curiosidade e prova trabalho feito. O fechamento (preço, escopo, reunião) acontece na resposta. Um e-mail que parece de vendedor morre no spam; um e-mail que parece de uma pessoa que já trabalhou de graça pro destinatário é aberto e respondido.
+El correo electrónico **NO busca vender de golpe**: despierta curiosidad y demuestra trabajo ya realizado. El cierre comercial (precio, alcance, llamada) ocurre tras la respuesta positiva del cliente.
+Un correo que parece de venta fría genérica va a spam; un correo que demuestra que te tomaste el tiempo de analizar su negocio y crear una versión mejorada en vivo, se abre y se responde.
 
-## Princípios
+## Principios Psicológicos de Alta Conversión
 
-1. **Rapport primeiro.** Abrir com elogio ESPECÍFICO e verificável: a nota no Google, uma avaliação real citada, uma credencial do site. Nunca elogio genérico.
-2. **A dor sem ofensa.** Apontar 1-2 defeitos objetivos do site atual como oportunidade ("notei que no celular o site fica difícil de ler"), nunca como crítica ao profissional.
-3. **A prova antes do pedido.** O trabalho JÁ está feito e no ar. O link é a proposta.
-4. **Zero preço.** Preço só na conversa que a resposta abre.
-5. **Zero pressão.** Sem urgência falsa, sem "últimas vagas". Um único CTA: dar uma olhada e responder o que achou.
-6. **Curto.** 120-180 palavras. Profissional ocupado não lê e-mail longo de desconhecido.
+1. **Rapport y Elogio Específico:** Abrir destacando su reputación real (su calificación en Google, una reseña destacada o su trayectoria en California). Cero elogios genéricos.
+2. **El Problema Sin Ofensa:** Señalar 1 o 2 puntos objetivos de fricción en su web actual (ej. lentitud en móvil, falta de botón directo de cita o teléfono tapado), siempre como una oportunidad de captar más clientes.
+3. **La Prueba Tangible:** El trabajo YA está hecho y en línea en Cloudflare con HTTPS seguro.
+4. **Cero Precios de Entrada:** El precio se discute en la respuesta cuando ya validaron el valor.
+5. **Cero Presión:** Sin urgencia artificial ("últimos cupos"). Un único llamado a la acción (CTA): revisar la demo en su celular y compartir su opinión.
+6. **Brevedad:** 100 a 160 palabras. Los dueños de negocios en California están ocupados.
 
-## Estrutura
+---
 
-- **Assunto**: pergunta pessoal e específica, ≤ 60 caracteres, sem cara de marketing. Ex.: `Dra. [Nome], posso te mostrar uma coisa sobre seu site?` ou `Preparei algo para a [Clínica X]`.
-- **Parágrafo 1**: quem encontrou + elogio específico (avaliações/credencial).
-- **Parágrafo 2**: observação sobre o site atual (1-2 pontos objetivos).
-- **Parágrafo 3**: "preparei uma nova versão, já no ar" + O ÚNICO LINK do e-mail: a página-capa (`.../proposta.html`), que mostra antes e depois lado a lado. Se a capa não existir, linkar a página nova direto.
-- **Parágrafo 4**: CTA — abrir no celular também, responder com a impressão.
-- **Assinatura**: nome, apresentação e WhatsApp do config (assinatura completa humaniza e reduz suspeita).
+## Plantillas Bilingües (EN / ES)
 
-## Checklist anti-spam (BLOQUEANTE — rodar antes de criar o rascunho)
+### Opción A: Negocios en Inglés (US Standard — Dentists, MedSpas, Lawyers, CPAs, Contractors)
 
-Revise o e-mail pronto contra CADA item; se falhar em qualquer um, reescreva antes de criar o rascunho:
+**Asunto (Subject Line)**:
+* `Dr. [Name], quick question regarding your website`
+* `Created a mobile concept for [Business Name]`
+* `Noticeable observation regarding [Business Name]'s mobile page`
 
-- [ ] **1 link só** (a página-capa). Dois links no máximo se incluir o site antigo — nunca mais que isso.
-- [ ] **Sem encurtador de URL** (bit.ly e afins = spam na certa). O link é o domínio real, com `https://`.
-- [ ] **Link como âncora HTML com texto visível limpo.** O Gmail embrulha TODO link em um redirect próprio (`google.com/url?q=...`) ao salvar — não dá pra impedir, e em corpo de texto puro o embrulho fica VISÍVEL, o que parece golpe. Por isso o rascunho é criado com corpo HTML e o link como âncora: `<a href="https://[dominio]/[pastaBase]/[slug]/proposta.html">https://[dominio]/[pastaBase]/[slug]/proposta.html</a>` — texto visível = a URL limpa montada a partir do config (nunca copiada de outro e-mail). O redirect do Google fica só no href invisível, como em qualquer e-mail do Gmail. Depois de criar, confira o rascunho: o texto visível deve começar em `https://[dominio do config]`.
-- [ ] **Domínio limpo e humano.** Se o domínio do config for um subdomínio técnico/temporário (cheio de números, tipo `nome1783367206076.1711244.meusitehostgator.com.br`), PARE antes de enviar qualquer proposta: link assim parece golpe e mata a confiança que a capa constrói. Oriente o usuário a ativar o domínio próprio (grátis no plano da HostGator: cPanel → Domains, ou registro em registro.br) e atualizar o campo `dominio` nas Configurações do dashboard. Proposta só sai com domínio apresentável.
-- [ ] **Sem palavras-gatilho**: grátis, promoção, imperdível, oferta, desconto, clique aqui, 100%, garantido, urgente.
-- [ ] **Sem CAIXA ALTA no assunto, sem "!!", sem emoji** no assunto.
-- [ ] **Texto simples** — corpo HTML minimalista (só parágrafos e a âncora do link; zero cores, botões, imagens ou anexos) (anexo de desconhecido aumenta score de spam E medo de abrir; a capa no link substitui o preview).
-- [ ] **Assunto ≤ 60 caracteres**, formulado como pergunta ou frase pessoal com o nome do negócio.
-- [ ] **Primeira linha 100% personalizada** (nome + fato real das avaliações) — filtros de spam e humanos reconhecem template genérico.
-- [ ] **Remetente = conta Gmail pessoal ativa do usuário** (já tem SPF/DKIM do Google). Nunca sugerir disparo em massa: os envios são 1 a 1, poucos por dia — padrão humano.
+**Cuerpo del Correo (Body)**:
+```html
+<p>Hi Dr. [Name] (or [First Name]),</p>
 
-## Envio
+<p>I came across [Business Name] while researching top-rated [niche] in [City/Area, CA]. Congratulations on your [Rating]★ rating on Google — patients clearly love your work.</p>
 
-- Modo **rascunho** (padrão): criar via MCP do Gmail do Antigravity (ferramenta de criar rascunho) ou pelo link de compose do Gmail (`https://mail.google.com/mail/?view=cm&fs=1&to=...&su=...&body=...`) com destinatário, assunto e corpo prontos. Avisar o usuário para revisar antes de enviar.
-- Modo **enviar direto**: se o conector não suportar envio, abrir o Gmail web via o MCP de navegador (Playwright), ou criar o rascunho e avisar.
-- Nunca enviar para lead sem e-mail confirmado; nesses casos, sugerir contato via WhatsApp com a mesma mensagem adaptada.
+<p>While looking through your services, I noticed that on smartphones, your current website takes a moment to load and lacks a one-tap booking/call button, which might be costing you calls from mobile visitors.</p>
 
-## Página-capa (o que o cliente vê ao clicar)
+<p>Since your clinic already has such high patient trust, I put together a clean, modern mobile redesign for your practice, completely live on a demo link:</p>
 
-O link do e-mail leva à página-capa gerada no `a skill deploy-hostgator` (template em `references/capa-proposta-template.html`): nome do cliente no topo, antes/depois lado a lado e a assinatura do usuário. Ela existe para dar credibilidade ao clique — o cliente vê o próprio negócio, não um link estranho. Exigências: servida em `https://`, personalizada com dados reais, sem pedido de dado pessoal nenhum.
+<p><a href="[URL_CLOUDFLARE_PROPOSTA]">[URL_CLOUDFLARE_PROPOSTA]</a></p>
 
-## Depois do envio
+<p>It's fully interactive so you can compare it side-by-side with your current page on your phone. Would love to hear your thoughts!</p>
 
-Registrar no banco/`leads.md` (status + data) e no dashboard. As respostas são verificadas pelo comando `a checagem de respostas no Gmail` (Gmail via conector) — sugira ao usuário agendar a verificação diária. Follow-up pelo `o follow-up de propostas` após 3+ dias úteis sem resposta (1 único follow-up por lead: curto, gentil, "conseguiu ver a página?").
+<p>Best regards,<br>
+<b>[YOUR_NAME]</b><br>
+[YOUR_TITLE_EN]<br>
+[YOUR_PHONE] · [YOUR_WEBSITE]</p>
+```
+
+**Follow-Up en Inglés (Día 3-4 si no hay respuesta)**:
+```html
+<p>Hi [First Name],</p>
+
+<p>Just wanted to make sure my previous note didn't get buried. Were you able to check out the mobile redesign demo for [Business Name]?</p>
+
+<p><a href="[URL_CLOUDFLARE_PROPOSTA]">[URL_CLOUDFLARE_PROPOSTA]</a></p>
+
+<p>No pressure at all — if you're happy with your current setup, completely understand. Have a great week!</p>
+
+<p>Best,<br>
+<b>[YOUR_NAME]</b></p>
+```
+
+---
+
+### Opción B: Negocios Hispanos en California (Español Profesional y Cálido)
+
+**Asunto**:
+* `Dr./Dra. [Nombre], preparé algo para el sitio web de [Negocio]`
+* `Una propuesta para la página móvil de [Negocio]`
+* `Pregunta rápida sobre la web de [Negocio] en [Ciudad]`
+
+**Cuerpo del Correo**:
+```html
+<p>Estimado/a Dr./Dra. [Apellido] (o [Nombre]),</p>
+
+<p>Encontré el perfil de [Nombre Negocio] buscando los mejores servicios de [nicho] en [Ciudad, California]. Muchas felicidades por su calificación de [Nota]★ en Google; se nota el excelente trato y la confianza de sus clientes.</p>
+
+<p>Al revisar su sitio web desde el teléfono, noté que la navegación móvil se dificulta un poco y no cuenta con un botón directo para agendar cita o llamar al instante, lo que puede estar haciendo perder pacientes/clientes que buscan desde el celular.</p>
+
+<p>Para mostrarles cómo luciría su presencia digital al nivel de su reputación, preparé una nueva versión interactiva que ya está activa en este enlace de demostración:</p>
+
+<p><a href="[URL_CLOUDFLARE_PROPOSTA]">[URL_CLOUDFLARE_PROPOSTA]</a></p>
+
+<p>Pueden verla directamente en su teléfono y comparar el antes y después. Me encantaría saber su opinión cuando tengan un minuto.</p>
+
+<p>Un cordial saludo,<br>
+<b>[TU_NOMBRE]</b><br>
+[TU_TITULO_ES]<br>
+[TU_TELEFONO] · [TU_WEB]</p>
+```
+
+**Follow-Up en Español (Día 3-4)**:
+```html
+<p>Hola [Nombre],</p>
+
+<p>Solo quería asegurarme de que mi mensaje anterior no se haya perdido entre sus correos. ¿Pudo ver la propuesta de rediseño para [Nombre Negocio]?</p>
+
+<p><a href="[URL_CLOUDFLARE_PROPOSTA]">[URL_CLOUDFLARE_PROPOSTA]</a></p>
+
+<p>Sin ningún compromiso. ¡Que tenga una excelente semana!</p>
+
+<p>Saludos cordiales,<br>
+<b>[TU_NOMBRE]</b></p>
+```
+
+---
+
+## Lista de Verificación Anti-Spam y CAN-SPAM (Bloqueante)
+
+Revisar el correo antes de enviar o crear el borrador:
+- [ ] **Un solo enlace**: Dirigido a la portada comparadora (`https://demos.aisalesradar.com/[slug]/proposta.html` o Cloudflare Worker).
+- [ ] **Sin acortadores**: Jamás usar bit.ly ni redirects sospechosos.
+- [ ] **Enlace limpio en HTML**: Texto visible idéntico al href para evitar falsos positivos de phishing.
+- [ ] **Sin palabras prohibidas**: Cero "gratis", "promoción", "descuento", "oferta única", "urgente", "garantizado 100%".
+- [ ] **Sin mayúsculas en el asunto** y sin signos de exclamación múltiples (`!!`).
+- [ ] **Remitente legítimo**: Cuenta personal activa de Gmail (cuenta con SPF y DKIM validados por Google).
+- [ ] **Frecuencia humana**: Envíos espaciados 1 a 1 (no blast masivo).
+
+## Modos de Creación
+
+1. **Modo Borrador en Gmail (Recomendado)**: Se genera como borrador en la cuenta de Gmail del usuario para que pueda darle una última revisión humana antes de pulsar Enviar.
+2. **Enlace Directo de Compose**: Fallback con `https://mail.google.com/mail/?view=cm&fs=1&to=...&su=...&body=...` con todo precargado.

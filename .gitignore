@@ -1,0 +1,35 @@
+# Archivos de configuración local y credenciales privadas
+prospector-config.json
+*.env
+*.env.*
+*.pem
+*.key
+
+# Base de datos SQLite local del CRM
+prospector.db
+prospector.db-journal
+*.sqlite3
+
+# Python y caché
+__pycache__/
+*.py[cod]
+*$py.class
+*.spec
+
+# Node.js y dependencias
+node_modules/
+.npm/
+.pnpm-store/
+
+# Cloudflare Wrangler temporales
+.wrangler/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Registro y sesiones de agentes locales
+tasks/
+.system_generated/
+scratch/
