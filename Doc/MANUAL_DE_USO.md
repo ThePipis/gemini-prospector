@@ -112,6 +112,8 @@ En el chat, escribe en lenguaje natural el nicho y la ciudad de California:
 - *"Find 10 personal injury lawyers in Irvine"*
 
 **Resultado:** El sistema busca los negocios, analiza sus páginas web, extrae su email y teléfono, los registra en `prospector.db` y los coloca en la columna **"Nuevo / New"** de tu panel Kanban.
+- **Valoración Automática Inteligente**: Asigna automáticamente un valor estimado de diseño ($600 a $1,200 USD) y mantenimiento mensual ($80 a $150 USD) basado en el nicho y volumen de reseñas.
+- **Edición Manual Protegida**: Puedes pulsar `✏️ editar` en cualquier prospecto para fijar tu propio precio; el sistema protegerá tus cambios para no sobreescribirlos en futuras búsquedas.
 
 ### Paso 3: Rediseñar los Mejores Candidatos
 Revisas los prospectos en tu panel y seleccionas cuáles rediseñar:
