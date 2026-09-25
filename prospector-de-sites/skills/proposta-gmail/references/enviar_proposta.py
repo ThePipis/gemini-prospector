@@ -68,17 +68,21 @@ def construir_propuesta(lead, cfg, idioma='auto', es_followup=False):
     subdomain = cfg.get('cloudflare', {}).get('subdomain', 'demos')
     domain = cfg.get('cloudflare', {}).get('customDomain', 'aisalesradar.com')
     slug = lead.get('slug', '')
-    url_demo = lead.get('urlNova') or f"https://{subdomain}.{domain}/{slug}/proposta.html"
+    url_demo = lead.get('urlNova') or f"https://{subdomain}.{domain}/{slug}/"
+    if url_demo and not url_demo.endswith('proposta.html'):
+        url_demo = url_demo.rstrip('/') + '/proposta.html'
 
     nombre_negocio = lead.get('nome', 'Business')
     nicho = lead.get('nicho', 'services')
     ciudad = lead.get('cidade', 'California')
     nota = lead.get('nota', 4.8)
+    motivo_lead = lead.get('motivo', '')
+    es_urgente_ssl = any(k in motivo_lead.lower() for k in ['ssl', 'caído', 'caido', 'inaccesible', 'error'])
 
     # Detección de idioma
     if idioma == 'auto':
         texto_comb = (nombre_negocio + ' ' + nicho).lower()
-        if any(h in texto_comb for h in ['dental', 'abogado', 'clinica', 'sonrisa', 'hispano', 'familia', 'taller']):
+        if any(h in texto_comb for h in ['abogado', 'clinica hispana', 'sonrisa', 'hispano', 'familia']):
             idioma = 'es'
         else:
             idioma = 'en'
@@ -96,6 +100,19 @@ def construir_propuesta(lead, cfg, idioma='auto', es_followup=False):
 <b>{mi_nombre}</b><br>
 {titulo_cargo}<br>
 {mi_empresa} · {mi_tel}</p>"""
+        elif es_urgente_ssl:
+            asunto = f"Urgente: Notificación de seguridad en el sitio web de {nombre_negocio} + propuesta de respaldo"
+            cuerpo_html = f"""<p>Estimado equipo de {nombre_negocio},</p>
+<p>Encontré su clínica mientras investigaba los mejores servicios dentales en {ciudad}, California. Muchas felicidades por su excelente reputación de {nota}★ en Google; es evidente el aprecio y confianza de sus pacientes.</p>
+<p>Les escribo con urgencia como cortesía profesional: al intentar ingresar a su sitio web oficial, noté que se encuentra caído y los navegadores bloquean el acceso debido a un error crítico de seguridad SSL (<b>ERR_SSL_PROTOCOL_ERROR</b>). Esto está impidiendo que nuevos pacientes puedan ver sus servicios o agendar citas en línea.</p>
+<p>Para evitar que sigan perdiendo consultas y mostrarles una solución inmediata, diseñé una versión moderna, ultrarrápida y segura que ya se encuentra activa en este enlace de demostración:</p>
+<p><a href="{url_demo}">{url_demo}</a></p>
+<p>Pueden revisarla directamente desde su teléfono y comparar el antes y después. Si les resulta útil, con gusto les ayudo a restaurar su presencia web de inmediato.</p>
+<p>Un cordial saludo,<br>
+<b>{mi_nombre}</b><br>
+{titulo_cargo}<br>
+<b>{mi_empresa}</b><br>
+{mi_tel} · <a href="{mi_web}">{mi_web}</a></p>"""
         else:
             asunto = f"Una propuesta para la página móvil de {nombre_negocio}"
             cuerpo_html = f"""<p>Estimado equipo de {nombre_negocio},</p>
@@ -122,6 +139,19 @@ def construir_propuesta(lead, cfg, idioma='auto', es_followup=False):
 <b>{mi_nombre}</b><br>
 {titulo_cargo}<br>
 {mi_empresa} · {mi_tel}</p>"""
+        elif es_urgente_ssl:
+            asunto = f"Urgent: Security notice regarding {nombre_negocio}'s website + backup concept"
+            cuerpo_html = f"""<p>Hi {nombre_negocio} team,</p>
+<p>I came across your practice while researching top-rated dental care in {ciudad}, CA. Congratulations on your outstanding {nota}★ reputation on Google — your patients clearly value your care.</p>
+<p>I am reaching out as a quick professional courtesy: when trying to view your website, I noticed it is currently down and browsers are actively blocking visitors due to a critical security protocol error (<b>ERR_SSL_PROTOCOL_ERROR</b>). This means patients searching for you online cannot view your hours, phone number, or request appointments.</p>
+<p>To help you see how your practice can restore an immediate, trustworthy online presence, I put together an emergency modern mobile redesign concept, live right now on this interactive preview link:</p>
+<p><a href="{url_demo}">{url_demo}</a></p>
+<p>You can open it side-by-side on your phone to compare the before & after. If you'd like to get your web presence restored and secure without downtime, feel free to reach out.</p>
+<p>Best regards,<br>
+<b>{mi_nombre}</b><br>
+{titulo_cargo}<br>
+<b>{mi_empresa}</b><br>
+{mi_tel} · <a href="{mi_web}">{mi_web}</a></p>"""
         else:
             asunto = f"Quick question regarding {nombre_negocio}'s mobile website"
             cuerpo_html = f"""<p>Hi {nombre_negocio} team,</p>
