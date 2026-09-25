@@ -74,9 +74,28 @@ class App(SimpleHTTPRequestHandler):
             cf = dict(cfg.get('cloudflare', {}))
             cf['tokenDefinido'] = bool(cf.get('apiToken') or os.getenv('CLOUDFLARE_API_TOKEN'))
             cf.pop('apiToken', None)  # El token NUNCA sale hacia el frontend
+
+            contrato = dict(cfg.get('contrato', {}))
+            contratante = dict(cfg.get('contratante', {}))
+            firma = dict(cfg.get('firma', {}))
+
+            # Consolidar campos para que el dashboard reciba siempre la información completa
+            for k in ['prestador_nombre', 'prestador_empresa', 'prestador_ein', 'prestador_direccion', 'estado_jurisdiccion', 'email', 'telefono']:
+                val = contrato.get(k) or contratante.get(k) or ''
+                if not val and k == 'email':
+                    val = firma.get('email', '')
+                if not val and k == 'telefono':
+                    val = firma.get('telefono', '')
+                if not val and k == 'prestador_nombre':
+                    val = firma.get('nombre', '')
+                if not val and k == 'prestador_empresa':
+                    val = firma.get('empresa', '')
+                contrato[k] = val
+
             return self._json(200, {
-                'contrato': cfg.get('contrato', {}),
-                'firma': cfg.get('firma', {}),
+                'contrato': contrato,
+                'contratante': contrato,
+                'firma': firma,
                 'cloudflare': cf,
                 'prospeccion': cfg.get('prospeccion', {})
             })
@@ -116,6 +135,25 @@ class App(SimpleHTTPRequestHandler):
                             continue
                         sub[k] = v
                     cfg[key] = sub
+
+            # Sincronizar datos del contratista/prestador en contrato y firma
+            datos_prestador = corpo.get('contrato') or corpo.get('contratante')
+            if datos_prestador and isinstance(datos_prestador, dict):
+                cfg_contrato = cfg.setdefault('contrato', {})
+                cfg_contratante = cfg.setdefault('contratante', {})
+                cfg_firma = cfg.setdefault('firma', {})
+                for k, v in datos_prestador.items():
+                    cfg_contrato[k] = v
+                    cfg_contratante[k] = v
+                    if k == 'email':
+                        cfg_firma['email'] = v
+                    elif k == 'telefono':
+                        cfg_firma['telefono'] = v
+                    elif k == 'prestador_nombre' and v:
+                        cfg_firma['nombre'] = v
+                    elif k == 'prestador_empresa' and v:
+                        cfg_firma['empresa'] = v
+
             json.dump(cfg, open(CONFIG, 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
             return self._json(200, {'ok': True})
         partes = self.path.split('?')[0].split('/')

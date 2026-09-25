@@ -699,7 +699,12 @@ fetch('/api/leads', { cache: 'no-store' }).then(function(r) {
   MODE = 'db';
   leads = j;
   fetch('/api/config', { cache: 'no-store' }).then(function(r) { return r.json(); }).then(function(c) {
-    CFG = (c && c.contrato) || c;
+    var ct = (c && c.contrato) || {};
+    var cnt = (c && c.contratante) || {};
+    var fm = (c && c.firma) || {};
+    CFG = Object.assign({}, fm, cnt, ct);
+    if (fm.email && !CFG.email) CFG.email = fm.email;
+    if (fm.telefono && !CFG.telefono) CFG.telefono = fm.telefono;
     CF = (c && c.cloudflare) || {};
     if (view === 'config') render();
   });
@@ -1140,9 +1145,9 @@ function salvarCfg() {
   fetch('/api/config', {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ contratante: body })
+    body: JSON.stringify({ contratante: body, contrato: body })
   }).then(function() {
-    CFG = body;
+    CFG = Object.assign({}, CFG, body);
     var ok = document.getElementById('cfg-ok');
     if (ok) {
       ok.style.display = 'inline';

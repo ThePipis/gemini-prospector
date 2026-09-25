@@ -251,6 +251,8 @@ var I18N = {
       pagina: 'sitio demo',
       editarSite: 'editor web',
       noAr: 'en vivo ↗',
+      ligar: 'Llamar',
+      sms: 'SMS',
       whatsapp: 'WhatsApp',
       email: 'Email',
       dados: '✎ editar',
@@ -445,6 +447,8 @@ var I18N = {
       pagina: 'demo site',
       editarSite: 'site editor',
       noAr: 'live ↗',
+      ligar: 'Call',
+      sms: 'SMS',
       whatsapp: 'WhatsApp',
       email: 'Email',
       dados: '✎ edit',
@@ -695,7 +699,12 @@ fetch('/api/leads', { cache: 'no-store' }).then(function(r) {
   MODE = 'db';
   leads = j;
   fetch('/api/config', { cache: 'no-store' }).then(function(r) { return r.json(); }).then(function(c) {
-    CFG = (c && c.contrato) || c;
+    var ct = (c && c.contrato) || {};
+    var cnt = (c && c.contratante) || {};
+    var fm = (c && c.firma) || {};
+    CFG = Object.assign({}, fm, cnt, ct);
+    if (fm.email && !CFG.email) CFG.email = fm.email;
+    if (fm.telefono && !CFG.telefono) CFG.telefono = fm.telefono;
     CF = (c && c.cloudflare) || {};
     if (view === 'config') render();
   });
@@ -876,7 +885,11 @@ function acoes(l) {
     a.push('<a href="sites/' + l.slug + '/' + l.slug + '-editor.html" target="_blank">' + t('actions.editarSite') + '</a>');
   }
   if (l.urlNova) a.push('<a href="' + l.urlNova + '" target="_blank">' + t('actions.noAr') + '</a>');
-  if (l.whatsapp) a.push('<a href="https://wa.me/' + l.whatsapp + '" target="_blank">' + t('actions.whatsapp') + '</a>');
+  if (l.telefone) {
+    var rawTel = l.telefone.replace(/[^0-9+]/g, '');
+    a.push('<a href="tel:' + rawTel + '">' + t('actions.ligar') + '</a>');
+    a.push('<a href="sms:' + rawTel + '">' + t('actions.sms') + '</a>');
+  }
   if (l.email && l.email.indexOf('@') > 0) a.push('<a href="mailto:' + l.email + '">' + t('actions.email') + '</a>');
   a.push('<a href="#" onclick="abrirEdit(\'' + l.slug + '\');return false">' + t('actions.dados') + '</a>');
   a.push('<a href="#" class="del" onclick="deletar(\'' + l.slug + '\');return false">' + t('actions.excluir') + '</a>');
@@ -1132,9 +1145,9 @@ function salvarCfg() {
   fetch('/api/config', {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ contratante: body })
+    body: JSON.stringify({ contratante: body, contrato: body })
   }).then(function() {
-    CFG = body;
+    CFG = Object.assign({}, CFG, body);
     var ok = document.getElementById('cfg-ok');
     if (ok) {
       ok.style.display = 'inline';
