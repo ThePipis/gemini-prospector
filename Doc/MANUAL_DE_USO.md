@@ -221,6 +221,14 @@ Ubicado en la esquina superior derecha del topbar. Permite alternar instantánea
 - **Financiero**: Control de caja (ingresos cobrados, por cobrar, ingresos recurrentes mensuales MRR y proyección anual).
 - **Configuración**: Edición de datos fiscales del contratista y credenciales de Cloudflare.
 
+### 3. Acciones en Tarjetas Kanban
+- **`original`**: Abre el sitio web actual del cliente (enlace externo).
+- **`sitio demo`**: Abre la previsualización local en tu máquina (`http://localhost:8765/sites/[slug]/...`) para revisar el diseño en privado.
+- **`editor web`**: Abre el editor interactivo en el navegador para editar textos o cambiar fotos.
+- **`en vivo ↗`**: Se activa automáticamente al pasar a la etapa **Publicado** y abre la URL definitiva con HTTPS en Cloudflare (`https://demos.aisalesradar.com/[slug]/`).
+- **`WhatsApp` / `Email`**: Enlaces directos para iniciar comunicación rápida.
+- **`✏️ editar`**: Abre el modal para personalizar el precio, cuota mensual, teléfono o dirección.
+
 ---
 
 ## 7. Envío de Propuestas y Modos de Gmail

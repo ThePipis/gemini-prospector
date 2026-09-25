@@ -42,3 +42,4 @@ Cada lead rediseñado debe tener en `sites/[slug]/`:
 1. `[slug].html`: La landing page de alta conversión.
 2. `[slug]-editor.html`: La versión con capa de edición en vivo.
 3. `proposta.html`: La portada interactiva con el comparador y CTA hacia el prestador (copiada de `references/capa-proposta-template.html`).
+4. **CRM SQLite (`prospector.db`)**: Actualizar `status = 'redesenhado'`. Mantener `urlNova = NULL` durante el rediseño; la URL pública de internet se asigna exclusivamente en el Paso 4 (Publicación en Cloudflare).
