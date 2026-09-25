@@ -10,6 +10,16 @@ prospector.db
 prospector.db-journal
 *.sqlite3
 
+# Archivos de ejecución/runtime en la raíz de trabajo local
+/dashboard-server.py
+/dashboard.html
+/enviar_proposta.py
+/iniciar-dashboard.bat
+/prospectar.py
+/prospector-config.template.json
+/wrangler.jsonc
+/sites/
+
 # Python y caché
 __pycache__/
 *.py[cod]
