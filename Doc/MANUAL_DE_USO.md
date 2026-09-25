@@ -86,48 +86,22 @@ Todos los parámetros se administran de forma centralizada en el archivo `prospe
 
 El método estándar y más cómodo para operar es mediante el chat de **Antigravity / Claude**. No necesitas memorizar comandos de consola.
 
-### Paso 0: Instalación y Configuración Inicial con IA (Prompt Maestro)
+### Paso 0: Instalación Universal con IA (1 Sola Instrucción)
 
-Para desplegar este proyecto por primera vez en cualquier computadora o para cualquier otro usuario, simplemente proporciona el repositorio de GitHub y el siguiente **Prompt Maestro** a tu agente de IA (Antigravity, Claude Code, Cursor o Codex):
+Para desplegar este proyecto en cualquier computadora o entorno nuevo, simplemente envíale este comando a tu agente de IA preferido (**Google Antigravity, Claude Code, Cursor o Codex**):
 
-```text
-Actúa como un Especialista DevOps y de Automatización Senior.
-Quiero que instales, configures y dejes 100% verificado y listo para operar este proyecto en mi entorno local:
-https://github.com/ThePipis/gemini-prospector
+> *"Instala y configura este plugin en mi proyecto actual: https://github.com/ThePipis/gemini-prospector"*
 
-Por favor ejecuta el siguiente protocolo paso a paso de forma autónoma:
-
-1. VERIFICACIÓN DEL ENTORNO:
-   - Valida que Python 3.8+ y Node.js/npx estén disponibles en el sistema.
-   - Instala las dependencias en Python: pip install "mcp[cli]" python-docx requests httpx.
-   - Verifica Wrangler para Cloudflare: npx wrangler --version.
-
-2. ASISTENTE INTERACTIVO DE CONFIGURACIÓN (Paso a Paso):
-   No inventes claves ni asumas datos privados. Solicítame uno a uno (en bloques breves y claros) los siguientes datos para armar mi archivo local prospector-config.json a partir de prospector-config.template.json:
-   - Datos de mi Agencia: Mi Nombre, Nombre de mi Agencia/Empresa, Teléfono (+1 USA) y Correo comercial.
-   - Nichos y Mercado: Nichos de interés en California (ej. Dentistas, Med Spas, Abogados, Contratistas) y Ciudad principal.
-   - Conexión Cloudflare: Mi Cloudflare Account ID, Dominio personalizado (ej. midominio.com), Subdominio de demos (ej. demos) y API Token.
-   - Conexión Gmail: Correo Gmail de la agencia y Contraseña de Aplicación de 16 caracteres (App Password de Google Account).
-   - Opcional: Mi clave de Yelp Fusion API si deseo las 500 búsquedas diarias gratis.
-
-3. INICIALIZACIÓN Y SEGURIDAD:
-   - Crea el archivo local prospector-config.json con mis datos reales y verifica que esté protegido dentro de .gitignore para que nunca se suba a ningún repositorio.
-   - Inicializa la base de datos prospector.db con el esquema SQLite correspondiente.
-   - Asegura la sincronización del dashboard.html con el selector bilingüe ES/EN.
-
-4. BATERÍA DE PRUEBAS AUTOMATIZADA:
-   - Ejecuta: python prospector-mcp.py --teste
-   - Ejecuta: python prospectar.py --probar
-   - Valida la autenticación de mi Gmail (SMTP/IMAP) para confirmar que la contraseña de aplicación funcione.
-
-5. CONFIRMACIÓN FINAL:
-   - Al finalizar con éxito, infórmame que el sistema está 100% listo para usar, explícame cómo abrir el dashboard (iniciar-dashboard.bat) y cómo darte la orden para comenzar mi primera prospección en lenguaje natural.
-```
+**Lo que el agente hace automáticamente tras leer el repositorio:**
+1. **Entorno**: Valida e instala dependencias (`pip install "mcp[cli]" python-docx requests httpx` y `wrangler`).
+2. **Registro**: Configura el plugin en tu entorno (`.agents/plugins/prospector-de-sites` para Antigravity, o conecta el MCP en Claude Code y Cursor).
+3. **Credenciales**: Te solicita de forma interactiva tus datos para generar `prospector-config.json` protegido en `.gitignore`.
+4. **Verificación**: Corre la batería de autotests (`prospector-mcp.py --teste` y `prospectar.py --probar`) para dejarlo 100% operativo.
 
 ---
 
 ### Paso 1: Abrir el Tablero de Control
-1. Da doble clic en el archivo `iniciar-dashboard.bat` en la carpeta raíz del proyecto (o dentro de `prospector-de-sites/dashboard/`).
+1. Da doble clic en el archivo `prospector-de-sites\dashboard\iniciar-dashboard.bat`.
 2. Se abrirá tu navegador en `http://localhost:8765`.
 3. Podrás cambiar entre Español e Inglés en cualquier momento con el botón `[ ES | EN ]` del menú superior.
 
