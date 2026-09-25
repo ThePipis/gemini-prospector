@@ -3,15 +3,14 @@
     "prospector-crm": {
       "command": "python",
       "args": [
-        "D:/GenWebSite/prospector-de-sites/prospector-mcp.py",
+        "prospector-de-sites/prospector-mcp.py",
         "--pasta",
-        "D:/GenWebSite"
+        "."
       ]
     },
     "playwright": {
-      "command": "node",
+      "command": "npx",
       "args": [
-        "C:/nvm4w/nodejs/node_modules/npm/bin/npx-cli.js",
         "-y",
         "@playwright/mcp@latest"
       ]

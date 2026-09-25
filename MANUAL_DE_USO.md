@@ -127,7 +127,7 @@ Por favor ejecuta el siguiente protocolo paso a paso de forma autónoma:
 ---
 
 ### Paso 1: Abrir el Tablero de Control
-1. Da doble clic en el archivo `iniciar-dashboard.bat` en la carpeta raíz `d:\GenWebSite\`.
+1. Da doble clic en el archivo `iniciar-dashboard.bat` en la carpeta raíz del proyecto (o dentro de `prospector-de-sites/dashboard/`).
 2. Se abrirá tu navegador en `http://localhost:8765`.
 3. Podrás cambiar entre Español e Inglés en cualquier momento con el botón `[ ES | EN ]` del menú superior.
 
@@ -308,4 +308,4 @@ Edita el archivo `prospector-config.json` en la sección `"prospeccion" -> "nich
 **No.** Toda la base de datos de leads, presupuestos, contratos y finanzas se almacena de forma privada y local en tu archivo `prospector.db`. Lo único que se publica en internet son los archivos estáticos HTML/CSS de las demos en tu cuenta personal de Cloudflare.
 
 #### ¿Dónde veo las demos generadas antes de enviarlas?
-Puedes abrirlas localmente en tu computadora desde la carpeta `d:\GenWebSite\sites\[cliente]\[cliente].html` o visualizarlas directamente en la pestaña **Sitios Web** o **Comparador** de tu dashboard.
+Puedes abrirlas localmente en tu computadora desde la carpeta `sites/[cliente]/[cliente].html` o visualizarlas directamente en la pestaña **Sitios Web** o **Comparador** de tu dashboard.

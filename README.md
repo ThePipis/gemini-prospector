@@ -4,34 +4,31 @@ Plugin profesional para **Google Antigravity** (compatible con Agy 2.0 / CLI / I
 
 ---
 
-## Estructura del Proyecto
+## Estructura del Repositorio
 
-```
-d:/GenWebSite/
-├── prospector-config.json     ← Configuración central (Cloudflare, firma, nichos USA)
-├── wrangler.jsonc             ← Configuración de despliegue atómico en Cloudflare
-├── iniciar-dashboard.bat      ← Lanzador del panel local (http://localhost:8765)
-├── dashboard-server.py        ← Servidor HTTP local (SQLite)
-├── dashboard.html             ← Frontend reactivo del CRM Kanban
-├── sites/                     ← Landing pages generadas por cliente
-│   └── [slug]/
-│       ├── [slug].html        (página de alta conversión)
-│       ├── [slug]-editor.html (editor visual en vivo)
-│       ├── proposta.html      (portada interactiva bilingüe antes/después)
-│       └── contract-[slug].html (contrato para California)
-└── prospector-de-sites/       ← Plugin para Antigravity
-    ├── plugin.json            (manifiesto del plugin)
-    ├── mcp_config.json        (servidores MCP: CRM + Playwright)
-    ├── prospector-mcp.py      (servidor FastMCP de base de datos)
-    ├── dashboard/             (fuentes del dashboard)
-    └── skills/                (las 7 skills en lenguaje natural)
-        ├── prospector-setup/  (asistente de configuración)
-        ├── prospeccao-maps/   (búsqueda en Google Maps / Places en California)
-        ├── redesign-premium/  (motor de rediseño bilingüe EN/ES)
-        ├── deploy-cloudflare/ (despliegue en Cloudflare Workers con Assets)
-        ├── proposta-gmail/    (propuestas anti-spam en inglés y español)
-        ├── dashboard-leads/   (gestión de CRM y métricas MRR)
-        └── contrato-servico/  (acuerdos legales para el Estado de California)
+```text
+gemini-prospector/
+├── .gitignore                   ← Excluye credenciales privadas, bases de datos y temporales
+├── README.md                    ← Documentación principal del repositorio
+├── MANUAL_DE_USO.md             ← Manual de operaciones y Prompt Maestro de instalación
+└── prospector-de-sites/         ← Paquete principal del Plugin para Antigravity / Claude
+    ├── plugin.json              ← Manifiesto del plugin
+    ├── mcp_config.json          ← Configuración de servidores MCP (CRM + Playwright)
+    ├── prospector-mcp.py        ← Servidor FastMCP de base de datos SQLite
+    ├── prospectar.py            ← Motor multi-proveedor de prospección segura (Yelp, Apify, Web)
+    ├── prospector-config.template.json ← Plantilla base de configuración
+    ├── dashboard/               ← Fuentes del Dashboard y servidor local
+    │   ├── dashboard-server.py  ← Mini-servidor local en Python
+    │   ├── dashboard-template.html ← Plantilla bilingüe del CRM Kanban [ES | EN]
+    │   └── iniciar-dashboard.bat ← Lanzador para Windows (puerto 8765)
+    └── skills/                  ← Las 7 skills en lenguaje natural
+        ├── prospector-setup/    (asistente de configuración inicial)
+        ├── prospeccao-maps/     (búsqueda y calificación de leads sin Google API)
+        ├── redesign-premium/    (motor de rediseño bilingüe EN/ES)
+        ├── deploy-cloudflare/   (despliegue en Cloudflare Workers con Static Assets)
+        ├── proposta-gmail/      (propuestas anti-spam en inglés y español)
+        ├── dashboard-leads/     (gestión de CRM y métricas MRR)
+        └── contrato-servico/    (acuerdos legales para el Estado de California)
 ```
 
 ---
