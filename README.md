@@ -109,5 +109,5 @@ prospector-de-sites/
 ## 📖 Manual de Operaciones y Setup Automatizado con IA
 
 Para ver el manual completo de uso, instructivo de prospección manual y el **Prompt Maestro** para que cualquier agente de IA instale y configure este repositorio automáticamente:
-👉 Consulta el archivo **[MANUAL_DE_USO.md](MANUAL_DE_USO.md)**.
+👉 Consulta el archivo **[Doc/MANUAL_DE_USO.md](Doc/MANUAL_DE_USO.md)**.
 

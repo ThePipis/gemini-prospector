@@ -19,6 +19,12 @@ parser.add_argument('--teste', action='store_true', help='Roda o autoteste e sai
 ARGS, _ = parser.parse_known_args()
 PASTA = os.path.abspath(ARGS.pasta)
 DB = os.path.join(PASTA, 'prospector.db')
+if not os.path.exists(DB):
+    for _sub in [os.path.join(PASTA, 'prospector-de-sites'), os.path.dirname(os.path.abspath(__file__))]:
+        if os.path.exists(os.path.join(_sub, 'prospector.db')):
+            PASTA = os.path.abspath(_sub)
+            DB = os.path.join(PASTA, 'prospector.db')
+            break
 
 CAMPOS = ['slug','nome','nicho','cidade','nota','avaliacoes','email','telefone','whatsapp',
           'siteAntigo','motivo','status','urlNova','dataProposta','valor','obs',

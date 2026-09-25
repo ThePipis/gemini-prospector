@@ -27,6 +27,11 @@ import urllib.parse
 import urllib.request
 
 PASTA = os.path.dirname(os.path.abspath(__file__))
+# Buscar prospector-config.json en PASTA, carpeta padre o cwd
+for _cand in [PASTA, os.path.join(PASTA, '..'), os.getcwd(), os.path.join(os.getcwd(), 'prospector-de-sites')]:
+    if os.path.exists(os.path.join(_cand, 'prospector-config.json')):
+        PASTA = os.path.abspath(_cand)
+        break
 DB = os.path.join(PASTA, 'prospector.db')
 CONFIG_FILE = os.path.join(PASTA, 'prospector-config.json')
 

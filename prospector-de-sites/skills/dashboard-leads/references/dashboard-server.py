@@ -84,8 +84,17 @@ class App(SimpleHTTPRequestHandler):
             c = conexao(); c.row_factory = sqlite3.Row
             rows = [dict(r) for r in c.execute('SELECT * FROM leads').fetchall()]; c.close()
             return self._json(200, rows)
-        if self.path in ('/', ''):
-            self.path = '/dashboard.html'
+        if self.path in ('/', '', '/dashboard.html', '/dashboard-template.html'):
+            for cand in ['dashboard.html', 'dashboard-template.html', os.path.join('dashboard', 'dashboard-template.html'), os.path.join('dashboard', 'dashboard.html')]:
+                p = os.path.join(PASTA, cand)
+                if os.path.exists(p):
+                    conteudo = open(p, 'rb').read()
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'text/html; charset=utf-8')
+                    self.send_header('Content-Length', str(len(conteudo)))
+                    self.end_headers()
+                    self.wfile.write(conteudo)
+                    return
         return SimpleHTTPRequestHandler.do_GET(self)
 
     def do_POST(self):
