@@ -251,6 +251,8 @@ var I18N = {
       pagina: 'sitio demo',
       editarSite: 'editor web',
       noAr: 'en vivo ↗',
+      ligar: 'Llamar',
+      sms: 'SMS',
       whatsapp: 'WhatsApp',
       email: 'Email',
       dados: '✎ editar',
@@ -445,6 +447,8 @@ var I18N = {
       pagina: 'demo site',
       editarSite: 'site editor',
       noAr: 'live ↗',
+      ligar: 'Call',
+      sms: 'SMS',
       whatsapp: 'WhatsApp',
       email: 'Email',
       dados: '✎ edit',
@@ -876,7 +880,11 @@ function acoes(l) {
     a.push('<a href="sites/' + l.slug + '/' + l.slug + '-editor.html" target="_blank">' + t('actions.editarSite') + '</a>');
   }
   if (l.urlNova) a.push('<a href="' + l.urlNova + '" target="_blank">' + t('actions.noAr') + '</a>');
-  if (l.whatsapp) a.push('<a href="https://wa.me/' + l.whatsapp + '" target="_blank">' + t('actions.whatsapp') + '</a>');
+  if (l.telefone) {
+    var rawTel = l.telefone.replace(/[^0-9+]/g, '');
+    a.push('<a href="tel:' + rawTel + '">' + t('actions.ligar') + '</a>');
+    a.push('<a href="sms:' + rawTel + '">' + t('actions.sms') + '</a>');
+  }
   if (l.email && l.email.indexOf('@') > 0) a.push('<a href="mailto:' + l.email + '">' + t('actions.email') + '</a>');
   a.push('<a href="#" onclick="abrirEdit(\'' + l.slug + '\');return false">' + t('actions.dados') + '</a>');
   a.push('<a href="#" class="del" onclick="deletar(\'' + l.slug + '\');return false">' + t('actions.excluir') + '</a>');

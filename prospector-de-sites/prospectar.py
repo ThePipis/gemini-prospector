@@ -93,6 +93,7 @@ def extrair_contatos_web(url):
     }
 
     html = ''
+    motivo_detectado = ''
     try:
         req = urllib.request.Request(url, headers=headers)
         with urllib.request.urlopen(req, timeout=8) as resp:
@@ -100,14 +101,29 @@ def extrair_contatos_web(url):
     except Exception as e:
         err_str = str(e).lower()
         if 'ssl' in err_str or 'handshake' in err_str or 'certificate' in err_str:
-            contatos['motivo'] = 'Error crítico SSL / Inaccesible en navegadores (ERR_SSL_PROTOCOL_ERROR) — Urgencia máxima'
+            motivo_detectado = 'Error crítico SSL / Inaccesible en navegadores (ERR_SSL_PROTOCOL_ERROR) — Urgencia máxima'
         elif 'timeout' in err_str or 'timed out' in err_str:
-            contatos['motivo'] = 'Sitio web caído o sin respuesta del servidor (Timeout) — Alta urgencia'
+            motivo_detectado = 'Sitio web caído o sin respuesta del servidor (Timeout) — Alta urgencia'
         elif '404' in err_str or 'not found' in err_str:
-            contatos['motivo'] = 'Enlace roto / Error 404 en web oficial — Alta urgencia'
+            motivo_detectado = 'Enlace roto / Error 404 en web oficial — Alta urgencia'
         else:
-            contatos['motivo'] = 'Sitio web inaccesible o caído — Oportunidad prioritaria de reemplazo'
-        return contatos
+            motivo_detectado = 'Sitio web inaccesible o caído — Oportunidad prioritaria de reemplazo'
+        
+        # Reintento por HTTP plano si era HTTPS para intentar extraer correos
+        if url.startswith('https://'):
+            http_url = 'http://' + url[8:]
+            try:
+                req_http = urllib.request.Request(http_url, headers=headers)
+                with urllib.request.urlopen(req_http, timeout=8) as resp_http:
+                    html = resp_http.read().decode('utf-8', errors='ignore')
+            except Exception:
+                pass
+        
+        if not html:
+            contatos['motivo'] = motivo_detectado
+            return contatos
+        else:
+            contatos['motivo'] = motivo_detectado
 
     # 1. Buscar correos electrónicos en la home
     emails_encontrados = set()

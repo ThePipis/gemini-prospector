@@ -42,9 +42,11 @@ Objetivo: Encontrar el "cliente de oro" — negocios locales solventes que ya fa
    * Identificar si la web o el perfil atienden principalmente en **Inglés** o **Español** (o bilingüe) para enviar la propuesta en el idioma correspondiente.
 
 4. **Extracción de Teléfono y Correo Electrónico**:
-   * **Teléfono USA**: Formato estándar `+1 (XXX) XXX-XXXX`.
-   * **WhatsApp / SMS**: Formato internacional `1XXXXXXXXXX` (listo para `wa.me/1XXXXXXXXXX`).
-   * **Correo Electrónico (Mandatorio)**: Buscar en pie de página, página `/contact` o `/about`, enlaces `mailto:`.
+   * **Teléfono USA**: Formato estándar `+1 (XXX) XXX-XXXX` (click-to-call nativo).
+   * **Canales de Mensajería**: En EE.UU., priorizar **Llamada telefónica a recepción** y **SMS / Business Texting** (iMessage/SMS bidireccional de clínicas). WhatsApp es secundario y rara vez utilizado en líneas fijas de negocios en USA.
+   * **Correo Electrónico (Mandatorio — Protocolo de Enriquecimiento OSINT Autónomo)**:
+     - *Nivel 1 (Web Oficial)*: Escaneo de home y página `/contact` (con reintento por HTTP e ignorado de certificados si HTTPS falla por SSL).
+     - *Nivel 2 (OSINT Autónomo Obligatorio)*: **CERO LEADS INCOMPLETOS**. Si el sitio web está caído, bloqueado por antivirus/ISP o no expone el email, el agente o script DEBE ejecutar de forma autónoma una búsqueda OSINT profunda (`"[Nombre]" "[Ciudad]" email OR contact OR receptionist`) para localizar el correo directo de la clínica o de la red médica. Ningún prospecto calificado debe quedar como 'sin email' si existe información pública en internet.
 
 5. **Límite**: Detener al alcanzar la meta de leads calificados (padrón 10).
 
