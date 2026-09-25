@@ -18,7 +18,8 @@ prospector.db-journal
 /prospectar.py
 /prospector-config.template.json
 /wrangler.jsonc
-/sites/
+sites/
+comparar.html
 
 # Python y caché
 __pycache__/
