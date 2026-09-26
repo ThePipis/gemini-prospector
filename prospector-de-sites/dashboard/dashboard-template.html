@@ -227,9 +227,24 @@ select.mini{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-
 .fu-filter-btn .badge{font-size:10.5px;padding:2px 7px;border-radius:10px;background:rgba(0,0,0,0.08);color:inherit}
 .fu-filter-btn.on .badge{background:rgba(255,255,255,0.22);color:#fff}
 
+/* Banner Plegable para Borradores Listos en Gmail */
+.fu-drafts-banner{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-bottom:34px;transition:border-color .15s ease,box-shadow .15s ease}
+.fu-drafts-banner:hover{border-color:var(--cinza);box-shadow:0 3px 12px rgba(0,0,0,0.04)}
+.fu-drafts-header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;cursor:pointer}
+.fu-drafts-left{flex:1;min-width:260px}
+.fu-drafts-title-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fu-drafts-icon{font-size:18px;line-height:1}
+.fu-drafts-title{font-family:var(--serif);font-size:16px;margin:0;font-weight:600;color:var(--ink)}
+.fu-drafts-sub{font-size:12.5px;color:var(--muted);margin:4px 0 0;line-height:1.4}
+.fu-drafts-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.fu-drafts-body{display:flex;flex-direction:column;gap:14px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line);cursor:default}
+.fu-drafts-banner .lead-track-card{background:var(--surface);border:1px solid var(--line);box-shadow:none}
+.fu-drafts-banner .lead-track-card:hover{border-color:var(--cinza);box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.fu-drafts-banner .lead-track-details{background:var(--white);border:1px solid var(--line)}
+
 /* Secciones y Tarjetas de Leads en Seguimiento */
-.fu-sec-group{margin-bottom:28px}
-.fu-sec-header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.fu-sec-group{margin-top:10px;margin-bottom:36px}
+.fu-sec-header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px;flex-wrap:wrap}
 .fu-sec-title{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:8px;margin:0}
 .fu-sec-hint{font-size:12px;color:var(--muted)}
 .fu-cards-list{display:flex;flex-direction:column;gap:14px}
@@ -934,6 +949,7 @@ var view = (function() {
   try { return localStorage.getItem('prospector_view') || 'geral'; } catch(e) { return 'geral'; }
 })(), busca = '', sortCol = 'nome', sortAsc = true, pag = 1, porPag = 'auto';
 var fuGuiaAberta = false;
+var fuBorradoresAberto = false;
 var fuFilter = 'todos';
 
 function pagSize() {
@@ -1250,8 +1266,14 @@ function toggleFuGuia(e) {
   render();
 }
 
+function toggleFuBorradores(e) {
+  fuBorradoresAberto = !fuBorradoresAberto;
+  render();
+}
+
 function setFuFilter(f) {
   fuFilter = f;
+  if (f === 'borradores') fuBorradoresAberto = true;
   render();
 }
 
@@ -1316,38 +1338,51 @@ function vFollowup() {
   var secHtml = '';
 
   if (fuFilter === 'todos' || fuFilter === 'borradores') {
-    secHtml += '<div class="fu-sec-group">' +
-      '<div class="fu-sec-header">' +
-        '<h3 class="fu-sec-title"><span>📝</span> Borradores Listos en Gmail — Pendientes de Revisión y Envío <span class="pill" style="background:#FEF3C7;color:#B45309">' + borradores.length + '</span></h3>' +
-        '<span class="fu-sec-hint">Revisa el borrador en Gmail antes de enviarlo. El cliente aún no ha recibido el correo.</span>' +
+    var borrPillTxt = fuBorradoresAberto ? 'Ocultar borradores ✕' : ('ℹ️ ' + (borradores.length ? 'Ver ' + borradores.length + ' borrador' + (borradores.length > 1 ? 'es' : '') + ' (clic para desplegar)' : 'Sin borradores pendientes'));
+    secHtml += '<div class="fu-drafts-banner" onclick="toggleFuBorradores(event)">' +
+      '<div class="fu-drafts-header">' +
+        '<div class="fu-drafts-left">' +
+          '<div class="fu-drafts-title-row">' +
+            '<span class="fu-drafts-icon">📝</span>' +
+            '<h3 class="fu-drafts-title">Borradores Listos en Gmail — Pendientes de Revisión y Envío</h3>' +
+            '<span class="pill" style="background:#FEF3C7;color:#B45309;font-weight:700">' + borradores.length + '</span>' +
+            '<span class="pill fu-guide-pill">' + borrPillTxt + '</span>' +
+          '</div>' +
+          '<p class="fu-drafts-sub">Revisa el borrador en Gmail antes de enviarlo. El cliente aún no ha recibido el correo.</p>' +
+        '</div>' +
+        '<div class="fu-drafts-actions" onclick="event.stopPropagation()">' +
+          '<a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" class="fu-btn primary" title="Abrir bandeja de borradores en Gmail para revisar y pulsar Enviar">📝 Abrir Borradores en Gmail ↗</a>' +
+        '</div>' +
       '</div>' +
-      (borradores.length ? '<div class="fu-cards-list">' + borradores.map(function(l) {
-        var rawTel = (l.telefone || '').replace(/[^0-9+]/g, '');
-        return '<div class="lead-track-card" style="border-left:4px solid #F59E0B">' +
-          '<div class="lead-track-top">' +
-            '<div class="lead-track-main">' +
-              '<div class="lead-track-name-row">' +
-                '<span class="lead-track-name">' + l.nome + '</span>' +
-                '<span class="pill" style="background:#FEF3C7;color:#B45309;font-size:11px">📝 Borrador listo en Gmail</span>' +
+      '<div class="fu-drafts-body" onclick="event.stopPropagation()" style="display:' + (fuBorradoresAberto ? 'flex' : 'none') + '">' +
+        (borradores.length ? borradores.map(function(l) {
+          var rawTel = (l.telefone || '').replace(/[^0-9+]/g, '');
+          return '<div class="lead-track-card" style="border-left:4px solid #F59E0B">' +
+            '<div class="lead-track-top">' +
+              '<div class="lead-track-main">' +
+                '<div class="lead-track-name-row">' +
+                  '<span class="lead-track-name">' + l.nome + '</span>' +
+                  '<span class="pill" style="background:#FEF3C7;color:#B45309;font-size:11px">📝 Borrador listo en Gmail</span>' +
+                '</div>' +
+                '<div class="lead-track-meta">' + [l.nicho, l.cidade, (l.nota ? '★ ' + l.nota + ' (' + l.avaliacoes + ')' : '')].filter(Boolean).join(' · ') + '</div>' +
               '</div>' +
-              '<div class="lead-track-meta">' + [l.nicho, l.cidade, (l.nota ? '★ ' + l.nota + ' (' + l.avaliacoes + ')' : '')].filter(Boolean).join(' · ') + '</div>' +
+              '<div class="lead-track-actions">' +
+                (l.slug ? '<a href="sites/' + l.slug + '/' + l.slug + '.html" target="_blank" class="fu-btn" title="Previsualizar sitio web propuesto">👁 Ver Demo</a>' : '') +
+                '<a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" class="fu-btn primary" title="Abrir bandeja de borradores en Gmail para revisar y pulsar Enviar">📝 Abrir Borrador en Gmail ↗</a>' +
+                '<button onclick="marcarEnviado(\'' + l.slug + '\')" class="fu-btn success" title="Si ya pulsaste Enviar en Gmail, haz clic aquí para confirmar la salida">✓ Marcar como Ya Enviado</button>' +
+              '</div>' +
             '</div>' +
-            '<div class="lead-track-actions">' +
-              (l.slug ? '<a href="sites/' + l.slug + '/' + l.slug + '.html" target="_blank" class="fu-btn" title="Previsualizar sitio web propuesto">👁 Ver Demo</a>' : '') +
-              '<a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" class="fu-btn primary" title="Abrir bandeja de borradores en Gmail para revisar y pulsar Enviar">📝 Abrir Borrador en Gmail ↗</a>' +
-              '<button onclick="marcarEnviado(\'' + l.slug + '\')" class="fu-btn success" title="Si ya pulsaste Enviar en Gmail, haz clic aquí para confirmar la salida">✓ Marcar como Ya Enviado</button>' +
+            '<div class="lead-track-details">' +
+              '<div class="row"><span class="tag-label">Asunto:</span> <b>' + (l.draftSubject || 'Propuesta personalizada de nuevo sitio web de alta conversión') + '</b></div>' +
+              '<div class="row"><span class="tag-label">Destinatario:</span> <a href="mailto:' + (l.email || '') + '" style="color:inherit">' + (l.email || 'Sin email registrado') + '</a>' +
+                (l.telefone ? ' · <span class="tag-label">Tel:</span> <a href="tel:' + rawTel + '" style="color:inherit">' + l.telefone + '</a>' : '') +
+                (l.valor ? ' · <span class="tag-label">Presupuesto:</span> $' + l.valor.toLocaleString('en-US') + (l.manutencao ? ' + $' + l.manutencao + '/mes' : '') : '') +
+              '</div>' +
+              (l.obs ? '<div class="row" style="margin-top:2px"><span class="tag-label">Notas:</span> <span style="color:var(--muted)">' + l.obs + '</span></div>' : '') +
             '</div>' +
-          '</div>' +
-          '<div class="lead-track-details">' +
-            '<div class="row"><span class="tag-label">Asunto:</span> <b>' + (l.draftSubject || 'Propuesta personalizada de nuevo sitio web de alta conversión') + '</b></div>' +
-            '<div class="row"><span class="tag-label">Destinatario:</span> <a href="mailto:' + (l.email || '') + '" style="color:inherit">' + (l.email || 'Sin email registrado') + '</a>' +
-              (l.telefone ? ' · <span class="tag-label">Tel:</span> <a href="tel:' + rawTel + '" style="color:inherit">' + l.telefone + '</a>' : '') +
-              (l.valor ? ' · <span class="tag-label">Presupuesto:</span> $' + l.valor.toLocaleString('en-US') + (l.manutencao ? ' + $' + l.manutencao + '/mes' : '') : '') +
-            '</div>' +
-            (l.obs ? '<div class="row" style="margin-top:2px"><span class="tag-label">Notas:</span> <span style="color:var(--muted)">' + l.obs + '</span></div>' : '') +
-          '</div>' +
-        '</div>';
-      }).join('') : '<div class="fu-empty-subtle">✓ No hay borradores pendientes. Todos los correos redactados han sido enviados.</div>') +
+          '</div>';
+        }).join('') : '<div class="fu-empty-subtle">✓ No hay borradores pendientes. Todos los correos redactados han sido enviados.</div>') +
+      '</div>' +
     '</div>';
   }
 
