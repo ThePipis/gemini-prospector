@@ -177,12 +177,27 @@ class App(SimpleHTTPRequestHandler):
 
     def log_message(self, *a): pass
 
+def obter_ip_tailscale():
+    try:
+        import subprocess
+        res = subprocess.run(['tailscale', 'ip', '-4'], capture_output=True, text=True, timeout=2)
+        if res.returncode == 0 and res.stdout.strip():
+            return res.stdout.strip().splitlines()[0].strip()
+    except Exception:
+        pass
+    return None
+
 if __name__ == '__main__':
     novo = not os.path.exists(DB)
     conexao().close()
     if novo: importar_snapshot()
-    print('Prospector Dashboard activo en http://localhost:%d  (Ctrl+C para detener)' % PORTA)
+    ts_ip = obter_ip_tailscale()
+    print('Prospector Dashboard activo (Ctrl+C para detener):')
+    print('  -> Local:     http://localhost:%d' % PORTA)
+    if ts_ip:
+        print('  -> Tailscale: http://%s:%d' % (ts_ip, PORTA))
     try: webbrowser.open('http://localhost:%d' % PORTA)
     except Exception: pass
-    try: ThreadingHTTPServer(('127.0.0.1', PORTA), App).serve_forever()
+    try: ThreadingHTTPServer(('0.0.0.0', PORTA), App).serve_forever()
     except KeyboardInterrupt: print('\nEncerrado.')
+
