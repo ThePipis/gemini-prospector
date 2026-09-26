@@ -213,8 +213,8 @@ select.mini{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-
     <h2 id="m-titulo">Editar lead</h2>
     <label id="m-lbl-nome">Nombre</label><input id="m-nome">
     <div class="mrow"><div><label id="m-lbl-email">Email</label><input id="m-email"></div><div><label id="m-lbl-telefone">Teléfono</label><input id="m-telefone"></div></div>
-    <div class="mrow"><div><label id="m-lbl-whatsapp">WhatsApp (+1 número)</label><input id="m-whatsapp"></div><div><label id="m-lbl-cidade">Ciudad</label><input id="m-cidade"></div></div>
-    <div class="mrow"><div><label id="m-lbl-nicho">Nicho / Industria</label><input id="m-nicho"></div><div><label id="m-lbl-status">Estado</label><select id="m-status"></select></div></div>
+    <div class="mrow"><div><label id="m-lbl-cidade">Ciudad</label><input id="m-cidade"></div><div><label id="m-lbl-nicho">Nicho / Industria</label><input id="m-nicho"></div></div>
+    <div class="mrow"><div><label id="m-lbl-siteAntigo">Sitio web actual / original</label><input id="m-siteAntigo" placeholder="https://..."></div><div><label id="m-lbl-status">Estado</label><select id="m-status"></select></div></div>
     <div class="mrow"><div><label id="m-lbl-valor">Valor acordado ($ USD)</label><input id="m-valor" type="number" step="50"></div><div><label id="m-lbl-dataProposta">Fecha de la propuesta</label><input id="m-dataProposta" type="date"></div></div>
     <div class="mrow"><div><label id="m-lbl-manutencao">Mantenimiento mensual ($ USD)</label><input id="m-manutencao" type="number" step="10"></div><div><label id="m-lbl-pago">¿Pago recibido?</label><select id="m-pago"><option value="0">No</option><option value="1">Sí</option></select></div></div>
     <div class="mrow"><div><label id="m-lbl-contratoStatus">Estado del contrato</label><select id="m-contratoStatus"><option value="pendente">Pendiente</option><option value="enviado">Enviado</option><option value="assinado">Firmado</option></select></div><div><label id="m-lbl-contratoEm">Fecha del contrato</label><input id="m-contratoEm" type="date"></div></div>
@@ -396,7 +396,7 @@ var I18N = {
       cfTokenAtivo: '✓ Token Cloudflare activo',
       cfTokenFalta: 'falta configurar el token',
       dadosClienteTitulo: '¿Y los datos del cliente para el contrato?',
-      dadosClienteTexto: 'El Tax ID / EIN y dirección del cliente se solicitan al cerrar la venta: pídelos por correo o WhatsApp y (1) pásalos a Claude al pedir /contrato — los extrae y guarda solo — o (2) ingrésalos en ✎ editar en la tarjeta. Lo que falte aparecerá como "[completar]" en el borrador.',
+      dadosClienteTexto: 'El Tax ID / EIN y dirección del cliente se solicitan al cerrar la venta: pídelos por correo o llamada/SMS y (1) pásalos a Claude al pedir /contrato — los extrae y guarda solo — o (2) ingrésalos en ✎ editar en la tarjeta. Lo que falte aparecerá como "[completar]" en el borrador.',
       labels: {
         prestador_nombre: 'Nombre comercial / Razón Social',
         prestador_empresa: 'Empresa / LLC / Trade Name',
@@ -418,7 +418,8 @@ var I18N = {
       nome: 'Nombre',
       email: 'Email',
       telefone: 'Teléfono',
-      whatsapp: 'WhatsApp (+1 número)',
+      siteAntigo: 'Sitio web actual / original',
+      siteAntigoPh: 'https://...',
       cidade: 'Ciudad',
       nicho: 'Nicho / Industria',
       status: 'Estado',
@@ -595,7 +596,7 @@ var I18N = {
       cfTokenAtivo: '✓ Cloudflare Token active',
       cfTokenFalta: 'token configuration missing',
       dadosClienteTitulo: 'What about client contract details?',
-      dadosClienteTexto: 'Client EIN/Tax ID and legal address are requested upon closing: ask via email/WhatsApp and (1) provide to Claude when calling /contrato — it extracts and saves automatically — or (2) fill in via ✎ edit on the card. Missing info shows as "[to be completed]" in draft.',
+      dadosClienteTexto: 'Client EIN/Tax ID and legal address are requested upon closing: ask via email, call/SMS and (1) provide to Claude when calling /contrato — it extracts and saves automatically — or (2) fill in via ✎ edit on the card. Missing info shows as "[to be completed]" in draft.',
       labels: {
         prestador_nombre: 'Business / Contractor Name',
         prestador_empresa: 'Company / LLC / Trade Name',
@@ -617,7 +618,8 @@ var I18N = {
       nome: 'Name',
       email: 'Email',
       telefone: 'Phone',
-      whatsapp: 'WhatsApp (+1 number)',
+      siteAntigo: 'Current / Original website',
+      siteAntigoPh: 'https://...',
       cidade: 'City',
       nicho: 'Niche / Industry',
       status: 'Status',
@@ -861,7 +863,8 @@ function abrirEdit(slug) {
   document.getElementById('m-lbl-nome').textContent = t('modal.nome');
   document.getElementById('m-lbl-email').textContent = t('modal.email');
   document.getElementById('m-lbl-telefone').textContent = t('modal.telefone');
-  document.getElementById('m-lbl-whatsapp').textContent = t('modal.whatsapp');
+  document.getElementById('m-lbl-siteAntigo').textContent = t('modal.siteAntigo');
+  document.getElementById('m-siteAntigo').placeholder = t('modal.siteAntigoPh') || 'https://...';
   document.getElementById('m-lbl-cidade').textContent = t('modal.cidade');
   document.getElementById('m-lbl-nicho').textContent = t('modal.nicho');
   document.getElementById('m-lbl-status').textContent = t('modal.status');
@@ -889,7 +892,7 @@ function abrirEdit(slug) {
     return '<option value="' + st + '"' + (l.status === st ? ' selected' : '') + '>' + getNomestatus(st) + '</option>';
   }).join('');
 
-  ['nome','email','telefone','whatsapp','cidade','nicho','valor','dataProposta','urlNova','obs','manutencao','contratoEm','docCliente','endCliente'].forEach(function(k) {
+  ['nome','email','telefone','siteAntigo','cidade','nicho','valor','dataProposta','urlNova','obs','manutencao','contratoEm','docCliente','endCliente'].forEach(function(k) {
     document.getElementById('m-' + k).value = l[k] == null ? '' : l[k];
   });
   document.getElementById('m-pago').value = l.pago ? 1 : 0;
@@ -905,7 +908,7 @@ function fecharEdit() {
 function salvarEdit() {
   if (!editSlug) return;
   var ch = {};
-  ['nome','email','telefone','whatsapp','cidade','nicho','urlNova','obs','dataProposta','docCliente','endCliente'].forEach(function(k) {
+  ['nome','email','telefone','siteAntigo','cidade','nicho','urlNova','obs','dataProposta','docCliente','endCliente'].forEach(function(k) {
     ch[k] = document.getElementById('m-' + k).value || null;
   });
   ch.status = document.getElementById('m-status').value;

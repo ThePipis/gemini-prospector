@@ -70,13 +70,8 @@ def formatar_telefono_us(tel):
     return tel
 
 def formatar_whatsapp_us(tel):
-    if not tel: return ''
-    digits = re.sub(r'\D', '', str(tel))
-    if len(digits) == 10:
-        return '1' + digits
-    if len(digits) == 11 and digits.startswith('1'):
-        return digits
-    return digits
+    # En EE.UU. los negocios usan teléfonos fijos/VoIP de oficina; no inventar números de WhatsApp
+    return None
 
 def extrair_contatos_web(url):
     """
