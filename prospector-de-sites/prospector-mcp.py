@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Prospector de Sites — servidor MCP do CRM (STDIO)
-Funciona no ChatGPT (Work/Codex) e no Claude (Desktop/Cowork) ao mesmo tempo,
+Funciona con cualquier Agente de IA compatible con MCP (Antigravity, Claude Code, Codex, Cursor, Windsurf, etc.),
 por cima do MESMO prospector.db do dashboard.
 
 Instalação:  pip install "mcp[cli]"

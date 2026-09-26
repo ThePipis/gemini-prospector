@@ -165,6 +165,23 @@ select.mini{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-
 .cmp-col .cab.antes{color:var(--muted)} .cmp-col .cab.depois{color:var(--accent)}
 .cmp-col iframe{flex:1 1 auto;width:100%;border:0;min-height:0;background:#fff}
 @media(max-width:900px){.cmp-grid{grid-template-columns:1fr}}
+.cfg-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:20px;align-items:start;max-width:1200px}
+@media(max-width:960px){.cfg-grid{grid-template-columns:1fr}}
+.cfg-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.cfg-full{grid-column:1 / -1}
+.cfg-collapse{background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .15s ease,box-shadow .15s ease}
+.cfg-collapse[open]{box-shadow:0 4px 14px rgba(0,0,0,0.05);border-color:var(--cinza)}
+.cfg-collapse-header{padding:14px 18px;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;user-select:none;background:var(--white);transition:background .15s ease}
+.cfg-collapse-header::-webkit-details-marker{display:none}
+.cfg-collapse-header:hover{background:var(--surface)}
+.cfg-collapse-header:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.cfg-chevron{color:var(--muted);transition:transform .2s ease;flex-shrink:0}
+.cfg-collapse[open] .cfg-chevron{transform:rotate(180deg)}
+.cfg-collapse-body{padding:0 18px 18px;border-top:1px solid var(--line)}
+.cfg-btn-primary{border:0;border-radius:10px;padding:10px 20px;font-size:13.5px;font-weight:700;cursor:pointer;background:var(--accent);color:#fff;font-family:var(--sans);transition:background .15s ease}
+.cfg-btn-primary:hover{background:var(--accent-2)}
+.cfg-btn-primary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.cfg-btn-primary:disabled{opacity:.4;cursor:default}
 </style>
 </head>
 <body>
@@ -178,7 +195,7 @@ select.mini{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-
     </button>
   </div>
   <nav id="nav"></nav>
-  <div class="side-foot" id="side-foot">Impulsado por el plugin <b>prospector-de-sites</b>. ¿Cliente respondió o cerró? Cuéntale a Claude para actualizar aquí.</div>
+  <div class="side-foot" id="side-foot">Impulsado por el plugin <b>prospector-de-sites</b>. ¿Cliente respondió o cerró trato? Cuéntale a tu Agente IA para actualizar aquí.</div>
 </aside>
 <main>
   <div class="topbar">
@@ -244,7 +261,7 @@ var I18N = {
   es: {
     appTitle: 'Prospector — Panel de Clientes',
     logoSub: 'panel de clientes y prospección',
-    sideFoot: 'Impulsado por el plugin <b>prospector-de-sites</b>. ¿Cliente respondió o cerró trato? Cuéntale a Claude para actualizar aquí.',
+    sideFoot: 'Impulsado por el plugin <b>prospector-de-sites</b>. ¿Cliente respondió o cerró trato? Cuéntale a tu Agente IA para actualizar aquí.',
     searchPlaceholder: 'Buscar cliente, nicho, ciudad...',
     modeFile: 'modo archivo',
     modeFileTitle: 'Abre mediante iniciar-dashboard.bat para guardar en base de datos',
@@ -306,7 +323,7 @@ var I18N = {
       fupWhatsApp: 'contactar por WhatsApp →'
     },
     pipeline: {
-      dragDica: 'Arrastra una tarjeta para cambiar de estado — los automáticos (rediseñado, publicado, propuesta) los actualiza Claude; usa el arrastre principalmente para <b>Respondió</b> y <b>Cerrado</b>.'
+      dragDica: 'Arrastra una tarjeta para cambiar de estado — los automáticos (rediseñado, publicado, propuesta) los actualiza el Agente IA; usa el arrastre principalmente para <b>Respondió</b> y <b>Cerrado</b>.'
     },
     clientes: {
       thNome: 'Cliente',
@@ -327,10 +344,10 @@ var I18N = {
       editarSite: 'Editar sitio web',
       antigoTitle: 'sitio web original del cliente',
       localTitle: 'versión local',
-      vazio: 'Aún no hay sitios rediseñados — ejecuta /redesenhar en Claude.'
+      vazio: 'Aún no hay sitios rediseñados — ejecuta /redesenhar con tu Agente IA.'
     },
     comparador: {
-      vazio: 'Sin sitios rediseñados aún — ejecuta /redesenhar en Claude y el antes/después aparecerá aquí.',
+      vazio: 'Sin sitios rediseñados aún — ejecuta /redesenhar con tu Agente IA y el antes/después aparecerá aquí.',
       antes: 'Antes — Sitio actual',
       depois: 'Después — Nueva versión',
       abrir: 'abrir ↗',
@@ -342,7 +359,7 @@ var I18N = {
       vazio: 'Ningún seguimiento pendiente.'
     },
     contratos: {
-      vazio: 'Ningún cliente cerrado todavía. Cuando cierres un trato, arrastra la tarjeta a "Cerrado" y dile a Claude: /contrato [cliente].',
+      vazio: 'Ningún cliente cerrado todavía. Cuando cierres un trato, arrastra la tarjeta a "Cerrado" y dile a tu Agente IA: /contrato [cliente].',
       thCliente: 'Cliente',
       thValor: 'Valor',
       thManutencao: 'Mantenimiento',
@@ -359,7 +376,7 @@ var I18N = {
       baixarDoc: '⬇ Descargar .docx',
       baixarDocTitle: 'descarga el Word protegido para el cliente',
       assinadoDoc: '✓ Firmado',
-      pedirClaude: 'solicita /contrato a Claude'
+      pedirContrato: 'solicita /contrato al Agente IA'
     },
     doc: {
       tituloPadrao: 'Contrato',
@@ -380,23 +397,24 @@ var I18N = {
       thManutencao: 'Mantenimiento/mes',
       thContrato: 'Contrato',
       comoAlimentaTitulo: '¿Cómo se alimenta el área financiera?',
-      comoAlimentaTexto: 'El valor del proyecto y el mantenimiento recurrente se registran cuando cierras la venta (arrastrando en el kanban o desde ✎ editar). Marca la casilla "Pagado" cuando recibas los fondos. El estado del contrato pasa a "enviado" cuando Claude genera el documento mediante /contrato y a "firmado" cuando lo marcas una vez suscrito.'
+      comoAlimentaTexto: 'El valor del proyecto y el mantenimiento recurrente se registran cuando cierras la venta (arrastrando en el kanban o desde ✎ editar). Marca la casilla "Pagado" cuando recibas los fondos. El estado del contrato pasa a "enviado" cuando el Agente IA genera el documento mediante /contrato y a "firmado" cuando lo marcas una vez suscrito.'
     },
     config: {
       meusDadosTitulo: 'Mis datos comerciales y fiscales — Prestador / Contratista',
       meusDadosSub: 'Configúralo una sola vez y cada contrato generado por /contrato incluirá automáticamente tus datos completos de CONTRATISTA. Se guarda en prospector-config.json en tu equipo.',
       btnSalvarMeusDados: 'Guardar mis datos',
       salvo: 'guardado ✓',
-      avisoModoFile: 'abre mediante iniciar-dashboard.bat para editar — o dicta los datos a Claude con /setup',
+      avisoModoFile: 'abre mediante iniciar-dashboard.bat para editar — o dicta los datos al Agente IA con /setup',
       cfTitulo: 'Conexión Cloudflare — Despliegue y CDN Global',
+      cfTituloShort: 'Conexión Cloudflare',
       cfSub: 'Publicación instantánea en Cloudflare Workers / Static Assets con SSL (HTTPS) universal y CDN de ultra-baja latencia.',
       cfTokenConfigurado: '••••• configurado (dejar vacío para mantener)',
       cfTokenVazio: 'pega tu API Token',
       cfBtnSalvar: 'Guardar Cloudflare',
-      cfTokenAtivo: '✓ Token Cloudflare activo',
-      cfTokenFalta: 'falta configurar el token',
+      cfTokenAtivo: '✓ Token activo',
+      cfTokenFalta: 'Falta configurar token',
       dadosClienteTitulo: '¿Y los datos del cliente para el contrato?',
-      dadosClienteTexto: 'El Tax ID / EIN y dirección del cliente se solicitan al cerrar la venta: pídelos por correo o llamada/SMS y (1) pásalos a Claude al pedir /contrato — los extrae y guarda solo — o (2) ingrésalos en ✎ editar en la tarjeta. Lo que falte aparecerá como "[completar]" en el borrador.',
+      dadosClienteTexto: 'El Tax ID / EIN y dirección del cliente se solicitan al cerrar la venta: pídelos por correo o llamada/SMS y (1) pásalos al Agente IA al pedir /contrato — los extrae y guarda solo — o (2) ingrésalos en ✎ editar en la tarjeta. Lo que falte aparecerá como "[completar]" en el borrador.',
       labels: {
         prestador_nombre: 'Nombre comercial / Razón Social',
         prestador_empresa: 'Empresa / LLC / Trade Name',
@@ -444,7 +462,7 @@ var I18N = {
   en: {
     appTitle: 'Prospector — Client Dashboard',
     logoSub: 'client pipeline & prospecting',
-    sideFoot: 'Powered by <b>prospector-de-sites</b> plugin. Client replied or closed? Tell Claude to update here.',
+    sideFoot: 'Powered by <b>prospector-de-sites</b> plugin. Client replied or closed? Tell your AI Agent to update here.',
     searchPlaceholder: 'Search client, niche, city...',
     modeFile: 'file mode',
     modeFileTitle: 'Open via iniciar-dashboard.bat to save to database',
@@ -506,7 +524,7 @@ var I18N = {
       fupWhatsApp: 'message on WhatsApp →'
     },
     pipeline: {
-      dragDica: 'Drag a card to update status — automated stages (redesigned, published, proposal) update with Claude; use drag & drop mainly for <b>Replied</b> and <b>Closed</b>.'
+      dragDica: 'Drag a card to update status — automated stages (redesigned, published, proposal) update with your AI Agent; use drag & drop mainly for <b>Replied</b> and <b>Closed</b>.'
     },
     clientes: {
       thNome: 'Client',
@@ -527,10 +545,10 @@ var I18N = {
       editarSite: 'Edit website',
       antigoTitle: 'original client website',
       localTitle: 'local version',
-      vazio: 'No redesigned websites yet — run /redesenhar in Claude.'
+      vazio: 'No redesigned websites yet — run /redesenhar with your AI Agent.'
     },
     comparador: {
-      vazio: 'No redesigned websites yet — run /redesenhar in Claude and the before/after comparison will appear here.',
+      vazio: 'No redesigned websites yet — run /redesenhar with your AI Agent and the before/after comparison will appear here.',
       antes: 'Before — Current site',
       depois: 'After — New version',
       abrir: 'open ↗',
@@ -542,7 +560,7 @@ var I18N = {
       vazio: 'No pending follow-ups.'
     },
     contratos: {
-      vazio: 'No closed clients yet. When you close a deal, drag the card to "Closed" and tell Claude: /contrato [client].',
+      vazio: 'No closed clients yet. When you close a deal, drag the card to "Closed" and tell your AI Agent: /contrato [client].',
       thCliente: 'Client',
       thValor: 'Value',
       thManutencao: 'Maintenance',
@@ -559,7 +577,7 @@ var I18N = {
       baixarDoc: '⬇ Download .docx',
       baixarDocTitle: 'download locked Word doc for client',
       assinadoDoc: '✓ Signed',
-      pedirClaude: 'request /contrato from Claude'
+      pedirContrato: 'request /contrato from your AI Agent'
     },
     doc: {
       tituloPadrao: 'Contract',
@@ -587,16 +605,17 @@ var I18N = {
       meusDadosSub: 'Configure once and every contract generated via /contrato will automatically populate your credentials. Saved in prospector-config.json on your computer.',
       btnSalvarMeusDados: 'Save contractor info',
       salvo: 'saved ✓',
-      avisoModoFile: 'open via iniciar-dashboard.bat to edit — or provide details to Claude in /setup',
+      avisoModoFile: 'open via iniciar-dashboard.bat to edit — or provide details to your AI Agent in /setup',
       cfTitulo: 'Cloudflare Integration — Deployments & Global CDN',
+      cfTituloShort: 'Cloudflare Integration',
       cfSub: 'Instant hosting on Cloudflare Workers / Static Assets with universal HTTPS SSL and ultra-low latency CDN.',
       cfTokenConfigurado: '••••• configured (leave blank to keep)',
       cfTokenVazio: 'paste your API Token',
       cfBtnSalvar: 'Save Cloudflare settings',
-      cfTokenAtivo: '✓ Cloudflare Token active',
-      cfTokenFalta: 'token configuration missing',
+      cfTokenAtivo: '✓ Token active',
+      cfTokenFalta: 'Token configuration missing',
       dadosClienteTitulo: 'What about client contract details?',
-      dadosClienteTexto: 'Client EIN/Tax ID and legal address are requested upon closing: ask via email, call/SMS and (1) provide to Claude when calling /contrato — it extracts and saves automatically — or (2) fill in via ✎ edit on the card. Missing info shows as "[to be completed]" in draft.',
+      dadosClienteTexto: 'Client EIN/Tax ID and legal address are requested upon closing: ask via email, call/SMS and (1) provide to your AI Agent when calling /contrato — it extracts and saves automatically — or (2) fill in via ✎ edit on the card. Missing info shows as "[to be completed]" in draft.',
       labels: {
         prestador_nombre: 'Business / Contractor Name',
         prestador_empresa: 'Company / LLC / Trade Name',
@@ -1129,7 +1148,7 @@ function vContratos() {
         '<a href="#" class="btn-ct ver" onclick="abrirContrato(\'' + l.slug + '\',\'' + l.nome.replace(/'/g, '') + '\');return false" title="' + t('contratos.verDocTitle') + '">' + t('contratos.verDoc') + '</a>' +
         '<a href="sites/' + l.slug + '/contrato-' + l.slug + '.docx" download class="btn-ct baixar" title="' + t('contratos.baixarDocTitle') + '">' + t('contratos.baixarDoc') + '</a>' +
         (l.contratoStatus === 'assinado' ? '<a href="sites/' + l.slug + '/contrato-' + l.slug + '-assinado.docx" download class="btn-ct ass">' + t('contratos.assinadoDoc') + '</a>' : '') :
-        '<span style="color:var(--muted);font-size:12px">' + t('contratos.pedirClaude') + '</span>';
+        '<span style="color:var(--muted);font-size:12px">' + t('contratos.pedirContrato') + '</span>';
 
       return '<tr><td><b>' + l.nome + '</b></td><td>' + (l.valor ? '$' + l.valor.toLocaleString('en-US') : '—') + '</td><td>' +
         (l.manutencao ? '$' + l.manutencao.toLocaleString('en-US') + mo : '—') + '</td><td><select class="mini" onchange="salvarOv(\'' + l.slug + '\',{contratoStatus:this.value})">' +
@@ -1172,14 +1191,21 @@ function vFinanceiro() {
   return html;
 }
 
-var CFG_CAMPOS = ['prestador_nombre', 'prestador_empresa', 'prestador_ein', 'prestador_direccion', 'estado_jurisdiccion', 'email', 'telefono', 'booking_url'];
+var CFG_CAMPOS = ['prestador_nombre', 'prestador_empresa', 'prestador_ein', 'estado_jurisdiccion', 'prestador_direccion', 'email', 'telefono', 'booking_url'];
+var CFG_FULL_WIDTH = ['prestador_direccion', 'booking_url'];
+
+var cfgCfAberto = false;
+var cfgDadosClienteAberto = false;
 
 function vConfig() {
   var db = MODE === 'db';
   var campos = CFG_CAMPOS.map(function(c) {
     var label = (I18N[LANG] && I18N[LANG].config && I18N[LANG].config.labels && I18N[LANG].config.labels[c]) || c;
-    return '<div><label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:12px 0 4px">' +
-      label + '</label><input id="cfg-' + c + '" value="' + ((CFG[c] || '').replace(/"/g, '&quot;')) + '" ' +
+    var isFull = CFG_FULL_WIDTH.indexOf(c) !== -1;
+    var inputType = c === 'email' ? 'email' : (c === 'telefono' ? 'tel' : (c === 'booking_url' ? 'url' : 'text'));
+    var spell = (c === 'prestador_ein' || c === 'email' || c === 'booking_url') ? 'spellcheck="false"' : '';
+    return '<div class="' + (isFull ? 'cfg-full' : '') + '"><label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:8px 0 4px">' +
+      label + '</label><input id="cfg-' + c + '" type="' + inputType + '" ' + spell + ' value="' + ((CFG[c] || '').replace(/"/g, '&quot;')) + '" ' +
       (db ? '' : 'disabled') + ' style="width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:13.5px;font-family:var(--sans);color:var(--ink);background:var(--surface)"></div>';
   }).join('');
 
@@ -1188,25 +1214,78 @@ function vConfig() {
   ].map(function(c) {
     var label = (I18N[LANG] && I18N[LANG].config && I18N[LANG].config.labels && I18N[LANG].config.labels[c[0]]) || c[0];
     var ph = c[0] === 'apiToken' ? (CF.tokenDefinido ? t('config.cfTokenConfigurado') : t('config.cfTokenVazio')) : '';
-    return '<div><label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:12px 0 4px">' +
-      label + '</label><input id="cf-' + c[0] + '" type="' + c[1] + '" placeholder="' + ph + '" value="' +
+    return '<div><label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:10px 0 4px">' +
+      label + '</label><input id="cf-' + c[0] + '" type="' + c[1] + '" spellcheck="false" placeholder="' + ph + '" value="' +
       (c[0] === 'apiToken' ? '' : ((CF[c[0]] || '').replace(/"/g, '&quot;'))) + '" ' + (db ? '' : 'disabled') +
-      ' style="width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:14px;font-family:var(--sans);background:' + (db ? 'var(--white)' : '#f0ede4') + '"></div>';
+      ' style="width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:13.5px;font-family:var(--sans);background:' + (db ? 'var(--white)' : '#f0ede4') + '"></div>';
   }).join('');
 
-  return '<div class="painel" style="max-width:640px"><h2>' + t('config.meusDadosTitulo') + '</h2><p style="font-size:13px;color:var(--muted);margin:0 0 6px">' +
-    t('config.meusDadosSub') + '</p>' + campos + '<div style="margin-top:18px;display:flex;gap:10px;align-items:center">' +
-    '<button ' + (db ? '' : 'disabled') + ' onclick="salvarCfg()" style="border:0;border-radius:10px;padding:11px 22px;font-size:13.5px;font-weight:700;cursor:pointer;background:var(--accent);color:#fff">' +
-    t('config.btnSalvarMeusDados') + '</button><span id="cfg-ok" style="color:var(--ok);font-weight:700;font-size:13px;display:none">' + t('config.salvo') + '</span>' +
-    (db ? '' : '<span style="color:var(--warn);font-size:12.5px;font-weight:600">' + t('config.avisoModoFile') + '</span>') + '</div></div>' +
-    '<div class="painel" style="max-width:640px"><h2>' + t('config.cfTitulo') + '</h2><p style="font-size:13px;color:var(--muted);margin:0 0 6px">' +
-    t('config.cfSub') + '</p>' + cfCampos + '<div style="margin-top:18px;display:flex;gap:10px;align-items:center">' +
-    '<button ' + (db ? '' : 'disabled') + ' onclick="salvarCF()" style="border:0;border-radius:10px;padding:11px 22px;font-size:13.5px;font-weight:700;cursor:pointer;background:var(--accent);color:#fff">' +
-    t('config.cfBtnSalvar') + '</button><span id="cf-ok" style="color:var(--ok);font-weight:700;font-size:13px;display:none">' + t('config.salvo') + '</span>' +
-    (db ? (CF.tokenDefinido ? '<span style="color:var(--ok);font-size:12.5px;font-weight:600">' + t('config.cfTokenAtivo') + '</span>' : '<span style="color:var(--warn);font-size:12.5px;font-weight:600">' + t('config.cfTokenFalta') + '</span>') : '<span style="color:var(--warn);font-size:12.5px;font-weight:600">' + t('config.avisoModoFile') + '</span>') +
-    '</div></div>' +
-    '<div class="painel" style="max-width:640px"><h2>' + t('config.dadosClienteTitulo') + '</h2><p style="font-size:13px;color:var(--muted);margin:0;line-height:1.5">' +
-    t('config.dadosClienteTexto') + '</p></div>';
+  var cfBadge = CF.tokenDefinido ?
+    '<span class="pill" style="background:var(--ok-soft);color:var(--ok);font-size:11px">' + t('config.cfTokenAtivo') + '</span>' :
+    '<span class="pill" style="background:var(--warn-soft);color:var(--warn);font-size:11px">' + t('config.cfTokenFalta') + '</span>';
+
+  return '<div class="cfg-grid">' +
+    '<div class="cfg-col-main">' +
+      '<div class="painel" style="margin-bottom:0">' +
+        '<h2 style="font-family:var(--serif);font-size:18px;margin:0 0 6px;font-weight:600">' + t('config.meusDadosTitulo') + '</h2>' +
+        '<p style="font-size:13px;color:var(--muted);margin:0 0 16px;line-height:1.5">' + t('config.meusDadosSub') + '</p>' +
+        '<div class="cfg-form-grid">' + campos + '</div>' +
+        '<div style="margin-top:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">' +
+          '<button class="cfg-btn-primary" ' + (db ? '' : 'disabled') + ' onclick="salvarCfg()">' + t('config.btnSalvarMeusDados') + '</button>' +
+          '<span id="cfg-ok" style="color:var(--ok);font-weight:700;font-size:13px;display:none">' + t('config.salvo') + '</span>' +
+          (db ? '' : '<span style="color:var(--warn);font-size:12.5px;font-weight:600">' + t('config.avisoModoFile') + '</span>') +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="cfg-col-side" style="display:flex;flex-direction:column;gap:16px">' +
+      '<details class="cfg-collapse" id="cf-details" ontoggle="cfgCfAberto = this.open" ' + (cfgCfAberto ? 'open' : '') + '>' +
+        '<summary class="cfg-collapse-header">' +
+          '<div style="display:flex;align-items:center;gap:10px;min-width:0">' +
+            '<span style="font-size:18px;line-height:1">☁️</span>' +
+            '<div style="min-width:0">' +
+              '<div style="font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (t('config.cfTituloShort') || 'Conexión Cloudflare') + '</div>' +
+              '<div style="font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (CF.customDomain ? (CF.subdomain ? CF.subdomain + '.' + CF.customDomain : CF.customDomain) : 'Workers / Global CDN') + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">' +
+            cfBadge +
+            '<svg class="cfg-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
+          '</div>' +
+        '</summary>' +
+        '<div class="cfg-collapse-body">' +
+          '<p style="font-size:12.5px;color:var(--muted);margin:12px 0 14px;line-height:1.5">' + t('config.cfSub') + '</p>' +
+          cfCampos +
+          '<div style="margin-top:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">' +
+            '<button class="cfg-btn-primary" ' + (db ? '' : 'disabled') + ' onclick="salvarCF()">' + t('config.cfBtnSalvar') + '</button>' +
+            '<span id="cf-ok" style="color:var(--ok);font-weight:700;font-size:13px;display:none">' + t('config.salvo') + '</span>' +
+            (db ? (CF.tokenDefinido ? '<span style="color:var(--ok);font-size:12px;font-weight:600">' + t('config.cfTokenAtivo') + '</span>' : '<span style="color:var(--warn);font-size:12px;font-weight:600">' + t('config.cfTokenFalta') + '</span>') : '<span style="color:var(--warn);font-size:12.5px;font-weight:600">' + t('config.avisoModoFile') + '</span>') +
+          '</div>' +
+        '</div>' +
+      '</details>' +
+
+      '<details class="cfg-collapse" id="dados-cliente-details" ontoggle="cfgDadosClienteAberto = this.open" ' + (cfgDadosClienteAberto ? 'open' : '') + '>' +
+        '<summary class="cfg-collapse-header">' +
+          '<div style="display:flex;align-items:center;gap:10px;min-width:0">' +
+            '<span style="font-size:18px;line-height:1">📋</span>' +
+            '<div style="min-width:0">' +
+              '<div style="font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + t('config.dadosClienteTitulo') + '</div>' +
+              '<div style="font-size:11.5px;color:var(--muted)">Tax ID / EIN y dirección legal</div>' +
+            '</div>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">' +
+            '<span class="pill" style="background:var(--surface);border:1px solid var(--line);color:var(--muted);font-size:10.5px">Guía</span>' +
+            '<svg class="cfg-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
+          '</div>' +
+        '</summary>' +
+        '<div class="cfg-collapse-body">' +
+          '<p style="font-size:13px;color:var(--ink);margin:14px 0 0;line-height:1.6;background:var(--surface);padding:12px 14px;border-radius:10px;border-left:3px solid var(--accent)">' +
+            t('config.dadosClienteTexto') +
+          '</p>' +
+        '</div>' +
+      '</details>' +
+    '</div>' +
+  '</div>';
 }
 
 function salvarCfg() {
