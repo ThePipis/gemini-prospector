@@ -59,11 +59,15 @@ def atualizar_status_proposta(slug):
 
 def construir_propuesta(lead, cfg, idioma='auto', es_followup=False):
     firma = cfg.get('firma', {})
-    mi_nombre = firma.get('nombre', 'Jose Gonzales')
+    mi_nombre = firma.get('nombre', 'The AI Sales Radar Team')
     mi_empresa = firma.get('empresa', 'AI Sales Radar Studio')
-    mi_tel = firma.get('telefono', '+1 (555) 019-2834')
+    mi_tel = firma.get('telefono', '').strip()
     mi_email = firma.get('email', 'aisalesradar.agency@gmail.com')
     mi_web = f"https://{cfg.get('cloudflare', {}).get('customDomain', 'aisalesradar.com')}"
+    booking_url = firma.get('booking_url', '').strip() or cfg.get('booking_url', '').strip()
+
+    contacto_linea = f"{mi_tel} · " if mi_tel else ""
+    firma_pie = f"{contacto_linea}<a href=\"{mi_web}\">{mi_web}</a>"
 
     subdomain = cfg.get('cloudflare', {}).get('subdomain', 'demos')
     domain = cfg.get('cloudflare', {}).get('customDomain', 'aisalesradar.com')
@@ -87,84 +91,92 @@ def construir_propuesta(lead, cfg, idioma='auto', es_followup=False):
         else:
             idioma = 'en'
 
+    cta_agenda_es = f"""<p style="margin: 16px 0 10px;">Si desean revisar este concepto en vivo, resolver cualquier duda o ver cómo restaurar su presencia web sin complicaciones, pueden agendar una breve videollamada de 10 minutos por Google Meet directamente en nuestro calendario:<br>
+👉 <a href="{booking_url}" style="font-weight: bold; color: #2563eb;">Agendar videollamada de 10 minutos (Google Meet)</a></p>""" if booking_url else ""
+
+    cta_agenda_en = f"""<p style="margin: 16px 0 10px;">If you'd like to walk through this concept live, ask any questions, or see how easily we can migrate your content without downtime, feel free to pick a quick 10-minute Google Meet chat on our calendar:<br>
+👉 <a href="{booking_url}" style="font-weight: bold; color: #2563eb;">Schedule a 10-Min Video Call (Google Meet)</a></p>""" if booking_url else ""
+
     if idioma == 'es':
-        titulo_cargo = firma.get('presentacion_es', 'Especialista en Diseño Web y Conversión')
+        titulo_cargo = firma.get('presentacion_es', 'Especialistas en Diseño Web y Conversión')
         if es_followup:
             asunto = f"Seguimiento sobre la propuesta web para {nombre_negocio}"
             cuerpo_html = f"""<p>Hola,</p>
-<p>Solo quería asegurarme de que mi mensaje anterior no se haya perdido entre sus correos. ¿Tuvieron oportunidad de ver la versión móvil interactiva que diseñé para <b>{nombre_negocio}</b>?</p>
+<p>Solo quería asegurarme de que mi mensaje anterior no se haya perdido entre sus correos. ¿Tuvieron oportunidad de ver la versión móvil interactiva que diseñamos para <b>{nombre_negocio}</b>?</p>
 <p>Pueden verla y compararla directamente en su teléfono aquí:<br>
 <a href="{url_demo}">{url_demo}</a></p>
+{cta_agenda_es}
 <p>Sin ningún compromiso. ¡Que tengan una excelente semana!</p>
-<p>Atentamente,<br>
+<p>Un cordial saludo,<br>
 <b>{mi_nombre}</b><br>
-{titulo_cargo}<br>
-{mi_empresa} · {mi_tel}</p>"""
+{titulo_cargo} · <b>{mi_empresa}</b><br>
+{firma_pie}</p>"""
         elif es_urgente_ssl:
             asunto = f"Urgente: Notificación de seguridad en el sitio web de {nombre_negocio} + propuesta de respaldo"
             cuerpo_html = f"""<p>Estimado equipo de {nombre_negocio},</p>
 <p>Encontré su clínica mientras investigaba los mejores servicios dentales en {ciudad}, California. Muchas felicidades por su excelente reputación de {nota}★ en Google; es evidente el aprecio y confianza de sus pacientes.</p>
 <p>Les escribo con urgencia como cortesía profesional: al intentar ingresar a su sitio web oficial, noté que se encuentra caído y los navegadores bloquean el acceso debido a un error crítico de seguridad SSL (<b>ERR_SSL_PROTOCOL_ERROR</b>). Esto está impidiendo que nuevos pacientes puedan ver sus servicios o agendar citas en línea.</p>
-<p>Para evitar que sigan perdiendo consultas y mostrarles una solución inmediata, diseñé una versión moderna, ultrarrápida y segura que ya se encuentra activa en este enlace de demostración:</p>
+<p>Para evitar que sigan perdiendo consultas y mostrarles una solución inmediata, diseñamos una versión moderna, ultrarrápida y segura que ya se encuentra activa en este enlace de demostración:</p>
 <p><a href="{url_demo}">{url_demo}</a></p>
-<p>Pueden revisarla directamente desde su teléfono y comparar el antes y después. Si les resulta útil, con gusto les ayudo a restaurar su presencia web de inmediato.</p>
+<p>Pueden revisarla directamente desde su teléfono y comparar el antes y después. Si les resulta útil, con gusto les ayudamos a restaurar su presencia web de inmediato.</p>
+{cta_agenda_es}
 <p>Un cordial saludo,<br>
 <b>{mi_nombre}</b><br>
-{titulo_cargo}<br>
-<b>{mi_empresa}</b><br>
-{mi_tel} · <a href="{mi_web}">{mi_web}</a></p>"""
+{titulo_cargo} · <b>{mi_empresa}</b><br>
+{firma_pie}</p>"""
         else:
             asunto = f"Una propuesta para la página móvil de {nombre_negocio}"
             cuerpo_html = f"""<p>Estimado equipo de {nombre_negocio},</p>
 <p>Encontré su negocio mientras investigaba los mejores servicios de {nicho} en {ciudad}, California. Muchas felicidades por su calificación de {nota}★ en Google; se nota la confianza y preferencia de sus clientes.</p>
 <p>Al analizar su sitio web desde el teléfono celular, noté que la navegación móvil presenta oportunidades clave de mejora y no cuenta con un botón directo para agendar citas o llamar al instante, lo que puede estar haciendo perder clientes potenciales que buscan desde sus smartphones.</p>
-<p>Para mostrarles cómo luciría su presencia digital con una experiencia moderna y orientada a captar clientes, preparé una nueva versión interactiva que ya está en línea en este enlace de demostración:</p>
+<p>Para mostrarles cómo luciría su presencia digital con una experiencia moderna y orientada a captar clientes, preparamos una nueva versión interactiva que ya está en línea en este enlace de demostración:</p>
 <p><a href="{url_demo}">{url_demo}</a></p>
-<p>Pueden abrirla en su teléfono y comparar el antes y después. Me encantaría saber su opinión cuando tengan un minuto disponible.</p>
+<p>Pueden abrirla en su teléfono y comparar el antes y después. Nos encantaría saber su opinión cuando tengan un minuto disponible.</p>
+{cta_agenda_es}
 <p>Un cordial saludo,<br>
 <b>{mi_nombre}</b><br>
-{titulo_cargo}<br>
-<b>{mi_empresa}</b><br>
-{mi_tel} · <a href="{mi_web}">{mi_web}</a></p>"""
+{titulo_cargo} · <b>{mi_empresa}</b><br>
+{firma_pie}</p>"""
     else:
-        titulo_cargo = firma.get('presentacion_en', 'High-Converting Web Designer & Conversion Specialist')
+        titulo_cargo = firma.get('presentacion_en', 'High-Converting Web Design & Growth Specialists')
         if es_followup:
             asunto = f"Quick follow-up regarding the mobile concept for {nombre_negocio}"
             cuerpo_html = f"""<p>Hi there,</p>
-<p>Just wanted to make sure my previous note didn't get buried. Were you able to check out the mobile redesign concept I put together for <b>{nombre_negocio}</b>?</p>
+<p>Just wanted to make sure our previous note didn't get buried. Were you able to check out the mobile redesign concept we put together for <b>{nombre_negocio}</b>?</p>
 <p>You can preview it side-by-side on your phone here:<br>
 <a href="{url_demo}">{url_demo}</a></p>
-<p>No pressure at all — if you're completely happy with your current setup, I totally understand. Have a great week!</p>
+{cta_agenda_en}
+<p>No pressure at all — if you're completely happy with your current setup, we totally understand. Have a great week!</p>
 <p>Best regards,<br>
 <b>{mi_nombre}</b><br>
-{titulo_cargo}<br>
-{mi_empresa} · {mi_tel}</p>"""
+{titulo_cargo} · <b>{mi_empresa}</b><br>
+{firma_pie}</p>"""
         elif es_urgente_ssl:
             asunto = f"Urgent: Security notice regarding {nombre_negocio}'s website + backup concept"
             cuerpo_html = f"""<p>Hi {nombre_negocio} team,</p>
 <p>I came across your practice while researching top-rated dental care in {ciudad}, CA. Congratulations on your outstanding {nota}★ reputation on Google — your patients clearly value your care.</p>
-<p>I am reaching out as a quick professional courtesy: when trying to view your website, I noticed it is currently down and browsers are actively blocking visitors due to a critical security protocol error (<b>ERR_SSL_PROTOCOL_ERROR</b>). This means patients searching for you online cannot view your hours, phone number, or request appointments.</p>
-<p>To help you see how your practice can restore an immediate, trustworthy online presence, I put together an emergency modern mobile redesign concept, live right now on this interactive preview link:</p>
+<p>We are reaching out as a quick professional courtesy: when trying to view your website, we noticed it is currently down and browsers are actively blocking visitors due to a critical security protocol error (<b>ERR_SSL_PROTOCOL_ERROR</b>). This means patients searching for you online cannot view your hours, phone number, or request appointments.</p>
+<p>To help you see how your practice can restore an immediate, trustworthy online presence, we put together an emergency modern mobile redesign concept, live right now on this interactive preview link:</p>
 <p><a href="{url_demo}">{url_demo}</a></p>
 <p>You can open it side-by-side on your phone to compare the before & after. If you'd like to get your web presence restored and secure without downtime, feel free to reach out.</p>
+{cta_agenda_en}
 <p>Best regards,<br>
 <b>{mi_nombre}</b><br>
-{titulo_cargo}<br>
-<b>{mi_empresa}</b><br>
-{mi_tel} · <a href="{mi_web}">{mi_web}</a></p>"""
+{titulo_cargo} · <b>{mi_empresa}</b><br>
+{firma_pie}</p>"""
         else:
             asunto = f"Quick question regarding {nombre_negocio}'s mobile website"
             cuerpo_html = f"""<p>Hi {nombre_negocio} team,</p>
 <p>I came across your practice while researching top-rated {nicho} in {ciudad}, CA. Congratulations on your {nota}★ rating on Google — clients and patients clearly love your work.</p>
-<p>While looking through your services on my phone, I noticed that your current website takes a moment to load and lacks a one-tap appointment booking button, which might be costing you calls and conversions from mobile visitors.</p>
-<p>Since your business already has such high trust, I put together a clean, high-converting mobile redesign concept, completely live on this interactive demo link:</p>
+<p>While looking through your services on mobile, we noticed that your current website takes a moment to load and lacks a one-tap appointment booking button, which might be costing you calls and conversions from mobile visitors.</p>
+<p>Since your business already has such high trust, we put together a clean, high-converting mobile redesign concept, completely live on this interactive demo link:</p>
 <p><a href="{url_demo}">{url_demo}</a></p>
-<p>It's fully responsive so you can compare it side-by-side with your current page directly on your phone. Would love to hear your thoughts!</p>
+<p>It's fully responsive so you can compare it side-by-side with your current page directly on your phone. We'd love to hear your thoughts!</p>
+{cta_agenda_en}
 <p>Best regards,<br>
 <b>{mi_nombre}</b><br>
-{titulo_cargo}<br>
-<b>{mi_empresa}</b><br>
-{mi_tel} · <a href="{mi_web}">{mi_web}</a></p>"""
+{titulo_cargo} · <b>{mi_empresa}</b><br>
+{firma_pie}</p>"""
 
     return {
         'asunto': asunto,
