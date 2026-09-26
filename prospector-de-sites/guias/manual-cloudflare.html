@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Manual de Configuración — Cloudflare Workers & CDN Global</title>
+<style>
+  @page { size: letter; margin: 16mm 14mm 16mm 14mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #1e293b;
+    line-height: 1.55;
+    background: #ffffff;
+    margin: 0;
+    padding: 0;
+    font-size: 13px;
+  }
+  .header {
+    border-bottom: 2px solid #f97316;
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .brand { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; font-weight: 700; }
+  .title { font-size: 22px; font-weight: 800; color: #0f172a; margin: 4px 0 2px; }
+  .subtitle { font-size: 13px; color: #475569; margin: 0; }
+  .badge {
+    background: #ffedd5;
+    color: #c2410c;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 11px;
+    display: inline-block;
+  }
+  .callout {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-left: 4px solid #f97316;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    font-size: 12.5px;
+  }
+  .step-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    page-break-inside: avoid;
+  }
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .step-num {
+    background: #f97316;
+    color: #ffffff;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .step-title { font-size: 14px; font-weight: 700; color: #0f172a; margin: 0; }
+  .step-body { font-size: 12.5px; color: #334155; margin-left: 34px; }
+  .step-body ul { margin: 6px 0; padding-left: 20px; }
+  .step-body li { margin-bottom: 4px; }
+  .url-box {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 11.5px;
+    color: #0f172a;
+    display: inline-block;
+    word-break: break-all;
+    margin: 4px 0;
+  }
+  .img-wrap {
+    margin: 10px 0 6px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f8fafc;
+    text-align: center;
+  }
+  .img-wrap img {
+    max-width: 100%;
+    height: auto;
+    max-height: 230px;
+    display: block;
+    margin: 0 auto;
+    object-fit: cover;
+    object-position: top;
+  }
+  .img-caption {
+    font-size: 10.5px;
+    color: #64748b;
+    padding: 4px 8px;
+    background: #f1f5f9;
+    border-top: 1px solid #e2e8f0;
+    text-align: left;
+  }
+  table.param-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 12px;
+    page-break-inside: avoid;
+  }
+  table.param-table th {
+    background: #f1f5f9;
+    color: #334155;
+    font-weight: 700;
+    text-align: left;
+    padding: 8px 10px;
+    border: 1px solid #e2e8f0;
+  }
+  table.param-table td {
+    padding: 8px 10px;
+    border: 1px solid #e2e8f0;
+    vertical-align: top;
+  }
+  .check-list {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: #166534;
+    page-break-inside: avoid;
+  }
+  .check-list b { color: #14532d; display: block; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="brand">Prospector AI CRM · Manual Técnico Oficial</div>
+    <h1 class="title">Configuración de Cloudflare — Despliegue y CDN Global</h1>
+    <p class="subtitle">Publicación instantánea de sitios demo y propuestas con HTTPS automático en Cloudflare Workers</p>
+  </div>
+  <div style="text-align:right">
+    <span class="badge">Cloudflare Workers API</span>
+    <div style="font-size:11px;color:#64748b;margin-top:4px">CDN Global Edge</div>
+  </div>
+</div>
+
+<div class="callout">
+  <b>Objetivo:</b> Vincular tu cuenta de Cloudflare para que el Agente IA pueda compilar y desplegar los sitios rediseñados y propuestas interactivas directamente a internet con un solo comando (o mediante el plugin <code>deploy-cloudflare</code>). El sitio queda publicado bajo tu dominio personalizado (ejemplo: <code>https://demos.aisalesradar.com/oxy-dental-los-angeles/</code>) con certificado SSL de alta seguridad y tiempos de carga inferiores a 200ms en todo EE.UU.
+</div>
+
+<div class="step-card">
+  <div class="step-header">
+    <div class="step-num">1</div>
+    <h3 class="step-title">Acceder al Panel de Cloudflare</h3>
+  </div>
+  <div class="step-body">
+    Inicia sesión en Cloudflare con tu cuenta de agencia:
+    <div class="url-box">https://dash.cloudflare.com</div>
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-header">
+    <div class="step-num">2</div>
+    <h3 class="step-title">Localizar tu Account ID (ID de Cuenta)</h3>
+  </div>
+  <div class="step-body">
+    En el panel de Cloudflare:
+    <ul>
+      <li>Haz clic en tu dominio (ej. <code>aisalesradar.com</code>) o en la sección <b>Workers & Pages</b> en el menú lateral.</li>
+      <li>En la columna derecha de la pantalla (sección <i>API</i>), localiza <b>Account ID</b>.</li>
+      <li>Es un hash hexadecimal de 32 caracteres (ejemplo: <code>534190a0d0708744cbb88312512e92d0</code>).</li>
+      <li>Haz clic en <i>Click to copy</i> para copiarlo.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-header">
+    <div class="step-num">3</div>
+    <h3 class="step-title">Crear el API Token con Permisos de Workers</h3>
+  </div>
+  <div class="step-body">
+    Para que el sistema tenga permiso para subir los archivos de las demos sin exponer tu contraseña:
+    <ul>
+      <li>Ve directamente a la sección de API Tokens de tu perfil:</li>
+    </ul>
+    <div class="url-box">https://dash.cloudflare.com/profile/api-tokens</div>
+    <ul>
+      <li>Haz clic en el botón azul <b>Create Token</b>.</li>
+      <li>Puedes seleccionar la plantilla preconfigurada <b>Edit Cloudflare Workers</b> (clic en <i>Use template</i>), o crear un <i>Custom Token</i> con estos permisos mínimos:
+        <ul>
+          <li><b>Account ➔ Workers Scripts ➔ Edit</b></li>
+          <li><b>Account ➔ Account Settings ➔ Read</b></li>
+          <li><b>Zone ➔ Workers Routes ➔ Edit</b></li>
+          <li><b>Zone ➔ DNS ➔ Edit</b> (necesario para asignar automáticamente el dominio personalizado)</li>
+        </ul>
+      </li>
+      <li>En <b>Account Resources</b>, selecciona tu cuenta (<i>All accounts</i> o tu cuenta específica).</li>
+      <li>Haz clic en <b>Continue to summary</b> y luego en <b>Create Token</b>.</li>
+      <li><b>Copia el Token generado inmediatamente</b> (Cloudflare solo te lo mostrará una única vez).</li>
+    </ul>
+    <div class="img-wrap">
+      <img src="img/cf_token_support.png" alt="Cloudflare API Token Creation">
+      <div class="img-caption">Referencia oficial: Asistente de creación de API Tokens en Cloudflare Dashboard.</div>
+    </div>
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-header">
+    <div class="step-num">4</div>
+    <h3 class="step-title">Ingresar la configuración en el Panel del CRM</h3>
+  </div>
+  <div class="step-body">
+    <ul>
+      <li>Abre el panel en <code>http://localhost:8765</code> y ve a la pestaña <b>Configuración</b>.</li>
+      <li>En la columna lateral derecha, despliega: <b>☁️ Conexión Cloudflare — Despliegue y CDN Global</b>.</li>
+      <li>Ingresa los siguientes valores:
+        <ul>
+          <li><b>Cloudflare Account ID:</b> <code>534190a0d0708744cbb88312512e92d0</code></li>
+          <li><b>Nombre del Proyecto:</b> <code>prospector-sites</code> (o el nombre que prefieras).</li>
+          <li><b>Dominio Personalizado:</b> <code>aisalesradar.com</code> (tu dominio registrado en Cloudflare).</li>
+          <li><b>Subdominio de Demos:</b> <code>demos</code> (publicará en <code>demos.aisalesradar.com</code>).</li>
+          <li><b>Cloudflare API Token:</b> Pega el token generado en el Paso 3.</li>
+        </ul>
+      </li>
+      <li>Haz clic en <b>Guardar Cloudflare</b>. La etiqueta cambiará a <span style="background:#f0fdf4;color:#16a34a;padding:2px 8px;border-radius:6px;font-weight:700">✓ Token activo</span>.</li>
+    </ul>
+  </div>
+</div>
+
+<table class="param-table">
+  <thead>
+    <tr>
+      <th style="width:26%">Campo en el Panel</th>
+      <th style="width:36%">Dónde obtenerlo en Cloudflare</th>
+      <th style="width:38%">Valor de Ejemplo / Formato</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>accountId</b><br><small>Cloudflare Account ID</small></td>
+      <td>dash.cloudflare.com ➔ Overview de Zona o Workers</td>
+      <td><code>534190a0d0708744cbb88312512e92d0</code><br><small style="color:#64748b">Hash de 32 caracteres</small></td>
+    </tr>
+    <tr>
+      <td><b>projectName</b><br><small>Nombre del Proyecto</small></td>
+      <td>Definido por ti para el Worker de assets</td>
+      <td><code>prospector-sites</code></td>
+    </tr>
+    <tr>
+      <td><b>customDomain</b><br><small>Dominio Personalizado</small></td>
+      <td>Dominio activo en Cloudflare</td>
+      <td><code>aisalesradar.com</code></td>
+    </tr>
+    <tr>
+      <td><b>subdomain</b><br><small>Subdominio de Demos</small></td>
+      <td>Prefijo deseado (ej. demos)</td>
+      <td><code>demos</code> (resulta en demos.aisalesradar.com)</td>
+    </tr>
+    <tr>
+      <td><b>apiToken</b><br><small>API Token</small></td>
+      <td>dash.cloudflare.com/profile/api-tokens</td>
+      <td><code>vK9x...</code> (Token secreto con permisos de Workers)</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="check-list">
+  <b>✓ Verificación del Despliegue en Vivo:</b>
+  1. Al desplegar una demo con el Agente IA, el sistema ejecuta <code>npx wrangler deploy</code> con Static Assets.<br>
+  2. Podrás verificar el sitio web público en internet navegando a: <code>https://demos.aisalesradar.com/&lt;slug-del-cliente&gt;/</code>.<br>
+  3. En las tarjetas del CRM aparecerá el enlace directo <b>en vivo ↗</b> que puedes pulsar para comprobar que carga en HTTPS con certificado SSL universal activo.
+</div>
+
+</body>
+</html>

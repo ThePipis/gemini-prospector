@@ -182,6 +182,8 @@ select.mini{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-
 .cfg-btn-primary:hover{background:var(--accent-2)}
 .cfg-btn-primary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .cfg-btn-primary:disabled{opacity:.4;cursor:default}
+.cfg-help-btn{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,0.06);color:var(--muted);font-size:11px;font-weight:700;text-decoration:none;border:1px solid var(--line);cursor:pointer;transition:all .15s ease;vertical-align:middle;margin-left:6px;line-height:1}
+.cfg-help-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);transform:scale(1.1)}
 
 /* Modal de Sincronización Profesional */
 #sync-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:70;padding:16px}
@@ -529,6 +531,17 @@ var I18N = {
       twBtnSalvar: 'Guardar Twilio',
       twTokenAtivo: '✓ Twilio activo',
       twTokenFalta: 'Opcional / Pendiente',
+      gmailTitulo: 'Conexión Gmail & Google App Password',
+      gmailTituloShort: 'Google App Password',
+      gmailSub: 'Envío de propuestas por correo, depósito de borradores en Gmail y trazabilidad de respuestas de clientes.',
+      gmailUserLabel: 'Email de Gmail Remitente',
+      gmailAppPasswordLabel: 'Contraseña de Aplicación de Google (16 caracteres)',
+      gmailAppPasswordConfigurado: '••••• configurada (dejar vacío para mantener)',
+      gmailAppPasswordVazio: 'xxxx xxxx xxxx xxxx',
+      gmailBtnSalvar: 'Guardar Contraseña de Gmail',
+      gmailTokenAtivo: '✓ Contraseña activa',
+      gmailTokenFalta: 'Falta configurar contraseña',
+      manualPdfTitle: 'Ver manual PDF paso a paso (abre en pestaña nueva)',
       dadosClienteTitulo: '¿Y los datos del cliente para el contrato?',
       dadosClienteTexto: 'El Tax ID / EIN y dirección del cliente se solicitan al cerrar la venta: pídelos por correo o llamada/SMS y (1) pásalos al Agente IA al pedir /contrato — los extrae y guarda solo — o (2) ingrésalos en ✎ editar en la tarjeta. Lo que falte aparecerá como "[completar]" en el borrador.',
       labels: {
@@ -742,6 +755,17 @@ var I18N = {
       twBtnSalvar: 'Save Twilio settings',
       twTokenAtivo: '✓ Twilio active',
       twTokenFalta: 'Optional / Pending',
+      gmailTitulo: 'Gmail & Google App Password Connection',
+      gmailTituloShort: 'Google App Password',
+      gmailSub: 'Sending email proposals, depositing Gmail drafts, and client reply tracking.',
+      gmailUserLabel: 'Sender Gmail Address',
+      gmailAppPasswordLabel: 'Google App Password (16 characters)',
+      gmailAppPasswordConfigurado: '••••• configured (leave blank to keep)',
+      gmailAppPasswordVazio: 'xxxx xxxx xxxx xxxx',
+      gmailBtnSalvar: 'Save Gmail Password',
+      gmailTokenAtivo: '✓ Password active',
+      gmailTokenFalta: 'Missing App Password',
+      manualPdfTitle: 'View step-by-step PDF manual (opens in new tab)',
       dadosClienteTitulo: 'What about client contract details?',
       dadosClienteTexto: 'Client EIN/Tax ID and legal address are requested upon closing: ask via email, call/SMS and (1) provide to your AI Agent when calling /contrato — it extracts and saves automatically — or (2) fill in via ✎ edit on the card. Missing info shows as "[to be completed]" in draft.',
       labels: {
@@ -908,7 +932,7 @@ function aplicaOv(arr) {
             .map(function(l) { return Object.assign({}, l, OV[l.slug] || {}); });
 }
 
-var CFG = {}, CF = {}, TW = {};
+var CFG = {}, CF = {}, TW = {}, ENV = {};
 var leads = aplicaOv(D.leads || []);
 if (Object.keys(OV).length) {
   var lb = document.getElementById('limpar-ov');
@@ -930,6 +954,7 @@ fetch('/api/leads', { cache: 'no-store' }).then(function(r) {
     if (fm.telefono && !CFG.telefono) CFG.telefono = fm.telefono;
     CF = (c && c.cloudflare) || {};
     TW = (c && c.twilio) || {};
+    ENV = (c && c.envio) || {};
     if (view === 'config') render();
   });
   updateModoBadge();
@@ -1588,6 +1613,7 @@ var CFG_FULL_WIDTH = ['prestador_direccion', 'booking_url'];
 
 var cfgCfAberto = false;
 var cfgTwAberto = false;
+var cfgGmailAberto = false;
 var cfgDadosClienteAberto = false;
 
 function vConfig() {
@@ -1597,8 +1623,12 @@ function vConfig() {
     var isFull = CFG_FULL_WIDTH.indexOf(c) !== -1;
     var inputType = c === 'email' ? 'email' : (c === 'telefono' ? 'tel' : (c === 'booking_url' ? 'url' : 'text'));
     var spell = (c === 'prestador_ein' || c === 'email' || c === 'booking_url') ? 'spellcheck="false"' : '';
+    var helpIcon = '';
+    if (c === 'booking_url') {
+      helpIcon = ' <a href="/guias/manual-google-calendar.pdf" target="_blank" class="cfg-help-btn" title="' + (t('config.manualPdfTitle') || 'Ver manual PDF') + '">ℹ️</a>';
+    }
     return '<div class="' + (isFull ? 'cfg-full' : '') + '"><label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:8px 0 4px">' +
-      label + '</label><input id="cfg-' + c + '" type="' + inputType + '" ' + spell + ' value="' + ((CFG[c] || '').replace(/"/g, '&quot;')) + '" ' +
+      label + helpIcon + '</label><input id="cfg-' + c + '" type="' + inputType + '" ' + spell + ' value="' + ((CFG[c] || '').replace(/"/g, '&quot;')) + '" ' +
       (db ? '' : 'disabled') + ' style="width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:13.5px;font-family:var(--sans);color:var(--ink);background:var(--surface)"></div>';
   }).join('');
 
@@ -1632,6 +1662,10 @@ function vConfig() {
     '<span class="pill" style="background:var(--ok-soft);color:var(--ok);font-size:11px">' + t('config.twTokenAtivo') + '</span>' :
     '<span class="pill" style="background:var(--warn-soft);color:var(--warn);font-size:11px">' + t('config.twTokenFalta') + '</span>';
 
+  var gmailBadge = ENV.appPasswordDefinida ?
+    '<span class="pill" style="background:var(--ok-soft);color:var(--ok);font-size:11px">' + t('config.gmailTokenAtivo') + '</span>' :
+    '<span class="pill" style="background:var(--warn-soft);color:var(--warn);font-size:11px">' + t('config.gmailTokenFalta') + '</span>';
+
   return '<div class="cfg-grid">' +
     '<div class="cfg-col-main">' +
       '<div class="painel" style="margin-bottom:0">' +
@@ -1647,12 +1681,38 @@ function vConfig() {
     '</div>' +
 
     '<div class="cfg-col-side" style="display:flex;flex-direction:column;gap:16px">' +
+      '<details class="cfg-collapse" id="gmail-details" ontoggle="cfgGmailAberto = this.open" ' + (cfgGmailAberto ? 'open' : '') + '>' +
+        '<summary class="cfg-collapse-header">' +
+          '<div style="display:flex;align-items:center;gap:10px;min-width:0">' +
+            '<span style="font-size:18px;line-height:1">📧</span>' +
+            '<div style="min-width:0">' +
+              '<div style="font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + t('config.gmailTitulo') + ' <a href="/guias/manual-google-app-password.pdf" target="_blank" class="cfg-help-btn" onclick="event.stopPropagation()" title="' + (t('config.manualPdfTitle') || 'Ver manual PDF') + '">ℹ️</a></div>' +
+              '<div style="font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (ENV.gmail_user ? ENV.gmail_user : 'Borradores y Envío de Propuestas') + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">' +
+            gmailBadge +
+            '<svg class="cfg-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
+          '</div>' +
+        '</summary>' +
+        '<div class="cfg-collapse-body">' +
+          '<p style="font-size:12.5px;color:var(--muted);margin:12px 0 14px;line-height:1.5">' + t('config.gmailSub') + '</p>' +
+          '<div><label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:10px 0 4px">' + t('config.gmailUserLabel') + '</label><input id="gmail-user" type="email" spellcheck="false" value="' + ((ENV.gmail_user || '').replace(/"/g, '&quot;')) + '" ' + (db ? '' : 'disabled') + ' style="width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:13.5px;font-family:var(--sans);background:' + (db ? 'var(--white)' : '#f0ede4') + '"></div>' +
+          '<div><label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:10px 0 4px">' + t('config.gmailAppPasswordLabel') + '</label><input id="gmail-pw" type="password" spellcheck="false" placeholder="' + (ENV.appPasswordDefinida ? t('config.gmailAppPasswordConfigurado') : t('config.gmailAppPasswordVazio')) + '" ' + (db ? '' : 'disabled') + ' style="width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:13.5px;font-family:var(--sans);background:' + (db ? 'var(--white)' : '#f0ede4') + '"></div>' +
+          '<div style="margin-top:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">' +
+            '<button class="cfg-btn-primary" ' + (db ? '' : 'disabled') + ' onclick="salvarGmail()">' + t('config.gmailBtnSalvar') + '</button>' +
+            '<span id="gmail-ok" style="color:var(--ok);font-weight:700;font-size:13px;display:none">' + t('config.salvo') + '</span>' +
+            (db ? (ENV.appPasswordDefinida ? '<span style="color:var(--ok);font-size:12px;font-weight:600">' + t('config.gmailTokenAtivo') + '</span>' : '<span style="color:var(--warn);font-size:12px;font-weight:600">' + t('config.gmailTokenFalta') + '</span>') : '<span style="color:var(--warn);font-size:12.5px;font-weight:600">' + t('config.avisoModoFile') + '</span>') +
+          '</div>' +
+        '</div>' +
+      '</details>' +
+
       '<details class="cfg-collapse" id="cf-details" ontoggle="cfgCfAberto = this.open" ' + (cfgCfAberto ? 'open' : '') + '>' +
         '<summary class="cfg-collapse-header">' +
           '<div style="display:flex;align-items:center;gap:10px;min-width:0">' +
             '<span style="font-size:18px;line-height:1">☁️</span>' +
             '<div style="min-width:0">' +
-              '<div style="font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (t('config.cfTituloShort') || 'Conexión Cloudflare') + '</div>' +
+              '<div style="font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (t('config.cfTituloShort') || 'Conexión Cloudflare') + ' <a href="/guias/manual-cloudflare.pdf" target="_blank" class="cfg-help-btn" onclick="event.stopPropagation()" title="' + (t('config.manualPdfTitle') || 'Ver manual PDF') + '">ℹ️</a></div>' +
               '<div style="font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (CF.customDomain ? (CF.subdomain ? CF.subdomain + '.' + CF.customDomain : CF.customDomain) : 'Workers / Global CDN') + '</div>' +
             '</div>' +
           '</div>' +
@@ -1677,7 +1737,7 @@ function vConfig() {
           '<div style="display:flex;align-items:center;gap:10px;min-width:0">' +
             '<span style="font-size:18px;line-height:1">📱</span>' +
             '<div style="min-width:0">' +
-              '<div style="font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + t('config.twTitulo') + '</div>' +
+              '<div style="font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + t('config.twTitulo') + ' <a href="/guias/manual-twilio.pdf" target="_blank" class="cfg-help-btn" onclick="event.stopPropagation()" title="' + (t('config.manualPdfTitle') || 'Ver manual PDF') + '">ℹ️</a></div>' +
               '<div style="font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (TW.fromNumber ? TW.fromNumber : 'SMS y Telefonía') + '</div>' +
             '</div>' +
           '</div>' +
@@ -1780,6 +1840,26 @@ function salvarTW() {
       if (body[k] !== undefined) TW[k] = body[k];
     });
     var ok = document.getElementById('tw-ok');
+    if (ok) {
+      ok.style.display = 'inline';
+      setTimeout(function() { ok.style.display = 'none'; render(); }, 1200);
+    }
+  });
+}
+
+function salvarGmail() {
+  var u = (document.getElementById('gmail-user') && document.getElementById('gmail-user').value) || '';
+  var pw = (document.getElementById('gmail-pw') && document.getElementById('gmail-pw').value) || '';
+  var body = { gmail_user: u };
+  if (pw) body.gmail_app_password = pw;
+  fetch('/api/config', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ envio: body })
+  }).then(function() {
+    if (pw) ENV.appPasswordDefinida = true;
+    ENV.gmail_user = u;
+    var ok = document.getElementById('gmail-ok');
     if (ok) {
       ok.style.display = 'inline';
       setTimeout(function() { ok.style.display = 'none'; render(); }, 1200);

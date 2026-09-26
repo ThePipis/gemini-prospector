@@ -101,12 +101,17 @@ class App(SimpleHTTPRequestHandler):
                 tw['tokenDefinido'] = True
                 tw['authToken'] = ''
 
+            envio = dict(cfg.get('envio', {}))
+            envio['appPasswordDefinida'] = bool(envio.get('gmail_app_password'))
+            envio.pop('gmail_app_password', None)
+
             return self._json(200, {
                 'contrato': contrato,
                 'contratante': contrato,
                 'firma': firma,
                 'cloudflare': cf,
                 'twilio': tw,
+                'envio': envio,
                 'prospeccion': cfg.get('prospeccion', {})
             })
         if self.path.split('?')[0] in ('/api/sincronizar-agenda', '/api/sincronizar-mensajes'):
@@ -155,13 +160,15 @@ class App(SimpleHTTPRequestHandler):
     def do_PUT(self):
         if self.path.split('?')[0] == '/api/config':
             cfg = ler_config(); corpo = self._corpo()
-            for key in ['contrato', 'firma', 'cloudflare', 'prospeccion', 'contratante', 'hostgator', 'twilio']:
+            for key in ['contrato', 'firma', 'cloudflare', 'prospeccion', 'contratante', 'hostgator', 'twilio', 'envio']:
                 if key in corpo and isinstance(corpo[key], dict):
                     sub = cfg.get(key, {})
                     for k, v in corpo[key].items():
                         if key == 'cloudflare' and k == 'apiToken' and v == '':
                             continue
                         if key == 'twilio' and k == 'authToken' and v == '':
+                            continue
+                        if key == 'envio' and k == 'gmail_app_password' and v == '':
                             continue
                         sub[k] = v
                     cfg[key] = sub

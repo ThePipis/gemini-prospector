@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Manual de Configuración — Google Calendar & Google Meet</title>
+<style>
+  @page { size: letter; margin: 16mm 14mm 16mm 14mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #1e293b;
+    line-height: 1.55;
+    background: #ffffff;
+    margin: 0;
+    padding: 0;
+    font-size: 13px;
+  }
+  .header {
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .brand { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; font-weight: 700; }
+  .title { font-size: 22px; font-weight: 800; color: #0f172a; margin: 4px 0 2px; }
+  .subtitle { font-size: 13px; color: #475569; margin: 0; }
+  .badge {
+    background: #dbeafe;
+    color: #1d4ed8;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 11px;
+    display: inline-block;
+  }
+  .callout {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #2563eb;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    font-size: 12.5px;
+  }
+  .step-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    page-break-inside: avoid;
+  }
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .step-num {
+    background: #2563eb;
+    color: #ffffff;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .step-title { font-size: 14px; font-weight: 700; color: #0f172a; margin: 0; }
+  .step-body { font-size: 12.5px; color: #334155; margin-left: 34px; }
+  .step-body ul { margin: 6px 0; padding-left: 20px; }
+  .step-body li { margin-bottom: 4px; }
+  .url-box {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 11.5px;
+    color: #0f172a;
+    display: inline-block;
+    word-break: break-all;
+    margin: 4px 0;
+  }
+  .img-wrap {
+    margin: 10px 0 6px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f8fafc;
+    text-align: center;
+  }
+  .img-wrap img {
+    max-width: 100%;
+    height: auto;
+    max-height: 230px;
+    display: block;
+    margin: 0 auto;
+    object-fit: cover;
+    object-position: top;
+  }
+  .img-caption {
+    font-size: 10.5px;
+    color: #64748b;
+    padding: 4px 8px;
+    background: #f1f5f9;
+    border-top: 1px solid #e2e8f0;
+    text-align: left;
+  }
+  table.param-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 12px;
+    page-break-inside: avoid;
+  }
+  table.param-table th {
+    background: #f1f5f9;
+    color: #334155;
+    font-weight: 700;
+    text-align: left;
+    padding: 8px 10px;
+    border: 1px solid #e2e8f0;
+  }
+  table.param-table td {
+    padding: 8px 10px;
+    border: 1px solid #e2e8f0;
+    vertical-align: top;
+  }
+  .check-list {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: #166534;
+    page-break-inside: avoid;
+  }
+  .check-list b { color: #14532d; display: block; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="brand">Prospector AI CRM · Manual Técnico Oficial</div>
+    <h1 class="title">Configuración de Google Calendar & Google Meet</h1>
+    <p class="subtitle">Integración de agenda para llamadas de demostración y detección automática de citas</p>
+  </div>
+  <div style="text-align:right">
+    <span class="badge">Google Calendar API</span>
+    <div style="font-size:11px;color:#64748b;margin-top:4px">Versión 2.0 · Mercado EE.UU.</div>
+  </div>
+</div>
+
+<div class="callout">
+  <b>Objetivo:</b> Vincular tu página oficial de reservas de Google Calendar (<i>Appointment Schedule</i>) al CRM. Al configurarlo, el Agente IA insertará automáticamente el botón <b>«Schedule a 10-Min Call»</b> en las propuestas enviadas por correo y en los sitios demo en vivo. Cada vez que un cliente elija un horario, el sistema de sincronización detectará la reserva y avanzará automáticamente el prospecto a la etapa <b>Respondió</b> con la etiqueta <b>📅 Cita Google Meet</b>.
+</div>
+
+<div class="step-card">
+  <div class="step-header">
+    <div class="step-num">1</div>
+    <h3 class="step-title">Acceder a Google Calendar con tu cuenta de agencia</h3>
+  </div>
+  <div class="step-body">
+    Inicia sesión en tu navegador con la cuenta oficial que utilizas para el CRM (ej. <code>aisalesradar.agency@gmail.com</code>) dirigiéndote a:
+    <div class="url-box">https://calendar.google.com</div>
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-header">
+    <div class="step-num">2</div>
+    <h3 class="step-title">Crear una Programación de Citas (Appointment Schedule)</h3>
+  </div>
+  <div class="step-body">
+    Google Calendar ofrece la función nativa de agenda sin requerir herramientas externas de pago como Calendly:
+    <ul>
+      <li>En la esquina superior izquierda, haz clic en el botón <b>+ Crear</b> (o haz clic sobre cualquier espacio de tu calendario).</li>
+      <li>En el menú desplegable, selecciona <b>Página de citas</b> (o <i>Appointment Schedule</i>).</li>
+      <li><b>Título de la cita:</b> <code>10-Min Website Walkthrough & Strategy Call</code>.</li>
+      <li><b>Duración:</b> Configura <b>10 o 15 minutos</b> (las reuniones cortas aumentan dramáticamente la tasa de conversión en prospección fría).</li>
+      <li><b>Disponibilidad general:</b> Define tus días y horas hábiles (ejemplo: Lunes a Viernes de 9:00 AM a 5:00 PM).</li>
+      <li><b>Ventana de programación:</b> Establece que las citas se puedan reservar con un máximo de <b>14 o 30 días</b> de anticipación y un mínimo de <b>2 a 4 horas</b> antes.</li>
+    </ul>
+    <div class="img-wrap">
+      <img src="img/cal_support.png" alt="Google Calendar Appointment Schedule">
+      <div class="img-caption">Referencia oficial: Asistente de programación de citas en Google Calendar.</div>
+    </div>
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-header">
+    <div class="step-num">3</div>
+    <h3 class="step-title">Configurar Google Meet y Formulario de Reserva</h3>
+  </div>
+  <div class="step-body">
+    <ul>
+      <li><b>Ubicación y conferencias:</b> Selecciona <b>Videollamada de Google Meet</b>. Google generará un enlace único y seguro para cada cita confirmada y lo añadirá automáticamente a las invitaciones de calendario.</li>
+      <li><b>Formulario de reserva:</b> Configura los campos requeridos:
+        <ul>
+          <li>Nombre y Apellido (obligatorio).</li>
+          <li>Dirección de correo electrónico (obligatorio).</li>
+          <li>Número de teléfono (recomendado para enviar recordatorios por SMS).</li>
+        </ul>
+      </li>
+      <li><b>Recordatorios automáticos:</b> Deja activados los recordatorios por correo de Google Calendar (1 día antes y 1 hora antes de la reunión).</li>
+      <li>Haz clic en <b>Guardar</b>.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-header">
+    <div class="step-num">4</div>
+    <h3 class="step-title">Copiar el enlace público de reserva</h3>
+  </div>
+  <div class="step-body">
+    Una vez guardada la programación de citas:
+    <ul>
+      <li>Haz clic sobre el bloque de citas creado en tu calendario para abrir su tarjeta de información.</li>
+      <li>Haz clic en el botón <b>Compartir</b> (<i>Share</i>).</li>
+      <li>Copia el enlace corto oficial generado por Google. El formato estándar siempre comienza con:</li>
+    </ul>
+    <div class="url-box">https://calendar.app.google/cuMM1b8eHSnjNzMP6</div>
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-header">
+    <div class="step-num">5</div>
+    <h3 class="step-title">Pegar el enlace en el Panel del CRM</h3>
+  </div>
+  <div class="step-body">
+    Para que todo el sistema opere de forma automatizada:
+    <ul>
+      <li>Abre el CRM en tu navegador: <code>http://localhost:8765</code>.</li>
+      <li>Dirígete a la pestaña <b>Configuración</b>.</li>
+      <li>En la sección principal <i>Mis datos comerciales y fiscales</i>, localiza la caja de texto:
+        <br><b>Enlace de Agenda / Videollamada (Google Calendar / Meet)</b>.</li>
+      <li>Pega tu enlace (ej. <code>https://calendar.app.google/cuMM1b8eHSnjNzMP6</code>).</li>
+      <li>Haz clic en <b>Guardar mis datos</b>.</li>
+    </ul>
+  </div>
+</div>
+
+<table class="param-table">
+  <thead>
+    <tr>
+      <th style="width:28%">Campo en el Panel</th>
+      <th style="width:32%">Dónde obtenerlo en Google</th>
+      <th style="width:40%">Valor de Ejemplo / Formato</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>booking_url</b><br><small>Enlace de Agenda / Videollamada</small></td>
+      <td>Google Calendar ➔ Clic en cita ➔ Botón «Compartir» ➔ Copiar enlace</td>
+      <td><code>https://calendar.app.google/cuMM1b8eHSnjNzMP6</code><br><small style="color:#64748b">Debe iniciar con https://calendar.app.google/</small></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="check-list">
+  <b>✓ Verificación de Funcionamiento Exitoso:</b>
+  1. Abre el enlace en una ventana de incógnito para confirmar que un cliente externo puede ver tus horarios disponibles sin iniciar sesión obligatoriamente.<br>
+  2. Al pulsar «Sincronizar Bandejas» en el CRM, el script <code>sincronizar_mensajes.py</code> escaneará tu buzón en busca de correos con el asunto <i>«Se ha reservado una cita»</i> o <i>«Invitation: 10-Min Walkthrough...»</i> y vinculará la cita directamente con el prospecto en tu Kanban.
+</div>
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Manual de Configuración — Twilio SMS & Telefonía</title>
+<style>
+  @page { size: letter; margin: 16mm 14mm 16mm 14mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #1e293b;
+    line-height: 1.55;
+    background: #ffffff;
+    margin: 0;
+    padding: 0;
+    font-size: 13px;
+  }
+  .header {
+    border-bottom: 2px solid #e11d48;
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .brand { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; font-weight: 700; }
+  .title { font-size: 22px; font-weight: 800; color: #0f172a; margin: 4px 0 2px; }
+  .subtitle { font-size: 13px; color: #475569; margin: 0; }
+  .badge {
+    background: #ffe4e6;
+    color: #be123c;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 11px;
+    display: inline-block;
+  }
+  .callout {
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+    border-left: 4px solid #e11d48;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    font-size: 12.5px;
+  }
+  .step-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    page-break-inside: avoid;
+  }
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .step-num {
+    background: #e11d48;
+    color: #ffffff;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .step-title { font-size: 14px; font-weight: 700; color: #0f172a; margin: 0; }
+  .step-body { font-size: 12.5px; color: #334155; margin-left: 34px; }
+  .step-body ul { margin: 6px 0; padding-left: 20px; }
+  .step-body li { margin-bottom: 4px; }
+  .url-box {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 11.5px;
+    color: #0f172a;
+    display: inline-block;
+    word-break: break-all;
+    margin: 4px 0;
+  }
+  .img-wrap {
+    margin: 10px 0 6px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f8fafc;
+    text-align: center;
+  }
+  .img-wrap img {
+    max-width: 100%;
+    height: auto;
+    max-height: 230px;
+    display: block;
+    margin: 0 auto;
+    object-fit: cover;
+    object-position: top;
+  }
+  .img-caption {
+    font-size: 10.5px;
+    color: #64748b;
+    padding: 4px 8px;
+    background: #f1f5f9;
+    border-top: 1px solid #e2e8f0;
+    text-align: left;
+  }
+  table.param-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 12px;
+    page-break-inside: avoid;
+  }
+  table.param-table th {
+    background: #f1f5f9;
+    color: #334155;
+    font-weight: 700;
+    text-align: left;
+    padding: 8px 10px;
+    border: 1px solid #e2e8f0;
+  }
+  table.param-table td {
+    padding: 8px 10px;
+    border: 1px solid #e2e8f0;
+    vertical-align: top;
+  }
+  .check-list {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: #166534;
+    page-break-inside: avoid;
+  }
+  .check-list b { color: #14532d; display: block; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="brand">Prospector AI CRM · Manual Técnico Oficial</div>
+    <h1 class="title">Configuración de Twilio — SMS & Telefonía</h1>
+    <p class="subtitle">Conexión API para envío de recordatorios SMS y monitoreo de respuestas de clientes en EE.UU.</p>
+  </div>
+  <div style="text-align:right">
+    <span class="badge">Twilio REST API</span>
+    <div style="font-size:11px;color:#64748b;margin-top:4px">Canal Omnicanal EE.UU.</div>
+  </div>
+</div>
+
+<div class="callout">
+  <b>Objetivo:</b> Twilio es el estándar de la industria en EE.UU. para telecomunicaciones. Al integrarlo en el CRM, podrás enviar mensajes de texto SMS a los tomadores de decisión (médicos, contratistas, dueños de negocios) y el motor de sincronización (<code>sincronizar_mensajes.py</code>) detectará automáticamente cuando un cliente conteste tu SMS, avanzando la tarjeta en el Kanban a <b>Respondió</b> con la etiqueta <b>💬 SMS Twilio</b>.
+</div>
+
+<div class="step-card">
+  <div class="step-header">
+    <div class="step-num">1</div>
+    <h3 class="step-title">Acceder a la Consola Oficial de Twilio</h3>
+  </div>
+  <div class="step-body">
+    Inicia sesión o regístrate en Twilio (puedes iniciar con cuenta Trial o cuenta comercial de pago):
+    <div class="url-box">https://console.twilio.com</div>
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-header">
+    <div class="step-num">2</div>
+    <h3 class="step-title">Copiar el Account SID y Auth Token</h3>
+  </div>
+  <div class="step-body">
+    En la página principal de la consola (Dashboard):
+    <ul>
+      <li>Localiza el recuadro <b>Account Info</b> (en la parte central o inferior del dashboard).</li>
+      <li><b>Account SID:</b> Es una cadena alfanumérica de 34 caracteres que siempre empieza con las letras <code>AC</code> (ejemplo: <code>ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</code>). Copia este valor.</li>
+      <li><b>Auth Token:</b> Es la clave secreta de autenticación. Haz clic en el botón <b>Show</b> (Mostrar) o <b>Copy</b> para copiarla.</li>
+    </ul>
+    <div class="img-wrap">
+      <img src="img/tw_auth_support.png" alt="Twilio Console Account Info">
+      <div class="img-caption">Referencia oficial: Panel de credenciales API (Account SID y Auth Token) en Twilio Console.</div>
+    </div>
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-header">
+    <div class="step-num">3</div>
+    <h3 class="step-title">Adquirir un Número Telefónico de EE.UU. con capacidad de SMS</h3>
+  </div>
+  <div class="step-body">
+    Para enviar y recibir mensajes SMS necesitas un número oficial de Twilio:
+    <ul>
+      <li>En el menú de navegación izquierdo, ve a <b>Phone Numbers</b> ➔ <b>Manage</b> ➔ <b>Buy a number</b>.</li>
+      <li>En el selector de país, elige <b>United States (+1)</b>.</li>
+      <li>En <b>Capabilities</b>, asegúrate de marcar la casilla <b>SMS</b> (obligatorio).</li>
+      <li>En <b>Search by Area Code</b>, puedes ingresar el código de área del mercado que prospectas (ejemplo California: <code>213</code> o <code>323</code> para Los Ángeles, <code>415</code> para San Francisco).</li>
+      <li>Elige un número y haz clic en <b>Buy</b> (los números de Twilio en EE.UU. cuestan ~$1.15 USD/mes).</li>
+      <li>Copia el número en formato internacional E.164: <code>+1XXXXXXXXXX</code> (ejemplo: <code>+12135550199</code>).</li>
+    </ul>
+  </div>
+</div>
+
+<div class="step-card">
+  <div class="step-header">
+    <div class="step-num">4</div>
+    <h3 class="step-title">Ingresar las credenciales en el Panel del CRM</h3>
+  </div>
+  <div class="step-body">
+    <ul>
+      <li>Abre el panel en <code>http://localhost:8765</code> y haz clic en la pestaña <b>Configuración</b>.</li>
+      <li>En la columna lateral derecha, haz clic en la tarjeta colapsable: <b>📱 Conexión Twilio — SMS & Telefonía</b>.</li>
+      <li>Pega el <b>Account SID</b> (ej. <code>ACxxxxxxxx...</code>).</li>
+      <li>Pega el <b>Auth Token</b> (se ocultará por seguridad como contraseña).</li>
+      <li>Ingresa tu <b>Número Twilio (From Number)</b> en formato internacional (ej. <code>+12135550199</code>).</li>
+      <li>Haz clic en <b>Guardar Twilio</b>. El indicador superior cambiará a <span style="background:#f0fdf4;color:#16a34a;padding:2px 8px;border-radius:6px;font-weight:700">✓ Twilio activo</span>.</li>
+    </ul>
+  </div>
+</div>
+
+<table class="param-table">
+  <thead>
+    <tr>
+      <th style="width:28%">Campo en el Panel</th>
+      <th style="width:34%">Dónde obtenerlo en Twilio</th>
+      <th style="width:38%">Valor de Ejemplo / Formato</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>accountSid</b><br><small>Account SID</small></td>
+      <td>Twilio Console ➔ Dashboard ➔ Account Info</td>
+      <td><code>ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</code><br><small style="color:#64748b">Empieza siempre con "AC" seguido de 32 caracteres</small></td>
+    </tr>
+    <tr>
+      <td><b>authToken</b><br><small>Auth Token</small></td>
+      <td>Twilio Console ➔ Dashboard ➔ Account Info ➔ Show</td>
+      <td><code>[tu_auth_token_secreto_de_32_caracteres]</code><br><small style="color:#64748b">Token secreto de 32 caracteres</small></td>
+    </tr>
+    <tr>
+      <td><b>fromNumber</b><br><small>Número Remitente Twilio</small></td>
+      <td>Phone Numbers ➔ Active Numbers</td>
+      <td><code>+12135550199</code><br><small style="color:#64748b">Formato E.164 con código +1</small></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="check-list">
+  <b>✓ Verificación y Flujo Operativo:</b>
+  1. En las tarjetas de seguimiento de clientes que tengan teléfono, podrás pulsar el botón <b>💬 SMS</b> para abrir el canal de mensajería.<br>
+  2. Al ejecutar «Sincronizar Bandejas», el sistema consultará el endpoint <code>/Messages.json</code> de la API de Twilio buscando mensajes entrantes dirigidos a tu <code>fromNumber</code> y los registrará de forma inmediata en las notas del cliente.
+</div>
+
+</body>
+</html>
