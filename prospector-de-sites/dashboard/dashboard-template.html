@@ -182,19 +182,75 @@ select.mini{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-
 .cfg-btn-primary:hover{background:var(--accent-2)}
 .cfg-btn-primary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .cfg-btn-primary:disabled{opacity:.4;cursor:default}
-.fu-flow{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-bottom:18px}
-.fu-flow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px}
+
+/* Modal de Sincronización Profesional */
+#sync-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:70;padding:16px}
+#sync-modal-bg.aberto{display:flex}
+.sync-card{background:var(--white);border-radius:18px;width:580px;max-width:94vw;max-height:88vh;overflow-y:auto;box-shadow:0 24px 48px rgba(0,0,0,0.22);display:flex;flex-direction:column;border:1px solid var(--line);animation:syncModalIn .2s cubic-bezier(.16,1,.3,1)}
+@keyframes syncModalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.sync-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface);border-radius:18px 18px 0 0}
+.sync-badge-icon{width:40px;height:40px;border-radius:11px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.sync-close{background:none;border:none;font-size:18px;color:var(--muted);cursor:pointer;padding:6px 10px;border-radius:8px;line-height:1}
+.sync-close:hover{color:var(--ink);background:rgba(0,0,0,0.06)}
+.sync-body{padding:22px;display:flex;flex-direction:column;gap:16px}
+.sync-status-banner{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:11px;background:var(--ok-soft);color:var(--ok);border:1px solid color-mix(in srgb, var(--ok) 25%, transparent)}
+.sync-metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:10px}
+.sync-metric-tile{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:12px 8px;text-align:center;transition:transform .15s ease}
+.sync-metric-tile:hover{transform:translateY(-1px)}
+.sync-metric-tile .icon{font-size:17px;line-height:1;margin-bottom:4px}
+.sync-metric-tile .num{font-size:22px;font-weight:800;color:var(--ink);font-family:var(--sans);line-height:1.1}
+.sync-metric-tile .lbl{font-size:11px;color:var(--muted);font-weight:600;margin-top:4px;line-height:1.2}
+.sync-detalles-box{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:12px 16px;font-size:12.5px;color:var(--ink);line-height:1.55}
+.sync-detalles-box b{display:block;margin-bottom:6px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:0.5px}
+.sync-foot{padding:14px 22px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;background:var(--white);border-radius:0 0 18px 18px}
+
+/* Centro de Trazabilidad & Seguimiento Rediseñado */
+.fu-guide-banner{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-bottom:22px;transition:border-color .15s ease,box-shadow .15s ease;cursor:pointer}
+.fu-guide-banner:hover{border-color:var(--cinza);box-shadow:0 3px 12px rgba(0,0,0,0.04)}
+.fu-guide-header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.fu-guide-left{flex:1;min-width:260px}
+.fu-guide-title-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fu-guide-icon{font-size:18px;line-height:1}
+.fu-guide-title{font-family:var(--serif);font-size:16px;margin:0;font-weight:600;color:var(--ink)}
+.fu-guide-pill{background:var(--surface);border:1px solid var(--line);font-size:11px;color:var(--muted);cursor:pointer}
+.fu-guide-sub{font-size:12.5px;color:var(--muted);margin:4px 0 0;line-height:1.4}
+.fu-guide-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.fu-guide-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line);cursor:default}
 .fu-step{background:var(--surface);border-radius:10px;padding:12px 14px;border-left:3px solid var(--accent);font-size:12px;line-height:1.45}
 .fu-step b{display:block;font-size:12.5px;color:var(--ink);margin-bottom:3px}
-.fu-sec{margin-bottom:20px}
-.fu-sec-title{font-family:var(--serif);font-size:16px;margin:0 0 12px;font-weight:600;display:flex;align-items:center;gap:8px}
-.fu-list{display:flex;flex-direction:column;gap:10px}
-.fu-card{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
-.fu-card-info{min-width:240px;flex:1}
-.fu-card-title{font-weight:700;font-size:15px;color:var(--ink);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.fu-card-sub{font-size:12px;color:var(--muted);margin-top:4px}
-.fu-card-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.fu-btn{font-size:12px;font-weight:700;padding:6px 12px;border-radius:8px;text-decoration:none;border:1px solid var(--line);background:var(--white);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:var(--sans);transition:border-color .15s ease}
+
+/* Píldoras de Filtro Rápido en Seguimientos */
+.fu-filter-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
+.fu-filter-btn{border:1px solid var(--line);background:var(--white);padding:7px 14px;border-radius:20px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;font-family:var(--sans);display:inline-flex;align-items:center;gap:6px;transition:all .15s ease}
+.fu-filter-btn:hover{border-color:var(--accent);color:var(--ink)}
+.fu-filter-btn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.fu-filter-btn .badge{font-size:10.5px;padding:2px 7px;border-radius:10px;background:rgba(0,0,0,0.08);color:inherit}
+.fu-filter-btn.on .badge{background:rgba(255,255,255,0.22);color:#fff}
+
+/* Secciones y Tarjetas de Leads en Seguimiento */
+.fu-sec-group{margin-bottom:28px}
+.fu-sec-header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.fu-sec-title{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:8px;margin:0}
+.fu-sec-hint{font-size:12px;color:var(--muted)}
+.fu-cards-list{display:flex;flex-direction:column;gap:14px}
+
+/* Tarjeta individual de lead en seguimiento */
+.lead-track-card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:0 2px 6px rgba(0,0,0,0.03);display:flex;flex-direction:column;gap:12px;transition:border-color .15s ease,box-shadow .15s ease}
+.lead-track-card:hover{border-color:var(--cinza);box-shadow:0 6px 16px rgba(0,0,0,0.05)}
+.lead-track-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+.lead-track-main{flex:1;min-width:240px}
+.lead-track-name-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.lead-track-name{font-size:16px;font-weight:700;color:var(--ink)}
+.lead-track-meta{font-size:12px;color:var(--muted)}
+.lead-track-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+.lead-track-details{background:var(--surface);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--ink);display:flex;flex-direction:column;gap:4px}
+.lead-track-details .row{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.lead-track-details .tag-label{font-weight:700;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:0.4px}
+
+.fu-empty-subtle{padding:12px 16px;background:rgba(0,0,0,0.02);border:1px dashed var(--line);border-radius:10px;font-size:12.5px;color:var(--muted);text-align:center}
+
+.fu-btn{font-size:12px;font-weight:700;padding:6px 12px;border-radius:8px;text-decoration:none;border:1px solid var(--line);background:var(--white);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:var(--sans);transition:all .15s ease}
 .fu-btn:hover{border-color:var(--accent);color:var(--accent-2)}
 .fu-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
 .fu-btn.primary:hover{background:var(--accent-2);color:#fff}
@@ -257,6 +313,24 @@ select.mini{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-
     <label id="m-lbl-urlNova">URL publicada (en vivo)</label><input id="m-urlNova">
     <label id="m-lbl-obs">Observaciones / Notas</label><textarea id="m-obs" rows="2"></textarea>
     <div class="mbot"><button class="cancelar" id="m-btn-cancelar" onclick="fecharEdit()">Cancelar</button><button class="salvar" id="m-btn-salvar" onclick="salvarEdit()">Guardar</button></div>
+  </div>
+</div>
+<div id="sync-modal-bg" onclick="if(event.target===this)fecharSyncModal()">
+  <div class="sync-card">
+    <div class="sync-head">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="sync-badge-icon">🔄</div>
+        <div>
+          <h3 style="font-family:var(--serif);font-size:18px;margin:0;font-weight:600;color:var(--ink)">Sincronización Omnicanal</h3>
+          <p style="font-size:12px;color:var(--muted);margin:2px 0 0">Gmail (Borradores, Enviados, Inbox) · Google Meet · Twilio SMS</p>
+        </div>
+      </div>
+      <button class="sync-close" onclick="fecharSyncModal()" aria-label="Cerrar modal">✕</button>
+    </div>
+    <div id="sync-modal-content"></div>
+    <div class="sync-foot">
+      <button class="cfg-btn-primary" onclick="fecharSyncModal()" style="min-width:110px">Entendido</button>
+    </div>
   </div>
 </div>
 <script id="dados" type="application/json">__DADOS__</script>
@@ -856,7 +930,11 @@ var CORES = {
   proposta: 'var(--prop)', respondeu: 'var(--resp)', fechado: 'var(--fech)', descartado: 'var(--cinza)'
 };
 var ORDEM = ['novo', 'redesenhado', 'publicado', 'proposta', 'respondeu', 'fechado'];
-var view = 'geral', busca = '', sortCol = 'nome', sortAsc = true, pag = 1, porPag = 'auto';
+var view = (function() {
+  try { return localStorage.getItem('prospector_view') || 'geral'; } catch(e) { return 'geral'; }
+})(), busca = '', sortCol = 'nome', sortAsc = true, pag = 1, porPag = 'auto';
+var fuGuiaAberta = false;
+var fuFilter = 'todos';
 
 function pagSize() {
   if (porPag !== 'auto') return porPag;
@@ -986,6 +1064,7 @@ function salvarEdit() {
 
 function setView(v) {
   view = v;
+  try { localStorage.setItem('prospector_view', v); } catch(e){}
   render();
 }
 
@@ -1166,6 +1245,16 @@ function vSites() {
   }).join('') + '</div>' : '<div class="painel vazio">' + t('sites.vazio') + '</div>';
 }
 
+function toggleFuGuia(e) {
+  fuGuiaAberta = !fuGuiaAberta;
+  render();
+}
+
+function setFuFilter(f) {
+  fuFilter = f;
+  render();
+}
+
 function vFollowup() {
   var ls = fil();
   var borradores = ls.filter(function(l) { return l.status === 'proposta' && l.emailStatus === 'borrador'; });
@@ -1174,30 +1263,36 @@ function vFollowup() {
   var fuAlerta = ls.filter(function(l) { return l.status === 'proposta' && dias(l.emailEnviadoEm || l.dataProposta) >= 4 && l.emailStatus !== 'borrador'; });
   var respostas = ls.filter(function(l) { return l.status === 'respondeu'; });
   var esperando = enviados.concat(sinClasif).filter(function(l) { return dias(l.emailEnviadoEm || l.dataProposta) < 4; });
+  var totalTrack = borradores.length + fuAlerta.length + esperando.length + respostas.length;
 
-  var statsHtml = '<div class="stats">' + [
-    ['📝 Borradores por enviar', borradores.length, borradores.length ? 'ambar' : ''],
-    ['✉️ Propuestas enviadas activas', esperando.length, esperando.length ? 'azul' : ''],
-    ['⏰ Requieren seguimiento (≥4d)', fuAlerta.length, fuAlerta.length ? 'ambar' : ''],
-    ['🎯 Respuestas / Citas', respostas.length, respostas.length ? 'verde' : '']
+  var statsHtml = '<div class="stats" style="margin-bottom:18px">' + [
+    ['📝 Borradores por enviar', borradores.length, borradores.length ? 'ambar' : '', 'borradores'],
+    ['⏰ Requieren seguimiento (≥4d)', fuAlerta.length, fuAlerta.length ? 'laranja' : '', 'alertas'],
+    ['✉️ Propuestas enviadas activas', esperando.length, esperando.length ? 'azul' : '', 'enviados'],
+    ['🎯 Respuestas / Citas', respostas.length, respostas.length ? 'verde' : '', 'respostas']
   ].map(function(s) {
-    return '<div class="stat ' + s[2] + '"><div class="n">' + s[1] + '</div><div class="l">' + s[0] + '</div></div>';
+    return '<div class="stat ' + s[2] + '" onclick="setFuFilter(\'' + s[3] + '\')" style="cursor:pointer" title="Filtrar por esta categoría">' +
+      '<div class="n">' + s[1] + '</div><div class="l">' + s[0] + '</div></div>';
   }).join('') + '</div>';
 
-  var guideHtml = '<div class="fu-flow">' +
-    '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">' +
-      '<div>' +
-        '<h2 style="font-family:var(--serif);font-size:17px;margin:0 0 4px;font-weight:600">Centro de Trazabilidad Omnicanal & Seguimiento</h2>' +
-        '<p style="font-size:12.5px;color:var(--muted);margin:0">Monitoreo integral: Borrador en Gmail ➔ Envío al Cliente ➔ Detección de Respuestas / Citas ➔ Alerta de 4+ días sin respuesta.</p>' +
+  var guideHtml = '<div class="fu-guide-banner" onclick="toggleFuGuia(event)">' +
+    '<div class="fu-guide-header">' +
+      '<div class="fu-guide-left">' +
+        '<div class="fu-guide-title-row">' +
+          '<span class="fu-guide-icon">💡</span>' +
+          '<h3 class="fu-guide-title">Centro de Trazabilidad Omnicanal & Seguimiento</h3>' +
+          '<span class="pill fu-guide-pill">' + (fuGuiaAberta ? 'Ocultar guía del proceso ✕' : 'ℹ️ Ver guía del proceso (clic para desplegar)') + '</span>' +
+        '</div>' +
+        '<p class="fu-guide-sub">Ciclo completo de prospección: Borrador en Gmail ➔ Revisión humana y envío ➔ Monitoreo automático ➔ Alerta de 4+ días sin respuesta.</p>' +
       '</div>' +
-      '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
-        '<button class="fu-btn primary" onclick="sincronizarAgenda()">🔄 Sincronizar Bandejas Ahora</button>' +
-        '<a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" class="fu-btn">📝 Borradores Gmail ↗</a>' +
-        '<a href="https://mail.google.com/mail/u/0/#sent" target="_blank" class="fu-btn">✉️ Enviados ↗</a>' +
-        '<a href="https://mail.google.com/mail/u/0/#inbox" target="_blank" class="fu-btn">📥 Recibidos ↗</a>' +
+      '<div class="fu-guide-actions" onclick="event.stopPropagation()">' +
+        '<button class="fu-btn primary" onclick="sincronizarAgenda()" title="Escanear borradores, enviados, respuestas y citas">🔄 Sincronizar Bandejas Ahora</button>' +
+        '<a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" class="fu-btn" title="Ir a borradores de Gmail">📝 Borradores Gmail ↗</a>' +
+        '<a href="https://mail.google.com/mail/u/0/#sent" target="_blank" class="fu-btn" title="Ir a enviados de Gmail">✉️ Enviados ↗</a>' +
+        '<a href="https://mail.google.com/mail/u/0/#inbox" target="_blank" class="fu-btn" title="Ir a recibidos de Gmail">📥 Recibidos ↗</a>' +
       '</div>' +
     '</div>' +
-    '<div class="fu-flow-grid">' +
+    '<div class="fu-guide-body" style="display:' + (fuGuiaAberta ? 'grid' : 'none') + '">' +
       '<div class="fu-step"><b>1. Borrador en Gmail</b>El Agente IA genera el borrador con la propuesta y demo personalizada. Queda en tu Gmail listo para revisión humana.</div>' +
       '<div class="fu-step"><b>2. Revisión & Envío</b>Entras a Gmail, revisas el borrador y le das «Enviar». El sincronizador detecta automáticamente la salida.</div>' +
       '<div class="fu-step"><b>3. Monitoreo Omnicanal</b>Rastrea en tiempo real respuestas de email, reservas de Google Meet y SMS entrantes de Twilio.</div>' +
@@ -1205,90 +1300,164 @@ function vFollowup() {
     '</div>' +
   '</div>';
 
-  var secBorradores = '<div class="painel fu-sec">' +
-    '<div class="fu-sec-title"><span>📝</span> 1. Borradores Listos en Gmail — Pendientes de Revisión y Envío (' + borradores.length + ')</div>' +
-    (borradores.length ? '<div class="fu-list">' + borradores.map(function(l) {
-      return '<div class="fu-card" style="border-left:4px solid #f59e0b">' +
-        '<div class="fu-card-info">' +
-          '<div class="fu-card-title">' + l.nome + '<span class="pill" style="background:#fef3c7;color:#b45309;font-size:11px">Borrador listo en Gmail</span></div>' +
-          '<div class="fu-card-sub"><b>Asunto del borrador:</b> ' + (l.draftSubject || 'Propuesta personalizada de sitio web moderno') + '</div>' +
-          '<div class="fu-card-sub"><b>Destinatario:</b> ' + (l.email || 'Sin email registrado') + (l.cidade ? ' · ' + l.cidade : '') + (l.telefone ? ' · ' + l.telefone : '') + '</div>' +
-        '</div>' +
-        '<div class="fu-card-actions">' +
-          '<a href="sites/' + l.slug + '/' + l.slug + '.html" target="_blank" class="fu-btn">👁 Ver Demo</a>' +
-          '<a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" class="fu-btn primary">📝 Abrir Borrador en Gmail ↗</a>' +
-          '<button onclick="marcarEnviado(\'' + l.slug + '\')" class="fu-btn success" title="Si ya pulsaste Enviar en Gmail, haz clic aquí para marcarlo">✓ Marcar como Ya Enviado</button>' +
-        '</div>' +
-      '</div>';
-    }).join('') : '<div class="vazio">No hay borradores pendientes. Cuando el Agente IA genere una nueva propuesta, aparecerá aquí automáticamente.</div>') +
-  '</div>';
+  var filtros = [
+    ['todos', 'Todos los prospectos', totalTrack],
+    ['borradores', '📝 Borradores en Gmail', borradores.length],
+    ['alertas', '⏰ Requieren Follow-up (≥4d)', fuAlerta.length],
+    ['enviados', '✉️ Enviadas en espera', esperando.length],
+    ['respostas', '🎯 Respuestas / Citas', respostas.length]
+  ];
+  var filterBar = '<div class="fu-filter-bar">' + filtros.map(function(f) {
+    var on = fuFilter === f[0] ? ' on' : '';
+    return '<button class="fu-filter-btn' + on + '" onclick="setFuFilter(\'' + f[0] + '\')">' +
+      f[1] + '<span class="badge">' + f[2] + '</span></button>';
+  }).join('') + '</div>';
 
-  var secAlertas = '<div class="painel fu-sec">' +
-    '<div class="fu-sec-title" style="color:var(--warn)"><span>⏰</span> 2. Requieren Segundo Contacto / Follow-up (≥4 días sin respuesta) (' + fuAlerta.length + ')</div>' +
-    (fuAlerta.length ? '<div class="fu-list">' + fuAlerta.map(function(l) {
-      var d = dias(l.emailEnviadoEm || l.dataProposta);
-      var rawTel = (l.telefone || '').replace(/[^0-9+]/g, '');
-      var mailSub = encodeURIComponent('Seguimiento a nuestra propuesta para ' + l.nome);
-      var mailBody = encodeURIComponent('Hola ' + l.nome + ',\n\nQuería dar un breve seguimiento a la propuesta y demo del nuevo sitio web que te envié hace unos días.\n\n¿Tuviste oportunidad de revisarlo?\n\nQuedo atento.');
-      return '<div class="fu-card" style="border-left:4px solid var(--warn)">' +
-        '<div class="fu-card-info">' +
-          '<div class="fu-card-title">' + l.nome + '<span class="tag fup">' + d + ' días sin respuesta</span></div>' +
-          '<div class="fu-card-sub"><b>Enviada el:</b> ' + (l.emailEnviadoEm || l.dataProposta || '—') + ' · <b>Email:</b> ' + (l.email || '—') + ' · <b>Tel:</b> ' + (l.telefone || '—') + '</div>' +
-          (l.obs ? '<div class="fu-card-sub" style="color:var(--ink)"><i>' + l.obs + '</i></div>' : '') +
-        '</div>' +
-        '<div class="fu-card-actions">' +
-          (l.email ? '<a href="mailto:' + l.email + '?subject=' + mailSub + '&body=' + mailBody + '" class="fu-btn primary">✉️ Enviar Email de Seguimiento</a>' : '') +
-          (rawTel ? '<a href="tel:' + rawTel + '" class="fu-btn">📞 Llamar</a>' : '') +
-          (rawTel ? '<a href="sms:' + rawTel + '" class="fu-btn">💬 Enviar SMS</a>' : '') +
-          '<button onclick="salvarOv(\'' + l.slug + '\',{status:\'respondeu\',canalRespuesta:\'email\'})" class="fu-btn success">✓ Respondió</button>' +
-          '<button onclick="salvarOv(\'' + l.slug + '\',{status:\'descartado\'})" class="fu-btn" style="color:#B0483B">✕ Descartar</button>' +
-        '</div>' +
-      '</div>';
-    }).join('') : '<div class="vazio">¡Excelente! Ninguna propuesta enviada supera los 4 días sin respuesta.</div>') +
-  '</div>';
+  var secHtml = '';
 
-  var secEnviados = '<div class="painel fu-sec">' +
-    '<div class="fu-sec-title"><span>✉️</span> 3. Propuestas Enviadas — En Espera Reciente (<4 días) (' + esperando.length + ')</div>' +
-    (esperando.length ? '<div class="fu-list">' + esperando.map(function(l) {
-      var d = dias(l.emailEnviadoEm || l.dataProposta);
-      var rawTel = (l.telefone || '').replace(/[^0-9+]/g, '');
-      return '<div class="fu-card" style="border-left:4px solid #6366f1">' +
-        '<div class="fu-card-info">' +
-          '<div class="fu-card-title">' + l.nome + '<span class="pill" style="background:#e0e7ff;color:#4338ca;font-size:11px">Enviado hace ' + d + 'd</span></div>' +
-          '<div class="fu-card-sub"><b>Fecha de envío:</b> ' + (l.emailEnviadoEm || l.dataProposta || 'Reciente') + ' · <b>Email:</b> ' + (l.email || '—') + '</div>' +
-        '</div>' +
-        '<div class="fu-card-actions">' +
-          '<a href="https://mail.google.com/mail/u/0/#sent" target="_blank" class="fu-btn">Ver en Enviados ↗</a>' +
-          (rawTel ? '<a href="sms:' + rawTel + '" class="fu-btn">💬 SMS</a>' : '') +
-          '<button onclick="salvarOv(\'' + l.slug + '\',{status:\'respondeu\',canalRespuesta:\'email\'})" class="fu-btn success">✓ Marcar como Respondió</button>' +
-        '</div>' +
-      '</div>';
-    }).join('') : '<div class="vazio">No hay propuestas recientes en espera de respuesta.</div>') +
-  '</div>';
+  if (fuFilter === 'todos' || fuFilter === 'borradores') {
+    secHtml += '<div class="fu-sec-group">' +
+      '<div class="fu-sec-header">' +
+        '<h3 class="fu-sec-title"><span>📝</span> Borradores Listos en Gmail — Pendientes de Revisión y Envío <span class="pill" style="background:#FEF3C7;color:#B45309">' + borradores.length + '</span></h3>' +
+        '<span class="fu-sec-hint">Revisa el borrador en Gmail antes de enviarlo. El cliente aún no ha recibido el correo.</span>' +
+      '</div>' +
+      (borradores.length ? '<div class="fu-cards-list">' + borradores.map(function(l) {
+        var rawTel = (l.telefone || '').replace(/[^0-9+]/g, '');
+        return '<div class="lead-track-card" style="border-left:4px solid #F59E0B">' +
+          '<div class="lead-track-top">' +
+            '<div class="lead-track-main">' +
+              '<div class="lead-track-name-row">' +
+                '<span class="lead-track-name">' + l.nome + '</span>' +
+                '<span class="pill" style="background:#FEF3C7;color:#B45309;font-size:11px">📝 Borrador listo en Gmail</span>' +
+              '</div>' +
+              '<div class="lead-track-meta">' + [l.nicho, l.cidade, (l.nota ? '★ ' + l.nota + ' (' + l.avaliacoes + ')' : '')].filter(Boolean).join(' · ') + '</div>' +
+            '</div>' +
+            '<div class="lead-track-actions">' +
+              (l.slug ? '<a href="sites/' + l.slug + '/' + l.slug + '.html" target="_blank" class="fu-btn" title="Previsualizar sitio web propuesto">👁 Ver Demo</a>' : '') +
+              '<a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" class="fu-btn primary" title="Abrir bandeja de borradores en Gmail para revisar y pulsar Enviar">📝 Abrir Borrador en Gmail ↗</a>' +
+              '<button onclick="marcarEnviado(\'' + l.slug + '\')" class="fu-btn success" title="Si ya pulsaste Enviar en Gmail, haz clic aquí para confirmar la salida">✓ Marcar como Ya Enviado</button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="lead-track-details">' +
+            '<div class="row"><span class="tag-label">Asunto:</span> <b>' + (l.draftSubject || 'Propuesta personalizada de nuevo sitio web de alta conversión') + '</b></div>' +
+            '<div class="row"><span class="tag-label">Destinatario:</span> <a href="mailto:' + (l.email || '') + '" style="color:inherit">' + (l.email || 'Sin email registrado') + '</a>' +
+              (l.telefone ? ' · <span class="tag-label">Tel:</span> <a href="tel:' + rawTel + '" style="color:inherit">' + l.telefone + '</a>' : '') +
+              (l.valor ? ' · <span class="tag-label">Presupuesto:</span> $' + l.valor.toLocaleString('en-US') + (l.manutencao ? ' + $' + l.manutencao + '/mes' : '') : '') +
+            '</div>' +
+            (l.obs ? '<div class="row" style="margin-top:2px"><span class="tag-label">Notas:</span> <span style="color:var(--muted)">' + l.obs + '</span></div>' : '') +
+          '</div>' +
+        '</div>';
+      }).join('') : '<div class="fu-empty-subtle">✓ No hay borradores pendientes. Todos los correos redactados han sido enviados.</div>') +
+    '</div>';
+  }
 
-  var secRespostas = '<div class="painel fu-sec">' +
-    '<div class="fu-sec-title" style="color:var(--ok)"><span>🎯</span> 4. Respuestas & Citas Agendadas (' + respostas.length + ')</div>' +
-    (respostas.length ? '<div class="fu-list">' + respostas.map(function(l) {
-      var canalBadge = l.canalRespuesta === 'calendar' ?
-        '<span class="pill" style="background:#dcfce7;color:#15803d;font-size:11px">📅 Cita Google Meet</span>' :
-        (l.canalRespuesta === 'sms' ?
-          '<span class="pill" style="background:#e0f2fe;color:#0369a1;font-size:11px">💬 SMS Twilio</span>' :
-          '<span class="pill" style="background:#ecfdf5;color:#047857;font-size:11px">✉️ Correo Recibido</span>');
-      return '<div class="fu-card" style="border-left:4px solid var(--ok)">' +
-        '<div class="fu-card-info">' +
-          '<div class="fu-card-title">' + l.nome + canalBadge + '</div>' +
-          '<div class="fu-card-sub"><b>Contacto:</b> ' + (l.email || '—') + ' · ' + (l.telefone || '—') + '</div>' +
-          (l.obs ? '<div class="fu-card-sub" style="color:var(--ink);background:var(--surface);padding:6px 10px;border-radius:6px;margin-top:6px"><b>Registro:</b> ' + l.obs + '</div>' : '') +
-        '</div>' +
-        '<div class="fu-card-actions">' +
-          '<a href="sites/' + l.slug + '/' + l.slug + '.html" target="_blank" class="fu-btn">👁 Ver Sitio</a>' +
-          '<button onclick="dragSlug=\'' + l.slug + '\';solta({preventDefault:function(){},currentTarget:{classList:{remove:function(){}}}},\'fechado\')" class="fu-btn primary">🎉 Cerrar Venta / Crear Contrato</button>' +
-        '</div>' +
-      '</div>';
-    }).join('') : '<div class="vazio">Aún no hay respuestas o citas registradas. Pulsa «Sincronizar Bandejas» para detectar automáticamente reservas de Google Calendar o emails de respuesta.</div>') +
-  '</div>';
+  if (fuFilter === 'todos' || fuFilter === 'alertas') {
+    secHtml += '<div class="fu-sec-group">' +
+      '<div class="fu-sec-header">' +
+        '<h3 class="fu-sec-title" style="color:#DC2626"><span>⏰</span> Requieren Segundo Contacto / Follow-up (≥4 días) <span class="pill" style="background:#FEE2E2;color:#DC2626">' + fuAlerta.length + '</span></h3>' +
+        '<span class="fu-sec-hint">Han pasado más de 4 días desde el envío. Realiza un segundo contacto para reactivar la conversación.</span>' +
+      '</div>' +
+      (fuAlerta.length ? '<div class="fu-cards-list">' + fuAlerta.map(function(l) {
+        var d = dias(l.emailEnviadoEm || l.dataProposta);
+        var rawTel = (l.telefone || '').replace(/[^0-9+]/g, '');
+        var mailSub = encodeURIComponent('Seguimiento a nuestra propuesta para ' + l.nome);
+        var mailBody = encodeURIComponent('Hola ' + l.nome + ',\n\nQuería dar un breve seguimiento a la propuesta y demo del nuevo sitio web que te envié hace unos días.\n\n¿Tuviste oportunidad de revisarlo?\n\nQuedo atento.');
+        return '<div class="lead-track-card" style="border-left:4px solid #DC2626">' +
+          '<div class="lead-track-top">' +
+            '<div class="lead-track-main">' +
+              '<div class="lead-track-name-row">' +
+                '<span class="lead-track-name">' + l.nome + '</span>' +
+                '<span class="tag fup">' + d + ' días sin respuesta</span>' +
+              '</div>' +
+              '<div class="lead-track-meta">' + [l.nicho, l.cidade].filter(Boolean).join(' · ') + ' · Enviada el ' + (l.emailEnviadoEm || l.dataProposta || '—') + '</div>' +
+            '</div>' +
+            '<div class="lead-track-actions">' +
+              (l.email ? '<a href="mailto:' + l.email + '?subject=' + mailSub + '&body=' + mailBody + '" class="fu-btn primary" title="Enviar correo breve de seguimiento pre-redactado">✉️ Enviar Email de Seguimiento</a>' : '') +
+              (rawTel ? '<a href="tel:' + rawTel + '" class="fu-btn" title="Llamar directamente">📞 Llamar</a>' : '') +
+              (rawTel ? '<a href="sms:' + rawTel + '" class="fu-btn" title="Enviar mensaje de texto SMS">💬 SMS</a>' : '') +
+              '<button onclick="salvarOv(\'' + l.slug + '\',{status:\'respondeu\',canalRespuesta:\'email\'})" class="fu-btn success" title="Marcar que el cliente ya contestó">✓ Respondió</button>' +
+              '<button onclick="salvarOv(\'' + l.slug + '\',{status:\'descartado\'})" class="fu-btn" style="color:#B0483B" title="Descartar prospecto">✕ Descartar</button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="lead-track-details">' +
+            '<div class="row"><span class="tag-label">Destinatario:</span> <a href="mailto:' + (l.email || '') + '" style="color:inherit">' + (l.email || '—') + '</a>' +
+              (l.telefone ? ' · <span class="tag-label">Tel:</span> <a href="tel:' + rawTel + '" style="color:inherit">' + l.telefone + '</a>' : '') +
+              (l.urlNova ? ' · <span class="tag-label">Demo en Cloudflare:</span> <a href="' + l.urlNova + '" target="_blank" style="color:var(--accent)">' + l.urlNova + '</a>' : '') +
+            '</div>' +
+            (l.obs ? '<div class="row" style="margin-top:2px"><span class="tag-label">Notas:</span> <span style="color:var(--muted)">' + l.obs + '</span></div>' : '') +
+          '</div>' +
+        '</div>';
+      }).join('') : '<div class="fu-empty-subtle">✓ ¡Al día! Ninguna propuesta enviada supera los 4 días sin respuesta.</div>') +
+    '</div>';
+  }
 
-  return statsHtml + guideHtml + secBorradores + secAlertas + secEnviados + secRespostas;
+  if (fuFilter === 'todos' || fuFilter === 'enviados') {
+    secHtml += '<div class="fu-sec-group">' +
+      '<div class="fu-sec-header">' +
+        '<h3 class="fu-sec-title"><span>✉️</span> Propuestas Enviadas — En Espera Reciente (&lt;4 días) <span class="pill" style="background:#EEF2FF;color:#4338CA">' + esperando.length + '</span></h3>' +
+        '<span class="fu-sec-hint">Propuestas que ya salieron de tu buzón y están en tiempo prudencial de revisión por el cliente.</span>' +
+      '</div>' +
+      (esperando.length ? '<div class="fu-cards-list">' + esperando.map(function(l) {
+        var d = dias(l.emailEnviadoEm || l.dataProposta);
+        var rawTel = (l.telefone || '').replace(/[^0-9+]/g, '');
+        return '<div class="lead-track-card" style="border-left:4px solid #6366F1">' +
+          '<div class="lead-track-top">' +
+            '<div class="lead-track-main">' +
+              '<div class="lead-track-name-row">' +
+                '<span class="lead-track-name">' + l.nome + '</span>' +
+                '<span class="pill" style="background:#EEF2FF;color:#4338CA;font-size:11px">Enviado hace ' + d + 'd</span>' +
+              '</div>' +
+              '<div class="lead-track-meta">' + [l.nicho, l.cidade].filter(Boolean).join(' · ') + ' · Fecha de salida: ' + (l.emailEnviadoEm || l.dataProposta || 'Reciente') + '</div>' +
+            '</div>' +
+            '<div class="lead-track-actions">' +
+              '<a href="https://mail.google.com/mail/u/0/#sent" target="_blank" class="fu-btn">Ver en Enviados ↗</a>' +
+              (rawTel ? '<a href="sms:' + rawTel + '" class="fu-btn">💬 SMS</a>' : '') +
+              '<button onclick="salvarOv(\'' + l.slug + '\',{status:\'respondeu\',canalRespuesta:\'email\'})" class="fu-btn success">✓ Marcar como Respondió</button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="lead-track-details">' +
+            '<div class="row"><span class="tag-label">Destinatario:</span> <a href="mailto:' + (l.email || '') + '" style="color:inherit">' + (l.email || '—') + '</a>' +
+              (l.telefone ? ' · <span class="tag-label">Tel:</span> <a href="tel:' + rawTel + '" style="color:inherit">' + l.telefone + '</a>' : '') +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('') : '<div class="fu-empty-subtle">No hay propuestas recientes en este periodo.</div>') +
+    '</div>';
+  }
+
+  if (fuFilter === 'todos' || fuFilter === 'respostas') {
+    secHtml += '<div class="fu-sec-group">' +
+      '<div class="fu-sec-header">' +
+        '<h3 class="fu-sec-title" style="color:#059669"><span>🎯</span> Respuestas & Citas Agendadas <span class="pill" style="background:#ECFDF5;color:#059669">' + respostas.length + '</span></h3>' +
+        '<span class="fu-sec-hint">Clientes que respondieron positivamente o agendaron cita en Google Meet. ¡Listos para cerrar!</span>' +
+      '</div>' +
+      (respostas.length ? '<div class="fu-cards-list">' + respostas.map(function(l) {
+        var canalBadge = l.canalRespuesta === 'calendar' ?
+          '<span class="pill" style="background:#DCFCE7;color:#15803D;font-size:11px">📅 Cita Google Meet</span>' :
+          (l.canalRespuesta === 'sms' ?
+            '<span class="pill" style="background:#E0F2FE;color:#0369A1;font-size:11px">💬 SMS Twilio</span>' :
+            '<span class="pill" style="background:#ECFDF5;color:#047857;font-size:11px">✉️ Correo Recibido</span>');
+        return '<div class="lead-track-card" style="border-left:4px solid #10B981">' +
+          '<div class="lead-track-top">' +
+            '<div class="lead-track-main">' +
+              '<div class="lead-track-name-row">' +
+                '<span class="lead-track-name">' + l.nome + '</span>' +
+                canalBadge +
+              '</div>' +
+              '<div class="lead-track-meta">' + [l.nicho, l.cidade].filter(Boolean).join(' · ') + ' · ' + (l.email || '—') + '</div>' +
+            '</div>' +
+            '<div class="lead-track-actions">' +
+              (l.slug ? '<a href="sites/' + l.slug + '/' + l.slug + '.html" target="_blank" class="fu-btn">👁 Ver Sitio</a>' : '') +
+              '<button onclick="dragSlug=\'' + l.slug + '\';solta({preventDefault:function(){},currentTarget:{classList:{remove:function(){}}}},\'fechado\')" class="fu-btn primary">🎉 Cerrar Venta / Crear Contrato</button>' +
+            '</div>' +
+          '</div>' +
+          (l.obs ? '<div class="lead-track-details"><div class="row"><span class="tag-label">Registro:</span> ' + l.obs + '</div></div>' : '') +
+        '</div>';
+      }).join('') : '<div class="fu-empty-subtle">No hay respuestas o citas registradas. Pulsa «Sincronizar Bandejas» para detectar nuevas reservas.</div>') +
+    '</div>';
+  }
+
+  return statsHtml + guideHtml + filterBar + secHtml;
 }
 
 function abrirContrato(slug, nome) {
@@ -1594,24 +1763,17 @@ function sincronizarAgenda() {
       if (btn) btn.disabled = false;
       if (lbl) lbl.textContent = LANG === 'es' ? 'Sincronizar Bandejas' : 'Sync Inboxes';
       if (res && res.ok) {
-        var r = res.resumen || {};
-        var b = r.borradores !== undefined ? r.borradores : (r.borradores_detectados || 0);
-        var e = r.enviados !== undefined ? r.enviados : (r.enviados_detectados || 0);
-        var ri = r.respuestas_email !== undefined ? r.respuestas_email : (r.respuestas_inbox || 0);
-        var c = r.citas_calendar || 0;
-        var s = r.sms_recibidos !== undefined ? r.sms_recibidos : (r.sms_twilio || 0);
-        var msg = (LANG === 'es' ? '🔄 Sincronización omnicanal finalizada con éxito:\n\n' : '🔄 Omnichannel sync completed successfully:\n\n') +
-          '• ' + (LANG === 'es' ? 'Borradores listos en Gmail: ' : 'Gmail Drafts: ') + b + '\n' +
-          '• ' + (LANG === 'es' ? 'Envíos confirmados: ' : 'Confirmed Sent: ') + e + '\n' +
-          '• ' + (LANG === 'es' ? 'Respuestas en bandeja: ' : 'Inbox Replies: ') + ri + '\n' +
-          '• ' + (LANG === 'es' ? 'Citas Google Meet: ' : 'Google Meet Bookings: ') + c + '\n' +
-          '• ' + (LANG === 'es' ? 'SMS Twilio: ' : 'Twilio SMS: ') + s;
-        var det = res.detalles || res.actualizados || [];
-        if (det.length) {
-          msg += '\n\n' + (LANG === 'es' ? 'Actualizaciones registradas:\n• ' : 'Updates registered:\n• ') + det.join('\n• ');
-        }
-        alert(msg);
-        location.reload();
+        fetch('/api/leads', { cache: 'no-store' })
+          .then(function(lr) { return lr.json(); })
+          .then(function(j) {
+            leads = j;
+            render();
+            mostrarSyncModal(res);
+          })
+          .catch(function() {
+            render();
+            mostrarSyncModal(res);
+          });
       } else {
         alert((LANG === 'es' ? 'Error al sincronizar: ' : 'Sync error: ') + ((res && res.erro) || 'desconocido'));
       }
@@ -1623,6 +1785,80 @@ function sincronizarAgenda() {
     });
 }
 
+function mostrarSyncModal(res) {
+  var r = res.resumen || {};
+  var b = r.borradores !== undefined ? r.borradores : (r.borradores_detectados || 0);
+  var e = r.enviados !== undefined ? r.enviados : (r.enviados_detectados || 0);
+  var ri = r.respuestas_email !== undefined ? r.respuestas_email : (r.respuestas_inbox || 0);
+  var c = r.citas_calendar || 0;
+  var s = r.sms_recibidos !== undefined ? r.sms_recibidos : (r.sms_twilio || 0);
+  var det = res.detalles || res.actualizados || [];
+
+  var html = '<div class="sync-body">' +
+    '<div class="sync-status-banner">' +
+      '<span style="font-size:20px;line-height:1">✓</span>' +
+      '<div>' +
+        '<div style="font-weight:700;font-size:13.5px">' + (LANG === 'es' ? 'Sincronización omnicanal finalizada con éxito' : 'Omnichannel sync completed successfully') + '</div>' +
+        '<div style="font-size:12px;opacity:0.9;font-weight:400">' + (LANG === 'es' ? 'Se escanearon Gmail, Google Calendar y Twilio SMS.' : 'Gmail, Google Calendar and Twilio SMS scanned.') + '</div>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="sync-metrics-grid">' +
+      '<div class="sync-metric-tile" style="' + (b > 0 ? 'border-color:#F59E0B;background:#FEF3C72B' : '') + '">' +
+        '<div class="icon">📝</div>' +
+        '<div class="num" style="' + (b > 0 ? 'color:#B45309' : '') + '">' + b + '</div>' +
+        '<div class="lbl">' + (LANG === 'es' ? 'Borradores en Gmail' : 'Gmail Drafts') + '</div>' +
+      '</div>' +
+      '<div class="sync-metric-tile" style="' + (e > 0 ? 'border-color:#6366F1;background:#EEF2FF' : '') + '">' +
+        '<div class="icon">✉️</div>' +
+        '<div class="num" style="' + (e > 0 ? 'color:#4338CA' : '') + '">' + e + '</div>' +
+        '<div class="lbl">' + (LANG === 'es' ? 'Envíos Confirmados' : 'Confirmed Sent') + '</div>' +
+      '</div>' +
+      '<div class="sync-metric-tile" style="' + (ri > 0 ? 'border-color:#10B981;background:#ECFDF5' : '') + '">' +
+        '<div class="icon">📥</div>' +
+        '<div class="num" style="' + (ri > 0 ? 'color:#047857' : '') + '">' + ri + '</div>' +
+        '<div class="lbl">' + (LANG === 'es' ? 'Respuestas Inbox' : 'Inbox Replies') + '</div>' +
+      '</div>' +
+      '<div class="sync-metric-tile" style="' + (c > 0 ? 'border-color:#10B981;background:#ECFDF5' : '') + '">' +
+        '<div class="icon">📅</div>' +
+        '<div class="num" style="' + (c > 0 ? 'color:#047857' : '') + '">' + c + '</div>' +
+        '<div class="lbl">' + (LANG === 'es' ? 'Citas Google Meet' : 'Meet Bookings') + '</div>' +
+      '</div>' +
+      '<div class="sync-metric-tile" style="' + (s > 0 ? 'border-color:#0284C7;background:#F0F9FF' : '') + '">' +
+        '<div class="icon">💬</div>' +
+        '<div class="num" style="' + (s > 0 ? 'color:#0369A1' : '') + '">' + s + '</div>' +
+        '<div class="lbl">' + (LANG === 'es' ? 'SMS Twilio' : 'Twilio SMS') + '</div>' +
+      '</div>' +
+    '</div>' +
+
+    (det.length ?
+      '<div class="sync-detalles-box">' +
+        '<b>' + (LANG === 'es' ? 'Detalles de la sincronización:' : 'Sync activity details:') + '</b>' +
+        '<ul style="margin:0;padding-left:18px">' + det.map(function(d) { return '<li>' + d + '</li>'; }).join('') + '</ul>' +
+      '</div>' :
+      '<div style="font-size:12px;color:var(--muted);text-align:center;padding:4px 0">' +
+        (LANG === 'es' ? 'No se detectaron cambios de estado nuevos en las bandejas.' : 'No new state changes detected.') +
+      '</div>'
+    ) +
+  '</div>';
+
+  var content = document.getElementById('sync-modal-content');
+  if (content) content.innerHTML = html;
+  var bg = document.getElementById('sync-modal-bg');
+  if (bg) bg.classList.add('aberto');
+}
+
+function fecharSyncModal() {
+  var bg = document.getElementById('sync-modal-bg');
+  if (bg) bg.classList.remove('aberto');
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    fecharSyncModal();
+  }
+});
+
 function marcarEnviado(slug) {
   var hoje = new Date().toISOString().slice(0, 10);
   if (!confirm(LANG === 'es' ? '¿Confirmas que ya revisaste y enviaste este correo al cliente desde tu Gmail?' : 'Confirm that you reviewed and sent this email to the client from Gmail?')) return;
@@ -1632,12 +1868,7 @@ function marcarEnviado(slug) {
     body: JSON.stringify({ slug: slug, fecha: hoje })
   }).then(function(r) { return r.json(); })
   .then(function(res) {
-    if (res && res.ok) {
-      salvarOv(slug, { emailStatus: 'enviado', emailEnviadoEm: hoje, dataProposta: hoje });
-      alert(LANG === 'es' ? '✓ ¡Propuesta marcada como enviada! El sistema inició el monitoreo de respuestas.' : '✓ Proposal marked as sent! Tracking active.');
-    } else {
-      salvarOv(slug, { emailStatus: 'enviado', emailEnviadoEm: hoje, dataProposta: hoje });
-    }
+    salvarOv(slug, { emailStatus: 'enviado', emailEnviadoEm: hoje, dataProposta: hoje });
   }).catch(function() {
     salvarOv(slug, { emailStatus: 'enviado', emailEnviadoEm: hoje, dataProposta: hoje });
   });
