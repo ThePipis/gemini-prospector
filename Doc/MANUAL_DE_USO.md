@@ -212,16 +212,18 @@ Ubicado en la esquina superior derecha del topbar. Permite alternar instantánea
 ### 2. Vistas Principales
 - **Visión General**: Métricas clave en USD, embudo visual de prospectos y alertas de seguimiento (4+ días sin respuesta).
 - **Pipeline Kanban**: Tablero arrastrable con etapas:
-  - *Nuevo* $\to$ *Rediseñado* $\to$ *Publicado* $\to$ *Propuesta enviada* $\to$ *Respondió* $\to$ *Cerrado* $\to$ *Descartado*.
+  - *Nuevo* $\to$ *Rediseñado* $\to$ *Publicado* $\to$ *Propuesta* (con badges `📝 Borrador en Gmail (por enviar)` y `✉️ Enviada al cliente`) $\to$ *Respondió* (con canales `📅 Cita Google Meet`, `✉️ Respuesta Email`, `💬 Respuesta SMS`) $\to$ *Cerrado* $\to$ *Descartado*.
 - **Clientes**: Tabla paginada de todos los negocios con buscador rápido, notas, reseñas y enlaces directos a sus sitios.
 - **Sitios Web**: Galería visual con previsualización en miniatura de cada landing page generada y acceso al editor interactivo.
 - **Comparador (Before & After)**: Pestañas interactivas que muestran lado a lado la web actual del cliente frente a tu nueva versión moderna.
-- **Seguimientos**: Lista de control para clientes que no han respondido en 4 días, con enlace directo para escribirles por WhatsApp o correo.
+- **Seguimientos y Trazabilidad**: Centro de control omnicanal con 4 métricas KPI, guía visual del ciclo de vida de 4 fases (Borrador $\to$ Envío $\to$ Monitoreo $\to$ Alerta 4+ días), accesos directos a webmail de Gmail y listados clasificados por urgencia.
 - **Contratos**: Historial de acuerdos legales (pendiente, enviado, firmado), con visualizador PDF y enlace de descarga `.docx`.
 - **Financiero**: Control de caja (ingresos cobrados, por cobrar, ingresos recurrentes mensuales MRR y proyección anual).
-- **Configuración**: Edición de datos fiscales del contratista y credenciales de Cloudflare.
+- **Configuración**: Edición de datos fiscales del contratista y paneles plegables para Cloudflare CDN y Twilio (SMS y Telefonía).
 
 ### 3. Acciones en Tarjetas Kanban
+- **`Abrir borrador ↗`**: Abre la bandeja de borradores en Gmail cuando la propuesta aún no se ha enviado.
+- **`✓ Marcar enviado`**: Actualiza el estado local y en base de datos una vez que envías el correo al cliente.
 - **`original`**: Abre el sitio web actual del cliente (enlace externo).
 - **`sitio demo`**: Abre la previsualización local en tu máquina (`http://localhost:8765/sites/[slug]/...`) para revisar el diseño en privado.
 - **`editor web`**: Abre el editor interactivo en el navegador para editar textos o cambiar fotos.
@@ -231,13 +233,19 @@ Ubicado en la esquina superior derecha del topbar. Permite alternar instantánea
 
 ---
 
-## 7. Envío de Propuestas y Modos de Gmail
+## 7. Envío de Propuestas, Ciclo de Trazabilidad y Modos de Gmail
 
-La cuenta oficial de la agencia es **`aisalesradar.agency@gmail.com`** y ya se encuentra autenticada mediante App Password.
+La cuenta oficial de la agencia es **`aisalesradar.agency@gmail.com`** y se encuentra conectada mediante App Password para SMTP e IMAP.
+
+### El Ciclo de Vida Omnicanal (4 Fases)
+1. **Fase 1: Generación de Borrador en Gmail**: El Agente IA redacta la propuesta personalizada con el demo interactivo y la guarda de forma segura en `[Gmail]/Borradores`. En el CRM se etiqueta como `📝 Borrador en Gmail (por enviar)`.
+2. **Fase 2: Revisión Humana & Envío**: Abres tu Gmail con un clic (`Abrir borrador ↗`), compruebas el correo, ajustas lo que desees y pulsas «Enviar».
+3. **Fase 3: Monitoreo & Detección Automática**: Al pulsar el botón `🔄 Sincronizar Bandejas` en el dashboard (o ejecutar `python sincronizar_mensajes.py`), el sistema escanea `[Gmail]/Enviados` y confirma la salida del correo, cambiando el estado a `✉️ Enviada al cliente`. Además, vigila la bandeja de entrada (`INBOX`) para detectar respuestas y citas de Google Calendar / Meet (`📅 Cita Google Meet`) y SMS entrantes de Twilio.
+4. **Fase 4: Alerta de Seguimiento Inteligente**: Si pasan 4 o más días sin que el cliente responda, la tarjeta se resalta en ámbar en el Kanban y en la sección **Seguimientos y Trazabilidad** se habilita una acción rápida para disparar el correo o SMS de seguimiento.
 
 ### Generación de Propuestas con `enviar_proposta.py`
 
-Puedes pedirle a Claude o ejecutarlo en consola:
+Puedes pedirle a tu Agente IA o ejecutarlo en consola:
 ```powershell
 # 1. Crear borrador automático en Gmail en INGLÉS:
 python enviar_proposta.py --slug "dr-smith-dentistry-los-angeles" --idioma en --modo borrador
@@ -250,6 +258,9 @@ python enviar_proposta.py --slug "dr-smith-dentistry-los-angeles" --idioma en --
 
 # 4. Generar enlace de redacción web directa (Compose URL):
 python enviar_proposta.py --slug "dr-smith-dentistry-los-angeles" --modo link
+
+# 5. Sincronizar bandejas omnicanal (Borradores, Enviados, Respuestas, Meet y SMS):
+python sincronizar_mensajes.py
 ```
 
 ### Reglas Anti-Spam Obligatorias

@@ -4,6 +4,7 @@
 Uso: python dashboard-server.py  (ou duplo clique em iniciar-dashboard.bat)
 Abre em http://localhost:8765 — edições, exclusões e drag&drop salvam no prospector.db"""
 import json, sqlite3, os, sys, webbrowser
+from datetime import datetime
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 PASTA = os.path.dirname(os.path.abspath(__file__))
@@ -24,7 +25,8 @@ def ler_config():
 PORTA = 8765
 CAMPOS = ['slug','nome','nicho','cidade','nota','avaliacoes','email','telefone','whatsapp',
           'siteAntigo','motivo','status','urlNova','dataProposta','valor','obs',
-          'contratoStatus','contratoEm','manutencao','pago','docCliente','endCliente']
+          'contratoStatus','contratoEm','manutencao','pago','docCliente','endCliente',
+          'emailStatus','emailEnviadoEm','canalRespuesta','draftSubject']
 
 def conexao():
     c = sqlite3.connect(DB)
@@ -34,7 +36,7 @@ def conexao():
         status TEXT DEFAULT 'novo', urlNova TEXT, dataProposta TEXT, valor REAL, obs TEXT,
         contratoStatus TEXT DEFAULT 'pendente', contratoEm TEXT, manutencao REAL, pago INTEGER DEFAULT 0,
         atualizado TEXT DEFAULT (datetime('now','localtime')))''')
-    for col, tipo in [('contratoStatus',"TEXT DEFAULT 'pendente'"),('contratoEm','TEXT'),('manutencao','REAL'),('pago','INTEGER DEFAULT 0'),('docCliente','TEXT'),('endCliente','TEXT')]:
+    for col, tipo in [('contratoStatus',"TEXT DEFAULT 'pendente'"),('contratoEm','TEXT'),('manutencao','REAL'),('pago','INTEGER DEFAULT 0'),('docCliente','TEXT'),('endCliente','TEXT'),('emailStatus',"TEXT DEFAULT 'sin_borrador'"),('emailEnviadoEm','TEXT'),('canalRespuesta','TEXT'),('draftSubject','TEXT')]:
         try: c.execute('ALTER TABLE leads ADD COLUMN %s %s' % (col, tipo))
         except sqlite3.OperationalError: pass
     return c
@@ -94,18 +96,24 @@ class App(SimpleHTTPRequestHandler):
                     val = firma.get('empresa', '')
                 contrato[k] = val
 
+            tw = dict(cfg.get('twilio', {}))
+            if tw.get('authToken'):
+                tw['tokenDefinido'] = True
+                tw['authToken'] = ''
+
             return self._json(200, {
                 'contrato': contrato,
                 'contratante': contrato,
                 'firma': firma,
                 'cloudflare': cf,
+                'twilio': tw,
                 'prospeccion': cfg.get('prospeccion', {})
             })
-        if self.path.split('?')[0] == '/api/sincronizar-agenda':
+        if self.path.split('?')[0] in ('/api/sincronizar-agenda', '/api/sincronizar-mensajes'):
             try:
                 sys.path.insert(0, PASTA)
-                import sincronizar_agenda
-                res = sincronizar_agenda.sincronizar_citas()
+                import sincronizar_mensajes
+                res = sincronizar_mensajes.sincronizar_todo()
                 return self._json(200, res)
             except Exception as e:
                 return self._json(500, {'ok': False, 'erro': str(e)})
@@ -127,6 +135,16 @@ class App(SimpleHTTPRequestHandler):
         return SimpleHTTPRequestHandler.do_GET(self)
 
     def do_POST(self):
+        if self.path.split('?')[0] == '/api/marcar-enviado':
+            corpo = self._corpo()
+            slug = corpo.get('slug')
+            if not slug: return self._json(400, {'erro': 'slug requerido'})
+            c = conexao()
+            f_hoy = datetime.now().strftime('%Y-%m-%d')
+            c.execute("UPDATE leads SET emailStatus='enviado', emailEnviadoEm=?, dataProposta=COALESCE(dataProposta, ?), status='proposta', atualizado=datetime('now','localtime') WHERE slug=?",
+                      (f_hoy, f_hoy, slug))
+            c.commit(); c.close()
+            return self._json(200, {'ok': True})
         if self.path.split('?')[0] == '/api/leads':
             l = self._corpo(); c = conexao()
             c.execute('INSERT OR REPLACE INTO leads (%s) VALUES (%s)' % (','.join(CAMPOS), ','.join('?'*len(CAMPOS))),
@@ -137,11 +155,13 @@ class App(SimpleHTTPRequestHandler):
     def do_PUT(self):
         if self.path.split('?')[0] == '/api/config':
             cfg = ler_config(); corpo = self._corpo()
-            for key in ['contrato', 'firma', 'cloudflare', 'prospeccion', 'contratante', 'hostgator']:
+            for key in ['contrato', 'firma', 'cloudflare', 'prospeccion', 'contratante', 'hostgator', 'twilio']:
                 if key in corpo and isinstance(corpo[key], dict):
                     sub = cfg.get(key, {})
                     for k, v in corpo[key].items():
                         if key == 'cloudflare' and k == 'apiToken' and v == '':
+                            continue
+                        if key == 'twilio' and k == 'authToken' and v == '':
                             continue
                         sub[k] = v
                     cfg[key] = sub

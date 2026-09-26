@@ -182,6 +182,24 @@ select.mini{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-
 .cfg-btn-primary:hover{background:var(--accent-2)}
 .cfg-btn-primary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .cfg-btn-primary:disabled{opacity:.4;cursor:default}
+.fu-flow{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-bottom:18px}
+.fu-flow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px}
+.fu-step{background:var(--surface);border-radius:10px;padding:12px 14px;border-left:3px solid var(--accent);font-size:12px;line-height:1.45}
+.fu-step b{display:block;font-size:12.5px;color:var(--ink);margin-bottom:3px}
+.fu-sec{margin-bottom:20px}
+.fu-sec-title{font-family:var(--serif);font-size:16px;margin:0 0 12px;font-weight:600;display:flex;align-items:center;gap:8px}
+.fu-list{display:flex;flex-direction:column;gap:10px}
+.fu-card{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.fu-card-info{min-width:240px;flex:1}
+.fu-card-title{font-weight:700;font-size:15px;color:var(--ink);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fu-card-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.fu-card-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.fu-btn{font-size:12px;font-weight:700;padding:6px 12px;border-radius:8px;text-decoration:none;border:1px solid var(--line);background:var(--white);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:var(--sans);transition:border-color .15s ease}
+.fu-btn:hover{border-color:var(--accent);color:var(--accent-2)}
+.fu-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.fu-btn.primary:hover{background:var(--accent-2);color:#fff}
+.fu-btn.success{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.fu-btn.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
 </style>
 </head>
 <body>
@@ -206,8 +224,8 @@ select.mini{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-
     <span class="upd" id="upd"></span>
     <span class="modo file" id="modo" title="Abre mediante iniciar-dashboard.bat para guardar en base de datos">modo archivo</span>
     <button id="limpar-ov" style="display:none;border:1px solid var(--line);background:var(--white);color:var(--muted);font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;cursor:pointer;font-family:var(--sans)" onclick="limparLocalEdits()">limpiar ediciones locales</button>
-    <button id="btn-sync-cal" onclick="sincronizarAgenda()" style="border:1px solid var(--line);background:var(--white);color:var(--ink);font-size:12px;font-weight:700;padding:6px 12px;border-radius:12px;cursor:pointer;font-family:var(--sans);display:inline-flex;align-items:center;gap:6px" title="Sincronizar citas de Google Calendar / Meet con el CRM">
-      <span>📅</span> <span id="lbl-sync-cal">Sincronizar Citas</span>
+    <button id="btn-sync-cal" onclick="sincronizarAgenda()" style="border:1px solid var(--line);background:var(--white);color:var(--ink);font-size:12px;font-weight:700;padding:6px 12px;border-radius:12px;cursor:pointer;font-family:var(--sans);display:inline-flex;align-items:center;gap:6px" title="Sincronizar borradores, envíos, respuestas en Gmail, citas en Google Calendar y SMS en Twilio">
+      <span>🔄</span> <span id="lbl-sync-cal">Sincronizar Bandejas</span>
     </button>
     <div class="lang-toggle" title="Cambiar idioma / Switch language">
       <button id="btn-lang-es" class="lang-btn on" onclick="setLang('es')">ES</button>
@@ -276,7 +294,7 @@ var I18N = {
       novo: 'Nuevo',
       redesenhado: 'Rediseñado',
       publicado: 'Publicado',
-      proposta: 'Propuesta enviada',
+      proposta: 'Propuesta',
       respondeu: 'Respondió',
       fechado: 'Cerrado / Ganado',
       descartado: 'Descartado'
@@ -287,7 +305,7 @@ var I18N = {
       clientes: 'Clientes',
       sites: 'Sitios Web',
       comparador: 'Comparador',
-      followup: 'Seguimientos',
+      followup: 'Seguimientos y Trazabilidad',
       contratos: 'Contratos',
       financeiro: 'Financiero',
       config: 'Configuración'
@@ -355,8 +373,9 @@ var I18N = {
       dicaIframe: 'Algunos sitios web antiguos bloquean la visualización incrustada por seguridad — si el lado "Antes" queda en blanco, usa el enlace "abrir ↗".'
     },
     followup: {
-      titulo: 'Propuestas esperando seguimiento',
-      vazio: 'Ningún seguimiento pendiente.'
+      titulo: 'Seguimientos y Trazabilidad Omnicanal',
+      subtitulo: 'Monitoreo en tiempo real de borradores, propuestas enviadas, respuestas por email, citas de Google Meet y SMS.',
+      vazio: 'Ninguna propuesta en seguimiento en este momento.'
     },
     contratos: {
       vazio: 'Ningún cliente cerrado todavía. Cuando cierres un trato, arrastra la tarjeta a "Cerrado" y dile a tu Agente IA: /contrato [cliente].',
@@ -413,6 +432,14 @@ var I18N = {
       cfBtnSalvar: 'Guardar Cloudflare',
       cfTokenAtivo: '✓ Token activo',
       cfTokenFalta: 'Falta configurar token',
+      twTitulo: 'Conexión Twilio — SMS & Telefonía',
+      twTituloShort: 'Conexión Twilio',
+      twSub: 'Envío de mensajes SMS, recordatorios automáticos de propuestas y monitoreo de respuestas de clientes.',
+      twTokenConfigurado: '••••• configurado (dejar vacío para mantener)',
+      twTokenVazio: 'pega tu Auth Token',
+      twBtnSalvar: 'Guardar Twilio',
+      twTokenAtivo: '✓ Twilio activo',
+      twTokenFalta: 'Opcional / Pendiente',
       dadosClienteTitulo: '¿Y los datos del cliente para el contrato?',
       dadosClienteTexto: 'El Tax ID / EIN y dirección del cliente se solicitan al cerrar la venta: pídelos por correo o llamada/SMS y (1) pásalos al Agente IA al pedir /contrato — los extrae y guarda solo — o (2) ingrésalos en ✎ editar en la tarjeta. Lo que falte aparecerá como "[completar]" en el borrador.',
       labels: {
@@ -428,7 +455,10 @@ var I18N = {
         projectName: 'Nombre del Proyecto (Workers/Assets)',
         customDomain: 'Dominio Personalizado (ej. aisalesradar.com)',
         subdomain: 'Subdominio de Demos (ej. demos)',
-        apiToken: 'Cloudflare API Token'
+        apiToken: 'Cloudflare API Token',
+        accountSid: 'Twilio Account SID (ej. AC...)',
+        authToken: 'Twilio Auth Token',
+        fromNumber: 'Número Twilio (+1...)'
       }
     },
     modal: {
@@ -477,7 +507,7 @@ var I18N = {
       novo: 'New',
       redesenhado: 'Redesigned',
       publicado: 'Published',
-      proposta: 'Proposal sent',
+      proposta: 'Proposal',
       respondeu: 'Replied',
       fechado: 'Closed / Won',
       descartado: 'Discarded'
@@ -488,7 +518,7 @@ var I18N = {
       clientes: 'Clients',
       sites: 'Websites',
       comparador: 'Before / After',
-      followup: 'Follow-ups',
+      followup: 'Follow-ups & Tracking',
       contratos: 'Contracts',
       financeiro: 'Financials',
       config: 'Settings'
@@ -556,8 +586,9 @@ var I18N = {
       dicaIframe: 'Some legacy websites block embedded iframes for security — if the "Before" pane appears blank, click the "open ↗" link.'
     },
     followup: {
-      titulo: 'Proposals awaiting follow-up',
-      vazio: 'No pending follow-ups.'
+      titulo: 'Follow-ups & Omnichannel Tracking',
+      subtitulo: 'Real-time monitoring of drafts, sent proposals, email replies, Google Meet bookings, and SMS.',
+      vazio: 'No proposals currently in tracking.'
     },
     contratos: {
       vazio: 'No closed clients yet. When you close a deal, drag the card to "Closed" and tell your AI Agent: /contrato [client].',
@@ -614,6 +645,14 @@ var I18N = {
       cfBtnSalvar: 'Save Cloudflare settings',
       cfTokenAtivo: '✓ Token active',
       cfTokenFalta: 'Token configuration missing',
+      twTitulo: 'Twilio Integration — SMS & Voice',
+      twTituloShort: 'Twilio Integration',
+      twSub: 'SMS messaging, automated proposal follow-ups, and inbound text reply tracking.',
+      twTokenConfigurado: '••••• configured (leave blank to keep)',
+      twTokenVazio: 'paste your Auth Token',
+      twBtnSalvar: 'Save Twilio settings',
+      twTokenAtivo: '✓ Twilio active',
+      twTokenFalta: 'Optional / Pending',
       dadosClienteTitulo: 'What about client contract details?',
       dadosClienteTexto: 'Client EIN/Tax ID and legal address are requested upon closing: ask via email, call/SMS and (1) provide to your AI Agent when calling /contrato — it extracts and saves automatically — or (2) fill in via ✎ edit on the card. Missing info shows as "[to be completed]" in draft.',
       labels: {
@@ -629,7 +668,10 @@ var I18N = {
         projectName: 'Project Name (Workers/Assets)',
         customDomain: 'Custom Domain (e.g. aisalesradar.com)',
         subdomain: 'Demo Subdomain (e.g. demos)',
-        apiToken: 'Cloudflare API Token'
+        apiToken: 'Cloudflare API Token',
+        accountSid: 'Twilio Account SID (e.g. AC...)',
+        authToken: 'Twilio Auth Token',
+        fromNumber: 'Twilio Phone Number (+1...)'
       }
     },
     modal: {
@@ -716,7 +758,7 @@ function applyStaticI18n() {
   var lb = document.getElementById('limpar-ov');
   if (lb) lb.textContent = t('clearOv');
   var lblSync = document.getElementById('lbl-sync-cal');
-  if (lblSync) lblSync.textContent = (LANG === 'es' ? 'Sincronizar Citas' : 'Sync Calendar');
+  if (lblSync) lblSync.textContent = (LANG === 'es' ? 'Sincronizar Bandejas' : 'Sync Inboxes');
   var upd = document.getElementById('upd');
   if (upd && D.atualizado) upd.textContent = t('updatedAt') + D.atualizado;
   var btnCol = document.getElementById('btn-colapsar-sidebar');
@@ -777,6 +819,7 @@ function aplicaOv(arr) {
             .map(function(l) { return Object.assign({}, l, OV[l.slug] || {}); });
 }
 
+var CFG = {}, CF = {}, TW = {};
 var leads = aplicaOv(D.leads || []);
 if (Object.keys(OV).length) {
   var lb = document.getElementById('limpar-ov');
@@ -797,6 +840,7 @@ fetch('/api/leads', { cache: 'no-store' }).then(function(r) {
     if (fm.email && !CFG.email) CFG.email = fm.email;
     if (fm.telefono && !CFG.telefono) CFG.telefono = fm.telefono;
     CF = (c && c.cloudflare) || {};
+    TW = (c && c.twilio) || {};
     if (view === 'config') render();
   });
   updateModoBadge();
@@ -946,7 +990,7 @@ function setView(v) {
 }
 
 function nav() {
-  var fu = fil().filter(function(l) { return l.status === 'proposta' && dias(l.dataProposta) >= 4; });
+  var fu = fil().filter(function(l) { return l.status === 'proposta' || l.status === 'respondeu'; });
   var fechadosN = fil().filter(function(l) { return l.status === 'fechado'; }).length;
   var itens = [
     ['geral', t('nav.geral'), null],
@@ -971,6 +1015,12 @@ function pillStatus(s) {
 
 function acoes(l) {
   var a = [];
+  if (l.status === 'proposta' && l.emailStatus === 'borrador') {
+    a.push('<a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" style="color:var(--accent);font-weight:700" title="Abrir bandeja de borradores en Gmail">Abrir borrador ↗</a>');
+    a.push('<a href="#" onclick="marcarEnviado(\'' + l.slug + '\');return false" style="color:var(--ok);font-weight:700" title="Marcar como enviado al cliente">✓ Enviado</a>');
+  } else if (l.status === 'proposta' && l.emailStatus === 'enviado') {
+    a.push('<a href="https://mail.google.com/mail/u/0/#sent" target="_blank" title="Ver en enviados de Gmail">Ver enviado ↗</a>');
+  }
   if (l.siteAntigo) a.push('<a href="' + l.siteAntigo + '" target="_blank">' + t('actions.antigo') + '</a>');
   if (l.slug && ['redesenhado','publicado','proposta','respondeu','fechado'].indexOf(l.status) >= 0) {
     a.push('<a href="sites/' + l.slug + '/' + l.slug + '.html" target="_blank">' + t('actions.pagina') + '</a>');
@@ -989,10 +1039,28 @@ function acoes(l) {
 }
 
 function card(l) {
-  var f = l.status === 'proposta' && dias(l.dataProposta) >= 4 ? '<span class="tag fup">' + t('actions.followupTag') + dias(l.dataProposta) + 'd</span>' : '';
+  var f = l.status === 'proposta' && dias(l.emailEnviadoEm || l.dataProposta) >= 4 ? '<span class="tag fup">' + t('actions.followupTag') + dias(l.emailEnviadoEm || l.dataProposta) + 'd</span>' : '';
   var mo = LANG === 'es' ? '/mes' : '/mo';
+  var emailBadge = '';
+  if (l.status === 'proposta') {
+    if (l.emailStatus === 'borrador') {
+      emailBadge = '<div style="margin:4px 0"><span class="pill" style="background:#fef3c7;color:#b45309;font-size:10px;font-weight:700" title="Borrador generado en Gmail, pendiente de enviar">📝 Borrador en Gmail (por enviar)</span></div>';
+    } else if (l.emailStatus === 'enviado' || l.dataProposta) {
+      var dSent = l.emailEnviadoEm || l.dataProposta;
+      emailBadge = '<div style="margin:4px 0"><span class="pill" style="background:#e0e7ff;color:#4338ca;font-size:10px;font-weight:700" title="Propuesta enviada al cliente">✉️ Enviada (' + (dSent ? dias(dSent) + 'd' : '') + ')</span></div>';
+    }
+  } else if (l.status === 'respondeu') {
+    if (l.canalRespuesta === 'calendar') {
+      emailBadge = '<div style="margin:4px 0"><span class="pill" style="background:#dcfce7;color:#15803d;font-size:10px;font-weight:700">📅 Cita Google Meet</span></div>';
+    } else if (l.canalRespuesta === 'sms') {
+      emailBadge = '<div style="margin:4px 0"><span class="pill" style="background:#e0f2fe;color:#0369a1;font-size:10px;font-weight:700">💬 Respuesta SMS</span></div>';
+    } else {
+      emailBadge = '<div style="margin:4px 0"><span class="pill" style="background:#ecfdf5;color:#047857;font-size:10px;font-weight:700">✉️ Respuesta Email</span></div>';
+    }
+  }
   return '<div class="card" draggable="true" ondragstart="dragIni(event,\'' + l.slug + '\')" ondragend="dragFim(event)" style="--cor:' + CORES[l.status] + '">' +
     '<div class="nm">' + l.nome + f + '</div>' +
+    emailBadge +
     '<div class="mt">' + (l.nota ? '★ ' + l.nota + ' (' + l.avaliacoes + ')' : '') + (l.cidade ? ' · ' + l.cidade : '') + '</div>' +
     (l.motivo ? '<div class="motivo">' + l.motivo + '</div>' : '') +
     (l.obs ? '<div class="mt">' + l.obs + '</div>' : '') +
@@ -1099,8 +1167,128 @@ function vSites() {
 }
 
 function vFollowup() {
-  var fu = fil().filter(function(l) { return l.status === 'proposta' && dias(l.dataProposta) >= 4; });
-  return '<div class="painel"><h2>' + t('followup.titulo') + '</h2>' + (fu.length ? fu.map(card).join('') : '<div class="vazio">' + t('followup.vazio') + '</div>') + '</div>';
+  var ls = fil();
+  var borradores = ls.filter(function(l) { return l.status === 'proposta' && l.emailStatus === 'borrador'; });
+  var enviados = ls.filter(function(l) { return l.status === 'proposta' && l.emailStatus === 'enviado'; });
+  var sinClasif = ls.filter(function(l) { return l.status === 'proposta' && !l.emailStatus; });
+  var fuAlerta = ls.filter(function(l) { return l.status === 'proposta' && dias(l.emailEnviadoEm || l.dataProposta) >= 4 && l.emailStatus !== 'borrador'; });
+  var respostas = ls.filter(function(l) { return l.status === 'respondeu'; });
+  var esperando = enviados.concat(sinClasif).filter(function(l) { return dias(l.emailEnviadoEm || l.dataProposta) < 4; });
+
+  var statsHtml = '<div class="stats">' + [
+    ['📝 Borradores por enviar', borradores.length, borradores.length ? 'ambar' : ''],
+    ['✉️ Propuestas enviadas activas', esperando.length, esperando.length ? 'azul' : ''],
+    ['⏰ Requieren seguimiento (≥4d)', fuAlerta.length, fuAlerta.length ? 'ambar' : ''],
+    ['🎯 Respuestas / Citas', respostas.length, respostas.length ? 'verde' : '']
+  ].map(function(s) {
+    return '<div class="stat ' + s[2] + '"><div class="n">' + s[1] + '</div><div class="l">' + s[0] + '</div></div>';
+  }).join('') + '</div>';
+
+  var guideHtml = '<div class="fu-flow">' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">' +
+      '<div>' +
+        '<h2 style="font-family:var(--serif);font-size:17px;margin:0 0 4px;font-weight:600">Centro de Trazabilidad Omnicanal & Seguimiento</h2>' +
+        '<p style="font-size:12.5px;color:var(--muted);margin:0">Monitoreo integral: Borrador en Gmail ➔ Envío al Cliente ➔ Detección de Respuestas / Citas ➔ Alerta de 4+ días sin respuesta.</p>' +
+      '</div>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+        '<button class="fu-btn primary" onclick="sincronizarAgenda()">🔄 Sincronizar Bandejas Ahora</button>' +
+        '<a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" class="fu-btn">📝 Borradores Gmail ↗</a>' +
+        '<a href="https://mail.google.com/mail/u/0/#sent" target="_blank" class="fu-btn">✉️ Enviados ↗</a>' +
+        '<a href="https://mail.google.com/mail/u/0/#inbox" target="_blank" class="fu-btn">📥 Recibidos ↗</a>' +
+      '</div>' +
+    '</div>' +
+    '<div class="fu-flow-grid">' +
+      '<div class="fu-step"><b>1. Borrador en Gmail</b>El Agente IA genera el borrador con la propuesta y demo personalizada. Queda en tu Gmail listo para revisión humana.</div>' +
+      '<div class="fu-step"><b>2. Revisión & Envío</b>Entras a Gmail, revisas el borrador y le das «Enviar». El sincronizador detecta automáticamente la salida.</div>' +
+      '<div class="fu-step"><b>3. Monitoreo Omnicanal</b>Rastrea en tiempo real respuestas de email, reservas de Google Meet y SMS entrantes de Twilio.</div>' +
+      '<div class="fu-step"><b>4. Segundo Contacto (4+d)</b>Si el cliente no responde tras 4 días, se activa la alerta prioritaria con plantilla de seguimiento.</div>' +
+    '</div>' +
+  '</div>';
+
+  var secBorradores = '<div class="painel fu-sec">' +
+    '<div class="fu-sec-title"><span>📝</span> 1. Borradores Listos en Gmail — Pendientes de Revisión y Envío (' + borradores.length + ')</div>' +
+    (borradores.length ? '<div class="fu-list">' + borradores.map(function(l) {
+      return '<div class="fu-card" style="border-left:4px solid #f59e0b">' +
+        '<div class="fu-card-info">' +
+          '<div class="fu-card-title">' + l.nome + '<span class="pill" style="background:#fef3c7;color:#b45309;font-size:11px">Borrador listo en Gmail</span></div>' +
+          '<div class="fu-card-sub"><b>Asunto del borrador:</b> ' + (l.draftSubject || 'Propuesta personalizada de sitio web moderno') + '</div>' +
+          '<div class="fu-card-sub"><b>Destinatario:</b> ' + (l.email || 'Sin email registrado') + (l.cidade ? ' · ' + l.cidade : '') + (l.telefone ? ' · ' + l.telefone : '') + '</div>' +
+        '</div>' +
+        '<div class="fu-card-actions">' +
+          '<a href="sites/' + l.slug + '/' + l.slug + '.html" target="_blank" class="fu-btn">👁 Ver Demo</a>' +
+          '<a href="https://mail.google.com/mail/u/0/#drafts" target="_blank" class="fu-btn primary">📝 Abrir Borrador en Gmail ↗</a>' +
+          '<button onclick="marcarEnviado(\'' + l.slug + '\')" class="fu-btn success" title="Si ya pulsaste Enviar en Gmail, haz clic aquí para marcarlo">✓ Marcar como Ya Enviado</button>' +
+        '</div>' +
+      '</div>';
+    }).join('') : '<div class="vazio">No hay borradores pendientes. Cuando el Agente IA genere una nueva propuesta, aparecerá aquí automáticamente.</div>') +
+  '</div>';
+
+  var secAlertas = '<div class="painel fu-sec">' +
+    '<div class="fu-sec-title" style="color:var(--warn)"><span>⏰</span> 2. Requieren Segundo Contacto / Follow-up (≥4 días sin respuesta) (' + fuAlerta.length + ')</div>' +
+    (fuAlerta.length ? '<div class="fu-list">' + fuAlerta.map(function(l) {
+      var d = dias(l.emailEnviadoEm || l.dataProposta);
+      var rawTel = (l.telefone || '').replace(/[^0-9+]/g, '');
+      var mailSub = encodeURIComponent('Seguimiento a nuestra propuesta para ' + l.nome);
+      var mailBody = encodeURIComponent('Hola ' + l.nome + ',\n\nQuería dar un breve seguimiento a la propuesta y demo del nuevo sitio web que te envié hace unos días.\n\n¿Tuviste oportunidad de revisarlo?\n\nQuedo atento.');
+      return '<div class="fu-card" style="border-left:4px solid var(--warn)">' +
+        '<div class="fu-card-info">' +
+          '<div class="fu-card-title">' + l.nome + '<span class="tag fup">' + d + ' días sin respuesta</span></div>' +
+          '<div class="fu-card-sub"><b>Enviada el:</b> ' + (l.emailEnviadoEm || l.dataProposta || '—') + ' · <b>Email:</b> ' + (l.email || '—') + ' · <b>Tel:</b> ' + (l.telefone || '—') + '</div>' +
+          (l.obs ? '<div class="fu-card-sub" style="color:var(--ink)"><i>' + l.obs + '</i></div>' : '') +
+        '</div>' +
+        '<div class="fu-card-actions">' +
+          (l.email ? '<a href="mailto:' + l.email + '?subject=' + mailSub + '&body=' + mailBody + '" class="fu-btn primary">✉️ Enviar Email de Seguimiento</a>' : '') +
+          (rawTel ? '<a href="tel:' + rawTel + '" class="fu-btn">📞 Llamar</a>' : '') +
+          (rawTel ? '<a href="sms:' + rawTel + '" class="fu-btn">💬 Enviar SMS</a>' : '') +
+          '<button onclick="salvarOv(\'' + l.slug + '\',{status:\'respondeu\',canalRespuesta:\'email\'})" class="fu-btn success">✓ Respondió</button>' +
+          '<button onclick="salvarOv(\'' + l.slug + '\',{status:\'descartado\'})" class="fu-btn" style="color:#B0483B">✕ Descartar</button>' +
+        '</div>' +
+      '</div>';
+    }).join('') : '<div class="vazio">¡Excelente! Ninguna propuesta enviada supera los 4 días sin respuesta.</div>') +
+  '</div>';
+
+  var secEnviados = '<div class="painel fu-sec">' +
+    '<div class="fu-sec-title"><span>✉️</span> 3. Propuestas Enviadas — En Espera Reciente (<4 días) (' + esperando.length + ')</div>' +
+    (esperando.length ? '<div class="fu-list">' + esperando.map(function(l) {
+      var d = dias(l.emailEnviadoEm || l.dataProposta);
+      var rawTel = (l.telefone || '').replace(/[^0-9+]/g, '');
+      return '<div class="fu-card" style="border-left:4px solid #6366f1">' +
+        '<div class="fu-card-info">' +
+          '<div class="fu-card-title">' + l.nome + '<span class="pill" style="background:#e0e7ff;color:#4338ca;font-size:11px">Enviado hace ' + d + 'd</span></div>' +
+          '<div class="fu-card-sub"><b>Fecha de envío:</b> ' + (l.emailEnviadoEm || l.dataProposta || 'Reciente') + ' · <b>Email:</b> ' + (l.email || '—') + '</div>' +
+        '</div>' +
+        '<div class="fu-card-actions">' +
+          '<a href="https://mail.google.com/mail/u/0/#sent" target="_blank" class="fu-btn">Ver en Enviados ↗</a>' +
+          (rawTel ? '<a href="sms:' + rawTel + '" class="fu-btn">💬 SMS</a>' : '') +
+          '<button onclick="salvarOv(\'' + l.slug + '\',{status:\'respondeu\',canalRespuesta:\'email\'})" class="fu-btn success">✓ Marcar como Respondió</button>' +
+        '</div>' +
+      '</div>';
+    }).join('') : '<div class="vazio">No hay propuestas recientes en espera de respuesta.</div>') +
+  '</div>';
+
+  var secRespostas = '<div class="painel fu-sec">' +
+    '<div class="fu-sec-title" style="color:var(--ok)"><span>🎯</span> 4. Respuestas & Citas Agendadas (' + respostas.length + ')</div>' +
+    (respostas.length ? '<div class="fu-list">' + respostas.map(function(l) {
+      var canalBadge = l.canalRespuesta === 'calendar' ?
+        '<span class="pill" style="background:#dcfce7;color:#15803d;font-size:11px">📅 Cita Google Meet</span>' :
+        (l.canalRespuesta === 'sms' ?
+          '<span class="pill" style="background:#e0f2fe;color:#0369a1;font-size:11px">💬 SMS Twilio</span>' :
+          '<span class="pill" style="background:#ecfdf5;color:#047857;font-size:11px">✉️ Correo Recibido</span>');
+      return '<div class="fu-card" style="border-left:4px solid var(--ok)">' +
+        '<div class="fu-card-info">' +
+          '<div class="fu-card-title">' + l.nome + canalBadge + '</div>' +
+          '<div class="fu-card-sub"><b>Contacto:</b> ' + (l.email || '—') + ' · ' + (l.telefone || '—') + '</div>' +
+          (l.obs ? '<div class="fu-card-sub" style="color:var(--ink);background:var(--surface);padding:6px 10px;border-radius:6px;margin-top:6px"><b>Registro:</b> ' + l.obs + '</div>' : '') +
+        '</div>' +
+        '<div class="fu-card-actions">' +
+          '<a href="sites/' + l.slug + '/' + l.slug + '.html" target="_blank" class="fu-btn">👁 Ver Sitio</a>' +
+          '<button onclick="dragSlug=\'' + l.slug + '\';solta({preventDefault:function(){},currentTarget:{classList:{remove:function(){}}}},\'fechado\')" class="fu-btn primary">🎉 Cerrar Venta / Crear Contrato</button>' +
+        '</div>' +
+      '</div>';
+    }).join('') : '<div class="vazio">Aún no hay respuestas o citas registradas. Pulsa «Sincronizar Bandejas» para detectar automáticamente reservas de Google Calendar o emails de respuesta.</div>') +
+  '</div>';
+
+  return statsHtml + guideHtml + secBorradores + secAlertas + secEnviados + secRespostas;
 }
 
 function abrirContrato(slug, nome) {
@@ -1195,6 +1383,7 @@ var CFG_CAMPOS = ['prestador_nombre', 'prestador_empresa', 'prestador_ein', 'est
 var CFG_FULL_WIDTH = ['prestador_direccion', 'booking_url'];
 
 var cfgCfAberto = false;
+var cfgTwAberto = false;
 var cfgDadosClienteAberto = false;
 
 function vConfig() {
@@ -1223,6 +1412,21 @@ function vConfig() {
   var cfBadge = CF.tokenDefinido ?
     '<span class="pill" style="background:var(--ok-soft);color:var(--ok);font-size:11px">' + t('config.cfTokenAtivo') + '</span>' :
     '<span class="pill" style="background:var(--warn-soft);color:var(--warn);font-size:11px">' + t('config.cfTokenFalta') + '</span>';
+
+  var twCampos = [
+    ['accountSid', 'text'], ['authToken', 'password'], ['fromNumber', 'tel']
+  ].map(function(c) {
+    var label = (I18N[LANG] && I18N[LANG].config && I18N[LANG].config.labels && I18N[LANG].config.labels[c[0]]) || c[0];
+    var ph = c[0] === 'authToken' ? (TW.tokenDefinido ? t('config.twTokenConfigurado') : t('config.twTokenVazio')) : (c[0] === 'fromNumber' ? '+1XXXXXXXXXX' : '');
+    return '<div><label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:10px 0 4px">' +
+      label + '</label><input id="tw-' + c[0] + '" type="' + c[1] + '" spellcheck="false" placeholder="' + ph + '" value="' +
+      (c[0] === 'authToken' ? '' : ((TW[c[0]] || '').replace(/"/g, '&quot;'))) + '" ' + (db ? '' : 'disabled') +
+      ' style="width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:13.5px;font-family:var(--sans);background:' + (db ? 'var(--white)' : '#f0ede4') + '"></div>';
+  }).join('');
+
+  var twBadge = TW.tokenDefinido ?
+    '<span class="pill" style="background:var(--ok-soft);color:var(--ok);font-size:11px">' + t('config.twTokenAtivo') + '</span>' :
+    '<span class="pill" style="background:var(--warn-soft);color:var(--warn);font-size:11px">' + t('config.twTokenFalta') + '</span>';
 
   return '<div class="cfg-grid">' +
     '<div class="cfg-col-main">' +
@@ -1260,6 +1464,31 @@ function vConfig() {
             '<button class="cfg-btn-primary" ' + (db ? '' : 'disabled') + ' onclick="salvarCF()">' + t('config.cfBtnSalvar') + '</button>' +
             '<span id="cf-ok" style="color:var(--ok);font-weight:700;font-size:13px;display:none">' + t('config.salvo') + '</span>' +
             (db ? (CF.tokenDefinido ? '<span style="color:var(--ok);font-size:12px;font-weight:600">' + t('config.cfTokenAtivo') + '</span>' : '<span style="color:var(--warn);font-size:12px;font-weight:600">' + t('config.cfTokenFalta') + '</span>') : '<span style="color:var(--warn);font-size:12.5px;font-weight:600">' + t('config.avisoModoFile') + '</span>') +
+          '</div>' +
+        '</div>' +
+      '</details>' +
+
+      '<details class="cfg-collapse" id="tw-details" ontoggle="cfgTwAberto = this.open" ' + (cfgTwAberto ? 'open' : '') + '>' +
+        '<summary class="cfg-collapse-header">' +
+          '<div style="display:flex;align-items:center;gap:10px;min-width:0">' +
+            '<span style="font-size:18px;line-height:1">📱</span>' +
+            '<div style="min-width:0">' +
+              '<div style="font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + t('config.twTitulo') + '</div>' +
+              '<div style="font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (TW.fromNumber ? TW.fromNumber : 'SMS y Telefonía') + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">' +
+            twBadge +
+            '<svg class="cfg-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>' +
+          '</div>' +
+        '</summary>' +
+        '<div class="cfg-collapse-body">' +
+          '<p style="font-size:12.5px;color:var(--muted);margin:12px 0 14px;line-height:1.5">' + t('config.twSub') + '</p>' +
+          twCampos +
+          '<div style="margin-top:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">' +
+            '<button class="cfg-btn-primary" ' + (db ? '' : 'disabled') + ' onclick="salvarTW()">' + t('config.twBtnSalvar') + '</button>' +
+            '<span id="tw-ok" style="color:var(--ok);font-weight:700;font-size:13px;display:none">' + t('config.salvo') + '</span>' +
+            (db ? (TW.tokenDefinido ? '<span style="color:var(--ok);font-size:12px;font-weight:600">' + t('config.twTokenAtivo') + '</span>' : '<span style="color:var(--warn);font-size:12px;font-weight:600">' + t('config.twTokenFalta') + '</span>') : '<span style="color:var(--warn);font-size:12.5px;font-weight:600">' + t('config.avisoModoFile') + '</span>') +
           '</div>' +
         '</div>' +
       '</details>' +
@@ -1331,33 +1560,87 @@ function salvarCF() {
   });
 }
 
+function salvarTW() {
+  var body = {};
+  ['accountSid', 'authToken', 'fromNumber'].forEach(function(k) {
+    var el = document.getElementById('tw-' + k);
+    if (el) body[k] = el.value || '';
+  });
+  fetch('/api/config', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ twilio: body })
+  }).then(function() {
+    if (body.authToken) TW.tokenDefinido = true;
+    ['accountSid', 'fromNumber'].forEach(function(k) {
+      if (body[k] !== undefined) TW[k] = body[k];
+    });
+    var ok = document.getElementById('tw-ok');
+    if (ok) {
+      ok.style.display = 'inline';
+      setTimeout(function() { ok.style.display = 'none'; render(); }, 1200);
+    }
+  });
+}
+
 function sincronizarAgenda() {
   var btn = document.getElementById('btn-sync-cal');
   var lbl = document.getElementById('lbl-sync-cal');
   if (btn) btn.disabled = true;
   if (lbl) lbl.textContent = LANG === 'es' ? 'Sincronizando...' : 'Syncing...';
-  fetch('/api/sincronizar-agenda')
+  fetch('/api/sincronizar-mensajes')
     .then(function(r) { return r.json(); })
     .then(function(res) {
       if (btn) btn.disabled = false;
-      if (lbl) lbl.textContent = LANG === 'es' ? 'Sincronizar Citas' : 'Sync Calendar';
+      if (lbl) lbl.textContent = LANG === 'es' ? 'Sincronizar Bandejas' : 'Sync Inboxes';
       if (res && res.ok) {
-        var num = (res.actualizados || []).length;
-        if (num > 0) {
-          alert((LANG === 'es' ? '¡Se detectaron y actualizaron ' : 'Detected and updated ') + num + (LANG === 'es' ? ' citas en el CRM!' : ' appointments in CRM!'));
-          location.reload();
-        } else {
-          alert(LANG === 'es' ? 'No se detectaron nuevas reservas de Google Calendar en la bandeja de entrada.' : 'No new Google Calendar bookings found in inbox.');
+        var r = res.resumen || {};
+        var b = r.borradores !== undefined ? r.borradores : (r.borradores_detectados || 0);
+        var e = r.enviados !== undefined ? r.enviados : (r.enviados_detectados || 0);
+        var ri = r.respuestas_email !== undefined ? r.respuestas_email : (r.respuestas_inbox || 0);
+        var c = r.citas_calendar || 0;
+        var s = r.sms_recibidos !== undefined ? r.sms_recibidos : (r.sms_twilio || 0);
+        var msg = (LANG === 'es' ? '🔄 Sincronización omnicanal finalizada con éxito:\n\n' : '🔄 Omnichannel sync completed successfully:\n\n') +
+          '• ' + (LANG === 'es' ? 'Borradores listos en Gmail: ' : 'Gmail Drafts: ') + b + '\n' +
+          '• ' + (LANG === 'es' ? 'Envíos confirmados: ' : 'Confirmed Sent: ') + e + '\n' +
+          '• ' + (LANG === 'es' ? 'Respuestas en bandeja: ' : 'Inbox Replies: ') + ri + '\n' +
+          '• ' + (LANG === 'es' ? 'Citas Google Meet: ' : 'Google Meet Bookings: ') + c + '\n' +
+          '• ' + (LANG === 'es' ? 'SMS Twilio: ' : 'Twilio SMS: ') + s;
+        var det = res.detalles || res.actualizados || [];
+        if (det.length) {
+          msg += '\n\n' + (LANG === 'es' ? 'Actualizaciones registradas:\n• ' : 'Updates registered:\n• ') + det.join('\n• ');
         }
+        alert(msg);
+        location.reload();
       } else {
         alert((LANG === 'es' ? 'Error al sincronizar: ' : 'Sync error: ') + ((res && res.erro) || 'desconocido'));
       }
     })
     .catch(function(err) {
       if (btn) btn.disabled = false;
-      if (lbl) lbl.textContent = LANG === 'es' ? 'Sincronizar Citas' : 'Sync Calendar';
-      alert('Error de conexión con el servidor.');
+      if (lbl) lbl.textContent = LANG === 'es' ? 'Sincronizar Bandejas' : 'Sync Inboxes';
+      alert(LANG === 'es' ? 'Error de conexión con el servidor.' : 'Server connection error.');
     });
+}
+
+function marcarEnviado(slug) {
+  var hoje = new Date().toISOString().slice(0, 10);
+  if (!confirm(LANG === 'es' ? '¿Confirmas que ya revisaste y enviaste este correo al cliente desde tu Gmail?' : 'Confirm that you reviewed and sent this email to the client from Gmail?')) return;
+  fetch('/api/marcar-enviado', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ slug: slug, fecha: hoje })
+  }).then(function(r) { return r.json(); })
+  .then(function(res) {
+    if (res && res.ok) {
+      salvarOv(slug, { emailStatus: 'enviado', emailEnviadoEm: hoje, dataProposta: hoje });
+      alert(LANG === 'es' ? '✓ ¡Propuesta marcada como enviada! El sistema inició el monitoreo de respuestas.' : '✓ Proposal marked as sent! Tracking active.');
+    } else {
+      salvarOv(slug, { emailStatus: 'enviado', emailEnviadoEm: hoje, dataProposta: hoje });
+    }
+  }).catch(function() {
+    salvarOv(slug, { emailStatus: 'enviado', emailEnviadoEm: hoje, dataProposta: hoje });
+  });
 }
 
 function ordenar(c) {

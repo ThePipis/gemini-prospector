@@ -5,8 +5,8 @@
     "presentacion_en": "High-Converting Web Designer & Conversion Specialist",
     "presentacion_es": "Especialista en Diseño Web y Conversión para Negocios",
     "telefono": "+1 (000) 000-0000",
-    "whatsapp": "10000000000",
-    "email": "your-agency@gmail.com"
+    "email": "your-agency@gmail.com",
+    "booking_url": "https://calendar.app.google/..."
   },
   "prospeccion": {
     "motor": "auto",
@@ -45,5 +45,10 @@
     "prestador_ein": "",
     "prestador_direccion": "California, USA",
     "estado_jurisdiccion": "California"
+  },
+  "twilio": {
+    "accountSid": "",
+    "authToken": "",
+    "fromNumber": ""
   }
 }
