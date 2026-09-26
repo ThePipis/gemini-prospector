@@ -80,12 +80,14 @@ class App(SimpleHTTPRequestHandler):
             firma = dict(cfg.get('firma', {}))
 
             # Consolidar campos para que el dashboard reciba siempre la información completa
-            for k in ['prestador_nombre', 'prestador_empresa', 'prestador_ein', 'prestador_direccion', 'estado_jurisdiccion', 'email', 'telefono']:
+            for k in ['prestador_nombre', 'prestador_empresa', 'prestador_ein', 'prestador_direccion', 'estado_jurisdiccion', 'email', 'telefono', 'booking_url']:
                 val = contrato.get(k) or contratante.get(k) or ''
                 if not val and k == 'email':
                     val = firma.get('email', '')
                 if not val and k == 'telefono':
                     val = firma.get('telefono', '')
+                if not val and k == 'booking_url':
+                    val = firma.get('booking_url', '')
                 if not val and k == 'prestador_nombre':
                     val = firma.get('nombre', '')
                 if not val and k == 'prestador_empresa':
@@ -99,6 +101,14 @@ class App(SimpleHTTPRequestHandler):
                 'cloudflare': cf,
                 'prospeccion': cfg.get('prospeccion', {})
             })
+        if self.path.split('?')[0] == '/api/sincronizar-agenda':
+            try:
+                sys.path.insert(0, PASTA)
+                import sincronizar_agenda
+                res = sincronizar_agenda.sincronizar_citas()
+                return self._json(200, res)
+            except Exception as e:
+                return self._json(500, {'ok': False, 'erro': str(e)})
         if self.path.split('?')[0] == '/api/leads':
             c = conexao(); c.row_factory = sqlite3.Row
             rows = [dict(r) for r in c.execute('SELECT * FROM leads').fetchall()]; c.close()
@@ -149,6 +159,8 @@ class App(SimpleHTTPRequestHandler):
                         cfg_firma['email'] = v
                     elif k == 'telefono':
                         cfg_firma['telefono'] = v
+                    elif k == 'booking_url':
+                        cfg_firma['booking_url'] = v
                     elif k == 'prestador_nombre' and v:
                         cfg_firma['nombre'] = v
                     elif k == 'prestador_empresa' and v:

@@ -165,6 +165,9 @@ select.mini{border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-
     <span class="upd" id="upd"></span>
     <span class="modo file" id="modo" title="Abre mediante iniciar-dashboard.bat para guardar en base de datos">modo archivo</span>
     <button id="limpar-ov" style="display:none;border:1px solid var(--line);background:var(--white);color:var(--muted);font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;cursor:pointer;font-family:var(--sans)" onclick="limparLocalEdits()">limpiar ediciones locales</button>
+    <button id="btn-sync-cal" onclick="sincronizarAgenda()" style="border:1px solid var(--line);background:var(--white);color:var(--ink);font-size:12px;font-weight:700;padding:6px 12px;border-radius:12px;cursor:pointer;font-family:var(--sans);display:inline-flex;align-items:center;gap:6px" title="Sincronizar citas de Google Calendar / Meet con el CRM">
+      <span>📅</span> <span id="lbl-sync-cal">Sincronizar Citas</span>
+    </button>
     <div class="lang-toggle" title="Cambiar idioma / Switch language">
       <button id="btn-lang-es" class="lang-btn on" onclick="setLang('es')">ES</button>
       <button id="btn-lang-en" class="lang-btn" onclick="setLang('en')">EN</button>
@@ -376,6 +379,7 @@ var I18N = {
         estado_jurisdiccion: 'Estado / Jurisdicción (California)',
         email: 'Email de contacto comercial',
         telefono: 'Teléfono comercial (+1...)',
+        booking_url: 'Enlace de Agenda / Videollamada (Google Calendar / Meet)',
         accountId: 'Cloudflare Account ID',
         projectName: 'Nombre del Proyecto (Workers/Assets)',
         customDomain: 'Dominio Personalizado (ej. aisalesradar.com)',
@@ -572,6 +576,7 @@ var I18N = {
         estado_jurisdiccion: 'Governing Law & State (California)',
         email: 'Business Contact Email',
         telefono: 'Business Phone (+1...)',
+        booking_url: 'Calendar Booking Link (Google Calendar / Meet)',
         accountId: 'Cloudflare Account ID',
         projectName: 'Project Name (Workers/Assets)',
         customDomain: 'Custom Domain (e.g. aisalesradar.com)',
@@ -661,6 +666,8 @@ function applyStaticI18n() {
   if (docTit && (!docTit.dataset.custom)) docTit.textContent = t('doc.tituloPadrao');
   var lb = document.getElementById('limpar-ov');
   if (lb) lb.textContent = t('clearOv');
+  var lblSync = document.getElementById('lbl-sync-cal');
+  if (lblSync) lblSync.textContent = (LANG === 'es' ? 'Sincronizar Citas' : 'Sync Calendar');
   var upd = document.getElementById('upd');
   if (upd && D.atualizado) upd.textContent = t('updatedAt') + D.atualizado;
   updateModoBadge();
@@ -1099,7 +1106,7 @@ function vFinanceiro() {
   return html;
 }
 
-var CFG_CAMPOS = ['prestador_nombre', 'prestador_empresa', 'prestador_ein', 'prestador_direccion', 'estado_jurisdiccion', 'email', 'telefono'];
+var CFG_CAMPOS = ['prestador_nombre', 'prestador_empresa', 'prestador_ein', 'prestador_direccion', 'estado_jurisdiccion', 'email', 'telefono', 'booking_url'];
 
 function vConfig() {
   var db = MODE === 'db';
@@ -1177,6 +1184,35 @@ function salvarCF() {
       setTimeout(function() { ok.style.display = 'none'; render(); }, 1200);
     }
   });
+}
+
+function sincronizarAgenda() {
+  var btn = document.getElementById('btn-sync-cal');
+  var lbl = document.getElementById('lbl-sync-cal');
+  if (btn) btn.disabled = true;
+  if (lbl) lbl.textContent = LANG === 'es' ? 'Sincronizando...' : 'Syncing...';
+  fetch('/api/sincronizar-agenda')
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (btn) btn.disabled = false;
+      if (lbl) lbl.textContent = LANG === 'es' ? 'Sincronizar Citas' : 'Sync Calendar';
+      if (res && res.ok) {
+        var num = (res.actualizados || []).length;
+        if (num > 0) {
+          alert((LANG === 'es' ? '¡Se detectaron y actualizaron ' : 'Detected and updated ') + num + (LANG === 'es' ? ' citas en el CRM!' : ' appointments in CRM!'));
+          location.reload();
+        } else {
+          alert(LANG === 'es' ? 'No se detectaron nuevas reservas de Google Calendar en la bandeja de entrada.' : 'No new Google Calendar bookings found in inbox.');
+        }
+      } else {
+        alert((LANG === 'es' ? 'Error al sincronizar: ' : 'Sync error: ') + ((res && res.erro) || 'desconocido'));
+      }
+    })
+    .catch(function(err) {
+      if (btn) btn.disabled = false;
+      if (lbl) lbl.textContent = LANG === 'es' ? 'Sincronizar Citas' : 'Sync Calendar';
+      alert('Error de conexión con el servidor.');
+    });
 }
 
 function ordenar(c) {
